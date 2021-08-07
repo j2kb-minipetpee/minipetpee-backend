@@ -5,8 +5,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Entity
 public class Tab {
 
     @Id
@@ -15,12 +15,13 @@ public class Tab {
     private int id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @ColumnDefault("1")
     private boolean visible;
 
-    @ManyTo
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hompee_id")
     private Homepee homepee;
 }

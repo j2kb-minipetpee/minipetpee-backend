@@ -5,8 +5,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Entity
 public class GuestNote extends BaseTimeEntity{
 
     @Id
