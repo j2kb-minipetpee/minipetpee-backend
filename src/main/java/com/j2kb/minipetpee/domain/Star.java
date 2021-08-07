@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.domain;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -10,8 +11,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 public class Star {
     @Id
@@ -19,17 +18,17 @@ public class Star {
     @Column(name = "star_id")
     private int id;
 
-    @NonNull
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member starMember;
 
-    @NonNull
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member fanMember;
 
-    @NonNull
+    @NotNull
     @CreatedDate
     private LocalDateTime createdAt;
 }

@@ -1,16 +1,12 @@
 package com.j2kb.minipetpee.domain;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 public class Member extends BaseTimeEntity {
 
@@ -19,29 +15,21 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private int id;
 
+    @NotNull
     @Column(name = "email", unique = true)
-    @NonNull
-    @Size(min = 10, max = 30)
-    @Email
     private String email;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 6, max = 20)
+    @NotNull
     private String password;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 2, max = 10)
+    @NotNull
     @Column(name = "name")
     private String name;
 
     private LocalDate birthday;
 
-    @Size(max = 20)
     private String species;
 
-    @Size(max = 30)
     private String personality;
 
     @Enumerated(EnumType.STRING)

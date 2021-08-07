@@ -1,19 +1,10 @@
 package com.j2kb.minipetpee.domain;
 
-import com.j2kb.minipetpee.domain.Member;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import com.sun.istack.NotNull;
 
 @Getter
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 public class Homepee {
     @Id
@@ -21,17 +12,14 @@ public class Homepee {
     @Column(name = "homepee_id")
     private int id;
 
-    @NonNull
+    @NotNull
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member; // ??
 
-    @NonNull
-    @NotBlank
-    @Size(max = 50)
+    @NotNull
     private String title;
 
-    @NonNull
-    @PositiveOrZero()
+    @NotNull
     private int visitCount;
 }
