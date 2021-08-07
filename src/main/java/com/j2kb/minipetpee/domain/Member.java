@@ -1,14 +1,10 @@
-package com.j2kb.minipetpee.domain.member;
+package com.j2kb.minipetpee.domain;
 
-import com.j2kb.minipetpee.domain.BaseTimeEntity;
-import com.j2kb.minipetpee.domain.homepee.Homepee;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 

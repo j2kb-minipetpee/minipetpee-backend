@@ -1,7 +1,6 @@
-package com.j2kb.minipetpee.domain.homepee;
+package com.j2kb.minipetpee.domain;
 
-import com.j2kb.minipetpee.domain.member.Member;
-import com.sun.istack.NotNull;
+import com.j2kb.minipetpee.domain.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

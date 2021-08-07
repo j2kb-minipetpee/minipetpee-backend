@@ -1,8 +1,5 @@
-package com.j2kb.minipetpee.domain.star;
+package com.j2kb.minipetpee.domain;
 
-import com.j2kb.minipetpee.domain.BaseTimeEntity;
-import com.j2kb.minipetpee.domain.homepee.Homepee;
-import com.j2kb.minipetpee.domain.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

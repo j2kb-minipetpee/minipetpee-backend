@@ -1,13 +1,10 @@
-package com.j2kb.minipetpee.domain.star;
+package com.j2kb.minipetpee.domain;
 
-import com.j2kb.minipetpee.domain.member.Member;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
