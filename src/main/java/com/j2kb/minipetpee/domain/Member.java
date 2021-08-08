@@ -1,10 +1,10 @@
 package com.j2kb.minipetpee.domain;
 
-import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -12,33 +12,32 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private int id;
 
-    @NotNull
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotNull
+    @Column(nullable = false)
     private String password;
 
-    @NotNull
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
-    private LocalDate birthday;
-
+    private LocalDateTime birthday;
     private String species;
-
     private String personality;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "profile_image_url")
     private String profileImageUrl;
+
+    @Column(name = "gate_image_url")
     private String gateImageUrl;
 
-    private boolean delete;
+    @ColumnDefault("0")
+    private boolean deleted;
 
     @OneToOne(mappedBy = "member")
     private Homepee homepee;

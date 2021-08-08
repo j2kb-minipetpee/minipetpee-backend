@@ -2,24 +2,28 @@ package com.j2kb.minipetpee.domain;
 
 import lombok.Getter;
 import javax.persistence.*;
-import com.sun.istack.NotNull;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
 
 @Getter
 @Entity
 public class Homepee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "homepee_id")
     private int id;
 
-    @NotNull
     @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member member; // ??
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @NotNull
+    @Column(nullable = false)
     private String title;
 
-    @NotNull
+    @Column(name = "visit_count", nullable = false)
+    @ColumnDefault("0")
     private int visitCount;
+
+    @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
+    private List<Tab> tabList = new ArrayList<>();
 }

@@ -2,26 +2,22 @@ package com.j2kb.minipetpee.domain;
 
 import lombok.Getter;
 import javax.persistence.*;
-import com.sun.istack.NotNull;
 
 @Getter
 @Entity
 public class FanComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fan_comment_id")
     private int id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "homepee_id")
+    @JoinColumn(name = "homepee_id", nullable = false)
     private Homepee homepee;
 
-    @NotNull
+    @Column(nullable = false)
     private String content;
 }

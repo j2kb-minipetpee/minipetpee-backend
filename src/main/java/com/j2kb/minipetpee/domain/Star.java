@@ -1,10 +1,6 @@
 package com.j2kb.minipetpee.domain;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -15,20 +11,17 @@ import java.time.LocalDateTime;
 public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "star_id")
     private int id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member starMember;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member fanMember;
 
-    @NotNull
     @CreatedDate
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }
