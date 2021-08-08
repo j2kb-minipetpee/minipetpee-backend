@@ -14,11 +14,11 @@ public class Star {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "star_member_id", nullable = false)
     private Member starMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "fan_member_id", nullable = false)
     private Member fanMember;
 
     @CreatedDate
