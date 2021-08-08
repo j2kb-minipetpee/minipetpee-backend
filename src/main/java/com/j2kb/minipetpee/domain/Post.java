@@ -1,6 +1,7 @@
 package com.j2kb.minipetpee.domain;
 
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Post extends BaseTimeEntity{
     private String content;
 
     @Column(name = "view_count")
+    @ColumnDefault("0")
     private int viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
