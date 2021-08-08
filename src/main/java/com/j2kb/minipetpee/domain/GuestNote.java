@@ -11,7 +11,6 @@ public class GuestNote extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "guest_note_id")
     private int id;
 
     @Column(nullable = false)

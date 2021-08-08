@@ -11,7 +11,6 @@ public class Tab {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tab_id")
     private int id;
 
     @Column(nullable = false)
