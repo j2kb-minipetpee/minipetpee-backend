@@ -1,5 +1,8 @@
-package com.j2kb.minipetpee.domain;
+package com.j2kb.minipetpee.domain.posts;
 
+import com.j2kb.minipetpee.domain.BaseTimeEntity;
+import com.j2kb.minipetpee.domain.Image;
+import com.j2kb.minipetpee.domain.Tab;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -8,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype")
 @Entity
-public class Post extends BaseTimeEntity{
+public abstract class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +22,6 @@ public class Post extends BaseTimeEntity{
 
     @Column(nullable = false)
     private String title;
-    private String content;
 
     @Column(name = "view_count")
     @ColumnDefault("0")
@@ -27,6 +31,4 @@ public class Post extends BaseTimeEntity{
     @JoinColumn(name = "tab_id")
     private Tab tab;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Image> imageList = new ArrayList<>();
 }
