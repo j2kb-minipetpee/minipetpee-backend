@@ -15,6 +15,6 @@ import java.util.List;
 @Entity
 public class AlbumPost extends Post{
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Image> imageList = new ArrayList<>();
 }
