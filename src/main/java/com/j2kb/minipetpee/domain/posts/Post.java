@@ -31,4 +31,6 @@ public abstract class Post extends BaseTimeEntity {
     @JoinColumn(name = "tab_id")
     private Tab tab;
 
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    private List<Image> imageList;
 }

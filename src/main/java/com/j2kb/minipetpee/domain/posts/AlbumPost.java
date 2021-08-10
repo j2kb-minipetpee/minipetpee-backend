@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,6 +14,4 @@ import java.util.List;
 @Entity
 public class AlbumPost extends Post{
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-    private List<Image> imageList = new ArrayList<>();
 }
