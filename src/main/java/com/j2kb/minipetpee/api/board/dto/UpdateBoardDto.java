@@ -7,5 +7,5 @@ public class UpdateBoardDto {
     private int id;
     private String title;
     private String content;
-    private ImageDto image;
+    private BoardPostImage image;
 }
