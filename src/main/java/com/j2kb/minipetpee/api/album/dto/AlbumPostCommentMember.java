@@ -6,11 +6,9 @@ import lombok.Data;
 public class AlbumPostCommentMember {
     private int id;
     private String name;
-    private String profileImageUrl;
 
-    public AlbumPostCommentMember(int id, String name, String profileImageUrl) {
+    public AlbumPostCommentMember(int id, String name) {
         this.id = id;
         this.name = name;
-        this.profileImageUrl = profileImageUrl;
     }
 }

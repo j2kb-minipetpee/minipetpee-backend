@@ -29,18 +29,22 @@ public class BoardController {
 
     //게시글 목록 조회
     @GetMapping
-    public ResponseEntity<SendBoardPostList> sendPosts(@PathVariable(name = "homepee-id") int hompeeId, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<FindAllBoardPostsResponse> findAllPosts(@PathVariable(name = "homepee-id") int hompeeId, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        SendBoardPost boardPost1 = new SendBoardPost(1, "title1", LocalDateTime.now());
-        SendBoardPost boardPost2 = new SendBoardPost(2, "title2", LocalDateTime.now());
-        SendBoardPost boardPost3 = new SendBoardPost(3, "title3", LocalDateTime.now());
+        FindBoardPostImage boardImg1 = new FindBoardPostImage(1, "image1");
+        FindBoardPostImage boardImg2 = new FindBoardPostImage(2, "image2");
+        FindBoardPostImage boardImg3 = new FindBoardPostImage(3, "image3");
 
-        List<SendBoardPost> boardPosts = new ArrayList<>();
+        FindBoardPost boardPost1 = new FindBoardPost(1, "title1", boardImg1, LocalDateTime.now());
+        FindBoardPost boardPost2 = new FindBoardPost(2, "title2", boardImg2, LocalDateTime.now());
+        FindBoardPost boardPost3 = new FindBoardPost(3, "title3", boardImg3, LocalDateTime.now());
+
+        List<FindBoardPost> boardPosts = new ArrayList<>();
         boardPosts.add(boardPost1);
         boardPosts.add(boardPost2);
         boardPosts.add(boardPost3);
 
-        SendBoardPostList boardPostList = new SendBoardPostList(boardPosts);
+        FindAllBoardPostsResponse boardPostList = new FindAllBoardPostsResponse(boardPosts);
 
         return ResponseEntity.ok(boardPostList);
     }

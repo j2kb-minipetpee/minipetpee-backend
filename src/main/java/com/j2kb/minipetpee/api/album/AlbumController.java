@@ -2,6 +2,9 @@ package com.j2kb.minipetpee.api.album;
 
 import com.j2kb.minipetpee.api.album.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +36,7 @@ public class AlbumController {
 
     //게시글 조회 - 전체 사진첩 내용 모두 조회
     @GetMapping
-    public ResponseEntity<FindAlbumPostResponse> findAlbumPost(@PathVariable(name = "homepee-id") int homepeeId) {
+    public ResponseEntity<FindAlbumPostResponse> findAlbumPost(@PathVariable(name = "homepee-id") int homepeeId, @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<FindAlbumPostImage> albumImage1 = new ArrayList<>();
         albumImage1.add(new FindAlbumPostImage(0, "image1URL"));
         albumImage1.add(new FindAlbumPostImage(1, "image2URL"));
@@ -59,7 +62,7 @@ public class AlbumController {
     //게시글에 댓글 작성
     @PostMapping("/{post-id}/comments")
     public ResponseEntity<SaveAlbumPostCommentResponse> saveAlbumPostComment(@PathVariable(name = "homepee-id") int homepeeId, @PathVariable(name = "post-id") int postId, @RequestBody SaveAlbumPostCommentRequest albumRequest) {
-        AlbumPostCommentMember memberInfo = new AlbumPostCommentMember(2,"minipet", "imageurllll");
+        AlbumPostCommentMember memberInfo = new AlbumPostCommentMember(2,"minipet");
         SaveAlbumPostCommentResponse albumResponse = new SaveAlbumPostCommentResponse(0, albumRequest.getContent(), memberInfo,LocalDateTime.now());
         return ResponseEntity.ok(albumResponse);
     }
