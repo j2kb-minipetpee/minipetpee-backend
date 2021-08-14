@@ -17,7 +17,7 @@ public class StarController {
 
     // 스타
     @PostMapping("/apis/stars/{star-id}")
-    public ResponseEntity<Void> star(@PathVariable("star-id") long starId, @RequestBody StarRequest starRequest){
+    public ResponseEntity<Void> star(@PathVariable("star-id") long starId, @RequestBody String body){
         /**
          * 스타 서비스: 스타 메서드 호출
          */
