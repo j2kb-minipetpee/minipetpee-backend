@@ -1,11 +1,13 @@
 package com.j2kb.minipetpee.api.guestNote.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class UpdateGuestNoteRequest {
-    private int id;
-    private int memberId;
+    private Long id;
+    private Long memberId;
     private String content;
     private boolean visible;
 }

@@ -1,10 +1,12 @@
 package com.j2kb.minipetpee.api.setting.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class UpdateTabsRequest {
-    private List<SettingTabs> tabs;
+    private List<SettingTabsRequest> tabs;
 }

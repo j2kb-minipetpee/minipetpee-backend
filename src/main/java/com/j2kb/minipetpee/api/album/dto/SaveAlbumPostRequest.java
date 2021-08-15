@@ -1,15 +1,15 @@
 package com.j2kb.minipetpee.api.album.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.j2kb.minipetpee.api.board.dto.BoardPostImage;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class SaveAlbumPostRequest {
     private String title;
-    private List<SaveAlbumPostImage> images;
+    private List<SaveAlbumPostImageRequest> images;
     private boolean visible;
 
 }

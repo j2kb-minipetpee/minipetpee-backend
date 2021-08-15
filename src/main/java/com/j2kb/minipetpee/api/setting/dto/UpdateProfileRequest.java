@@ -1,8 +1,10 @@
 package com.j2kb.minipetpee.api.setting.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class UpdateProfileRequest {
 
     private String name;

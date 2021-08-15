@@ -1,14 +1,15 @@
 package com.j2kb.minipetpee.api.album.dto;
 
-import com.j2kb.minipetpee.api.board.dto.BoardPostImage;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class UpdateAlbumPostRequest {
-    private int id;
+    private Long id;
     private String title;
-    private List<BoardPostImage> imageList;
+    private List<UpdateAlbumPostImageRequest> images;
     private boolean visible;
 }

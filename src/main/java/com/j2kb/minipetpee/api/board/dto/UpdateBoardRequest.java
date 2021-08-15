@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SaveBoardPostRequest {
+public class UpdateBoardRequest {
+    private Long id;
     private String title;
     private String content;
-    private SaveBoardPostImageRequest image;
-    private boolean visible;
+    private BoardPostImageResponse image;
 }

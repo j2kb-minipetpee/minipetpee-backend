@@ -2,21 +2,19 @@ package com.j2kb.minipetpee.api.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class SaveBoardPostCommentResponse {
-    private int id;
-    private int memberId;
-    private String content;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime createdAt;
+    private final Long id;
+    private final String content;
+    private final BoardPostCommentMemberResponse member;
 
-    public SaveBoardPostCommentResponse(int id, int memberId, String content, LocalDateTime createdAt) {
-        this.id = id;
-        this.memberId = memberId;
-        this.content = content;
-        this.createdAt = createdAt;
-    }
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private final LocalDateTime createdAt;
+
 }

@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class SaveBoardPostResponse {
-    private final Long id;
+public class BoardPostImageResponse {
+    private final String url;
 }

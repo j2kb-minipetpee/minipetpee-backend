@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SaveBoardPostCommentRequest {
-    private Long memberId;
-    private String content;
+public class SaveBoardPostImageRequest {
+    private String url;
 }

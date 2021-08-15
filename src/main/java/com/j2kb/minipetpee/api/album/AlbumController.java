@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,60 +19,62 @@ public class AlbumController {
 
     //게시글 등록
     @PostMapping
-    public ResponseEntity<SaveAlbumPostResponse> saveAlbumPost(@PathVariable(name = "homepee-id") int homepeeId, @RequestBody SaveAlbumPostRequest albumDto) {
-        for(SaveAlbumPostImage albumPostImage : albumDto.getImages())
+    public ResponseEntity<SaveAlbumPostResponse> saveAlbumPost(@PathVariable(name = "homepee-id") Long homepeeId, @RequestBody SaveAlbumPostRequest saveAlbumPostRequest) {
+        for(SaveAlbumPostImageRequest albumPostImage : saveAlbumPostRequest.getImages())
             log.info("ImageUrl = {}", albumPostImage.getUrl());
 
-        SaveAlbumPostResponse saveAlbumPost = new SaveAlbumPostResponse(1);
-        return ResponseEntity.ok(saveAlbumPost);
-    }
-
-    //게시글 수정
-    @PutMapping
-    public ResponseEntity<Void> updateAlbumPost(@PathVariable(name = "homepee-id") int homepeeId, @RequestBody UpdateAlbumPostRequest albumDto) {
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        SaveAlbumPostResponse saveAlbumPostResponse = new SaveAlbumPostResponse(1L);
+        return ResponseEntity.ok(saveAlbumPostResponse);
     }
 
     //게시글 조회 - 전체 사진첩 내용 모두 조회
     @GetMapping
-    public ResponseEntity<FindAlbumPostResponse> findAlbumPost(@PathVariable(name = "homepee-id") int homepeeId, @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<FindAlbumPostImage> albumImage1 = new ArrayList<>();
-        albumImage1.add(new FindAlbumPostImage(0, "image1URL"));
-        albumImage1.add(new FindAlbumPostImage(1, "image2URL"));
-        albumImage1.add(new FindAlbumPostImage(2, "image3URL"));
+    public ResponseEntity<FindAlbumPostsResponse> findAlbumPosts(@PathVariable(name = "homepee-id") Long homepeeId, @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<FindAlbumPostImageResponse> albumImage1 = new ArrayList<>();
+        albumImage1.add(new FindAlbumPostImageResponse(1L, "image1URL"));
+        albumImage1.add(new FindAlbumPostImageResponse(2L, "image2URL"));
+        albumImage1.add(new FindAlbumPostImageResponse(3L, "image3URL"));
 
-        FindAlbumPostListResponse album1 = new FindAlbumPostListResponse(0,"title1", albumImage1, 100, true);
+        FindAlbumPostResponse album1 = new FindAlbumPostResponse(1L,"title1", albumImage1, 100, true);
 
-        List<FindAlbumPostImage> albumImage2 = new ArrayList<>();
-        albumImage2.add(new FindAlbumPostImage(3, "image3URL"));
-        albumImage2.add(new FindAlbumPostImage(4, "image4URL"));
+        List<FindAlbumPostImageResponse> albumImage2 = new ArrayList<>();
+        albumImage2.add(new FindAlbumPostImageResponse(4L, "image3URL"));
+        albumImage2.add(new FindAlbumPostImageResponse(5L, "image4URL"));
 
-        FindAlbumPostListResponse album2 = new FindAlbumPostListResponse(1,"title2", albumImage2, 1000, true);
+        FindAlbumPostResponse album2 = new FindAlbumPostResponse(2L,"title2", albumImage2, 1000, true);
 
-        List<FindAlbumPostListResponse> albumLists = new ArrayList<>();
+        List<FindAlbumPostResponse> albumLists = new ArrayList<>();
         albumLists.add(album1);
         albumLists.add(album2);
 
-        FindAlbumPostResponse albumResponse = new FindAlbumPostResponse(albumLists);
+        FindAlbumPostsResponse albumPostsResponse = new FindAlbumPostsResponse(albumLists);
 
-        return ResponseEntity.ok(albumResponse);
+        return ResponseEntity.ok(albumPostsResponse);
+    }
+
+    //게시글 수정
+    @PutMapping
+    public ResponseEntity<Void> updateAlbumPost(@PathVariable(name = "homepee-id") Long homepeeId, @RequestBody UpdateAlbumPostRequest updateAlbumPostRequest) {
+        return ResponseEntity.noContent().build();
     }
 
     //게시글에 댓글 작성
     @PostMapping("/{post-id}/comments")
-    public ResponseEntity<SaveAlbumPostCommentResponse> saveAlbumPostComment(@PathVariable(name = "homepee-id") int homepeeId, @PathVariable(name = "post-id") int postId, @RequestBody SaveAlbumPostCommentRequest albumRequest) {
-        AlbumPostCommentMember memberInfo = new AlbumPostCommentMember(2,"minipet");
-        SaveAlbumPostCommentResponse albumResponse = new SaveAlbumPostCommentResponse(0, albumRequest.getContent(), memberInfo,LocalDateTime.now());
-        return ResponseEntity.ok(albumResponse);
+    public ResponseEntity<SaveAlbumPostCommentResponse> saveAlbumPostComment(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId, @RequestBody SaveAlbumPostCommentRequest albumCommentRequest) {
+        AlbumPostCommentMemberResponse albumPostCommentMember = new AlbumPostCommentMemberResponse(2L,"minipet");
+        SaveAlbumPostCommentResponse albumPostCommentResponse = new SaveAlbumPostCommentResponse(1L, albumCommentRequest.getContent(), albumPostCommentMember, LocalDateTime.now());
+        return ResponseEntity.ok(albumPostCommentResponse);
     }
 
+    //게시글 삭제
     @DeleteMapping("/{post-id}")
-    public ResponseEntity<Void> deleteAlbumPost(@PathVariable(name = "homepee-id") int homepeeId, @PathVariable(name = "post-id") int postId) {
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteAlbumPost(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId) {
+        return ResponseEntity.noContent().build();
     }
 
+    //게시글 댓글 삭제
     @DeleteMapping("/{post-id}/comments/{comment-id}")
-    public ResponseEntity<Void> deleteAlbumComment(@PathVariable(name = "homepee-id") int homepeeId, @PathVariable(name = "post-id") int postId, @PathVariable(name = "comment-id") int commentId) {
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteAlbumComment(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId, @PathVariable(name = "comment-id") Long commentId) {
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,15 +1,16 @@
 package com.j2kb.minipetpee.api.album.dto;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@Getter
+@RequiredArgsConstructor
 public class FindAlbumPostResponse {
-
-    @JsonValue
-    private final List<FindAlbumPostListResponse> albums;
-
-    public FindAlbumPostResponse(List<FindAlbumPostListResponse> albums) {
-        this.albums = albums;
-    }
+    private final Long id;
+    private final String title;
+    private final List<FindAlbumPostImageResponse> images;
+    private final int viewCount;
+    private final boolean visible;
 }

@@ -1,16 +1,13 @@
 package com.j2kb.minipetpee.api.setting.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class FindSettingsResponse {
-    FindSettingsProfile profile;
-    List<FindSettingsTab> tabs;
-
-    public FindSettingsResponse(FindSettingsProfile profile, List<FindSettingsTab> tabs) {
-        this.profile = profile;
-        this.tabs = tabs;
-    }
+    private final FindSettingsProfileResponse profile;
+    private final List<FindSettingsTabResponse> tabs;
 }
