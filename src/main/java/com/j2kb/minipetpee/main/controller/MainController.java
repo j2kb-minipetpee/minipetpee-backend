@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,10 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/apis")
 public class MainController {
 
     // 인기 컨텐츠 요청
-    @GetMapping("/apis/popular-posts")
+    @GetMapping("/popular-posts")
     public ResponseEntity<FindPopularPostsResponse> findPopularPosts(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
         // popular post example
@@ -52,7 +54,7 @@ public class MainController {
 
 
     // 계정 검색
-    @GetMapping("/apis/search-member")
+    @GetMapping("/search-member")
     public ResponseEntity<FindMembersResponse> findMembers(@RequestParam("name") String memberName, @PageableDefault(size = 8, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
         FindMemberResponse member1 = new FindMemberResponse(1011, memberName, "rupeeImg1", 1011);
         FindMemberResponse member2 = new FindMemberResponse(1022, memberName, "rupeeImg2", 1032);
@@ -68,7 +70,7 @@ public class MainController {
     }
 
     // 게시글 검색
-    @GetMapping("/apis/search-post")
+    @GetMapping("/search-post")
     public ResponseEntity<FindPostsResponse> findPosts(@RequestParam("name") String postName, @PageableDefault(size = 8, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
         PostResponse post1 = new PostResponse(11, postName, LocalDateTime.now(), "hungryImg1", "초밥 먹고 싶다");
         PostResponse post2 = new PostResponse(22, postName, LocalDateTime.now(), "hungryImg2", "배고파퍗파퍗파퍄퍗");
