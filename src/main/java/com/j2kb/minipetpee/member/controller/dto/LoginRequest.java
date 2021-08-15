@@ -1,14 +1,14 @@
 package com.j2kb.minipetpee.member.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginMemberRequest {
     private String email;
     private String password;
-
-    public LoginMemberRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
 }
