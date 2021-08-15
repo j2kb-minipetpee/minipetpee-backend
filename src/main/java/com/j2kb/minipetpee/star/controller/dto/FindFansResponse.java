@@ -7,13 +7,10 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
-public class FindAllStarsResponse {
+@Getter
+@RequiredArgsConstructor
+public class FindFansResponse {
 
     @JsonValue
-    private final List<FindStarResponse> stars;
-
-    public FindAllStarsResponse(List<FindStarResponse> stars) {
-        this.stars = stars;
-    }
+    private final List<FindFanResponse> fans;
 }

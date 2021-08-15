@@ -2,25 +2,19 @@ package com.j2kb.minipetpee.star.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class FindFanResponse {
-    private long id;
-    private long memberId;
-    private String name;
-    private String profileImageUrl;
+    private final long id;
+    private final long memberId;
+    private final String name;
+    private final String profileImageUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private LocalDateTime createdAt;
-
-
-    public FindFanResponse(long id, long memberId, String name, String profileImageUrl, LocalDateTime createdAt) {
-        this.id = id;
-        this.memberId = memberId;
-        this.name = name;
-        this.profileImageUrl = profileImageUrl;
-        this.createdAt = createdAt;
-    }
+    private final LocalDateTime createdAt;
 }
