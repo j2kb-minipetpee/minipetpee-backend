@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FindAllPostsResponse {
+public class FindPostsResponse {
     @JsonValue
     List<FindPostResponse> posts;
 
-    public FindAllPostsResponse(List<FindPostResponse> posts) {
+    public FindPostsResponse(List<FindPostResponse> posts) {
         this.posts = posts;
     }
 }

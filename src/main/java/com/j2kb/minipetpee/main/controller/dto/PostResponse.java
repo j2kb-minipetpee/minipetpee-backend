@@ -1,12 +1,10 @@
 package com.j2kb.minipetpee.main.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class PostInfo {
+public class PostResponse {
     private long id;
     private String title;
 
@@ -16,7 +14,7 @@ public class PostInfo {
     private String imageUrl;
     private String content;
 
-    public PostInfo(long id, String title, LocalDateTime createdAt, String imageUrl, String content) {
+    public PostResponse(long id, String title, LocalDateTime createdAt, String imageUrl, String content) {
         this.id = id;
         this.title = title;
         this.createdAt = createdAt;

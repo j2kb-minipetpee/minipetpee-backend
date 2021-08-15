@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class FindPostResponse {
     private String memberName;
-    private PostInfo postInfo;
+    private PostResponse postInfo;
 
-    public FindPostResponse(String memberName, PostInfo postInfo) {
+    public FindPostResponse(String memberName, PostResponse postInfo) {
         this.memberName = memberName;
         this.postInfo = postInfo;
     }
