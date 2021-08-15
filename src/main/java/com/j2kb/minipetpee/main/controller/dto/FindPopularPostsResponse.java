@@ -2,16 +2,15 @@ package com.j2kb.minipetpee.main.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class FindPopularPostsResponse {
 
     @JsonValue
-    List<FindPopularPostResponse> popularPosts;
-
-    public FindPopularPostsResponse(List<FindPopularPostResponse> popularPosts) {
-        this.popularPosts = popularPosts;
-    }
+    private final List<FindPopularPostResponse> popularPosts;
 }

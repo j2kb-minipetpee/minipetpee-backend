@@ -1,14 +1,12 @@
 package com.j2kb.minipetpee.main.controller.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class FindPostResponse {
-    private String memberName;
-    private PostResponse postInfo;
-
-    public FindPostResponse(String memberName, PostResponse postInfo) {
-        this.memberName = memberName;
-        this.postInfo = postInfo;
-    }
+    private final String memberName;
+    private final PostResponse postInfo;
 }

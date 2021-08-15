@@ -1,16 +1,12 @@
 package com.j2kb.minipetpee.main.controller.dto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public class PopularPostMemberResponse {
-    private long id;
-    private String name;
-    private String profileImageUrl;
-
-    public PopularPostMemberResponse(long id, String name, String profileImageUrl) {
-        this.id = id;
-        this.name = name;
-        this.profileImageUrl = profileImageUrl;
-    }
+    private final long id;
+    private final String name;
+    private final String profileImageUrl;
 }
