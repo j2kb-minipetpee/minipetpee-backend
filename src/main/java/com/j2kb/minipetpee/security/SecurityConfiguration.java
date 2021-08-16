@@ -15,8 +15,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/h2-console/**").permitAll()
             .mvcMatchers("/").permitAll()
             .mvcMatchers("/aws/health").permitAll()
-            .mvcMatchers("/apis/members").permitAll()
-            .anyRequest().authenticated();
+            .anyRequest().permitAll();
 
         httpSecurity.csrf()
             .ignoringAntMatchers("/h2-console/**");
