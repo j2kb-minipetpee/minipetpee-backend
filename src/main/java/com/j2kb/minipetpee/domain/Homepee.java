@@ -5,13 +5,14 @@ import javax.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
 public class Homepee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false)

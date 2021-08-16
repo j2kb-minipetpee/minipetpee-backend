@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "star_member_id", nullable = false)
