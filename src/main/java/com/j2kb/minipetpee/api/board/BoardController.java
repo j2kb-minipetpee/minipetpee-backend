@@ -1,6 +1,9 @@
 package com.j2kb.minipetpee.api.board;
 
-import com.j2kb.minipetpee.api.board.dto.*;
+import com.j2kb.minipetpee.api.board.dto.request.SaveBoardPostCommentRequest;
+import com.j2kb.minipetpee.api.board.dto.request.SaveBoardPostRequest;
+import com.j2kb.minipetpee.api.board.dto.request.UpdateBoardPostRequest;
+import com.j2kb.minipetpee.api.board.dto.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,8 +22,11 @@ public class BoardController {
 
     //게시글 등록
     @PostMapping
-    public ResponseEntity<SaveBoardPostResponse> saveBoardPost(@PathVariable(name = "homepee-id") Long homepeeId, @RequestBody SaveBoardPostRequest boardPostRequest) {
-        log.info("ImageUrl = {}", boardPostRequest.getImage().getUrl());
+    public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @RequestBody SaveBoardPostRequest boardPostRequest
+    ) {
+        log.info("ImageUrl = {}", boardPostRequest.getImage());
 
         SaveBoardPostResponse boardPostResponse = new SaveBoardPostResponse(1L);
         return ResponseEntity.ok(boardPostResponse);
@@ -28,66 +34,85 @@ public class BoardController {
 
     //게시글 목록 조회
     @GetMapping
-    public ResponseEntity<FindBoardPostsResponse> findBoardPosts(@PathVariable(name = "homepee-id") Long hompeeId, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<List<BoardPostSummaryResponse>> findBoardPosts(
+            @PathVariable(name = "homepee-id") Long hompeeId,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "image1");
+        BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "image2");
+        BoardPostImageResponse boardImg3 = new BoardPostImageResponse(3L, "image3");
 
-        FindBoardPostImageResponse boardImg1 = new FindBoardPostImageResponse(1L, "image1");
-        FindBoardPostImageResponse boardImg2 = new FindBoardPostImageResponse(2L, "image2");
-        FindBoardPostImageResponse boardImg3 = new FindBoardPostImageResponse(3L, "image3");
+        BoardPostSummaryResponse boardPost1 = new BoardPostSummaryResponse(1L, "title1", boardImg1, LocalDateTime.now());
+        BoardPostSummaryResponse boardPost2 = new BoardPostSummaryResponse(2L, "title2", boardImg2, LocalDateTime.now());
+        BoardPostSummaryResponse boardPost3 = new BoardPostSummaryResponse(3L, "title3", boardImg3, LocalDateTime.now());
 
-        FindBoardPost boardPost1 = new FindBoardPost(1L, "title1", boardImg1, LocalDateTime.now());
-        FindBoardPost boardPost2 = new FindBoardPost(2L, "title2", boardImg2, LocalDateTime.now());
-        FindBoardPost boardPost3 = new FindBoardPost(3L, "title3", boardImg3, LocalDateTime.now());
-
-        List<FindBoardPost> boardPosts = new ArrayList<>();
+        List<BoardPostSummaryResponse> boardPosts = new ArrayList<>();
         boardPosts.add(boardPost1);
         boardPosts.add(boardPost2);
         boardPosts.add(boardPost3);
 
-        FindBoardPostsResponse boardPostsResponse = new FindBoardPostsResponse(boardPosts);
-
-        return ResponseEntity.ok(boardPostsResponse);
+        return ResponseEntity.ok(boardPosts);
     }
 
     //게시글 조회
     @GetMapping("/{post-id}")
-    public ResponseEntity<FindBoardPostResponse> findBoardPost(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId) {
+    public ResponseEntity<BoardPostResponse> findBoardPost(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId
+    ) {
         String title = "title";
         String content = "content";
         int viewCount = 100;
-        String url = "imageURL!";
-
-        BoardPostImageResponse postImageResponse = new BoardPostImageResponse(url);
-
+        BoardPostImageResponse postImageResponse = new BoardPostImageResponse(1L, "imageURL!");
         LocalDateTime createdAt = LocalDateTime.now();
-        FindBoardPostResponse boardPostResponse = new FindBoardPostResponse(postId,title,content,viewCount,postImageResponse, createdAt);
+
+        BoardPostResponse boardPostResponse = new BoardPostResponse(postId,title,content,viewCount,postImageResponse, createdAt);
+
         return ResponseEntity.ok(boardPostResponse);
     }
 
     //게시글 수정
     @PutMapping("/{post-id}")
-    public ResponseEntity<Void> updateBoardPost(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId, @RequestBody UpdateBoardRequest updateBoardRequest) {
+    public ResponseEntity<Void> updateBoardPost(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId,
+            @RequestBody UpdateBoardPostRequest updateBoardPostRequest
+    ) {
         return ResponseEntity.noContent().build();
     }
 
     //게시글 댓글 추가
     @PostMapping("/{post-id}/comment")
-    public ResponseEntity<SaveBoardPostCommentResponse> saveBoardPostComment(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId, @RequestBody SaveBoardPostCommentRequest boardCommentRequest) {
+    public ResponseEntity<SaveBoardPostCommentResponse> saveBoardPostComment(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId,
+            @RequestBody SaveBoardPostCommentRequest boardCommentRequest
+    ) {
         String content = boardCommentRequest.getContent();
         BoardPostCommentMemberResponse boardPostMember = new BoardPostCommentMemberResponse(boardCommentRequest.getMemberId(), "memberName");
         LocalDateTime createdAt = LocalDateTime.now();
+
         SaveBoardPostCommentResponse boardPostComment = new SaveBoardPostCommentResponse(1L,content, boardPostMember,createdAt);
+
         return ResponseEntity.ok(boardPostComment);
     }
 
     //게시글 삭제
     @DeleteMapping("/{post-id}")
-    public ResponseEntity<Void> deleteBoardPost(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId) {
+    public ResponseEntity<Void> deleteBoardPost(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId
+    ) {
         return ResponseEntity.noContent().build();
     }
 
     //게시글 댓글 삭제
     @DeleteMapping("/{post-id}/comments/{comment-id}")
-    public ResponseEntity<Void> deleteBoardPostComment(@PathVariable(name = "homepee-id") Long homepeeId, @PathVariable(name = "post-id") Long postId, @PathVariable(name = "comment-id") Long commentId) {
+    public ResponseEntity<Void> deleteBoardPostComment(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId,
+            @PathVariable(name = "comment-id") Long commentId
+    ) {
         return ResponseEntity.noContent().build();
     }
 
