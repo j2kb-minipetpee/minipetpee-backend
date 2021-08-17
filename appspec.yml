@@ -2,18 +2,13 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www
+    destination: /var/www/minipetpee-backend
 hooks:
-  BeforeInstall:
-    - location: scripts/UnzipResourceBundle.sh
-    - location: scripts/UnzipDataBundle.sh
   AfterInstall:
-    - location: scripts/RunResourceTests.sh
-      timeout: 180
-  ApplicationStart:
-    - location: scripts/RunFunctionalTests.sh
-      timeout: 240
+    - location: scripts/set_owner
+      timeout: 5
+      runas: root
   ValidateService:
-    - location: scripts/MonitorService.sh
+    - location: scripts/validate_server
       timeout: 30
-      runas: codedeployuser
+      runas: ec2-user
