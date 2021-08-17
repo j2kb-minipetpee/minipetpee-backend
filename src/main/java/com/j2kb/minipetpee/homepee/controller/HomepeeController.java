@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/apis/{homepee-id}")
 @RestController
+@RequestMapping("/apis/{homepee-id}")
 public class HomepeeController {
 
     // 홈 조회
@@ -44,12 +44,15 @@ public class HomepeeController {
 
     // 공생평 작성
     @PostMapping("/fan-comments")
-    public ResponseEntity<SaveFanCommentResponse> saveFanComment(@PathVariable("homepee-id") Long homepeeId, @RequestBody SaveFanCommentRequest fanCommentRequest) {
+    public ResponseEntity<FanCommentResponse> saveFanComment(@PathVariable("homepee-id") Long homepeeId, @RequestBody SaveFanCommentRequest fanCommentRequest) {
+        // 추가된 공생평 데이터의 id
         Long id = 10L;
         Long memberId = fanCommentRequest.getMemberId();
+        // 멤버 아이디에 해당하는 memberName 조회
+        String memberName = "춘식이";
         String content = fanCommentRequest.getContent();
         LocalDateTime createdAt = LocalDateTime.now();
-        SaveFanCommentResponse fanCommentResponse = new SaveFanCommentResponse(id, memberId, content, createdAt);
+        FanCommentResponse fanCommentResponse = new FanCommentResponse(id, memberId, memberName, content, createdAt);
         return ResponseEntity.ok(fanCommentResponse);
     }
 
