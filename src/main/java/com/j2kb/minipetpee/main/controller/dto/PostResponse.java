@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class PostResponse {
-    private final long id;
+    private final Long id;
     private final String title;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")

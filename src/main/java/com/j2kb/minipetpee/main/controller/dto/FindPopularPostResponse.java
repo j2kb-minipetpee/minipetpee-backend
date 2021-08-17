@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class FindPopularPostResponse {
-    private final long homepeeId;
+    private final Long homepeeId;
     private final PostResponse post;
     private final PopularPostMemberResponse member;
 }

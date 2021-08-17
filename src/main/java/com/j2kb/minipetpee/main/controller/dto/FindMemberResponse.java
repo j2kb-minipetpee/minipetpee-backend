@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class FindMemberResponse {
-    private final long id;
+    private final Long id;
     private final String name;
     private String profileImageUrl;
     private final long homepeeId;
