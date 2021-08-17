@@ -1,5 +1,6 @@
-package com.j2kb.minipetpee.domain;
+package com.j2kb.minipetpee.star.domain;
 
+import com.j2kb.minipetpee.member.domain.Member;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class Star {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "star_member_id", nullable = false)
