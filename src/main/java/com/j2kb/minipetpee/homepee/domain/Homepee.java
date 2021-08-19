@@ -6,6 +6,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.tab.domain.Tab;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,6 +28,6 @@ public class Homepee {
     @ColumnDefault("0")
     private int visitCount;
 
-    @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
-    private List<Tab> tabs;
+    @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tab> tabs = new ArrayList<>();
 }

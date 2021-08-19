@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ProfileResponse {
     private final String name;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDateTime birthday;
 
     private final String species;
