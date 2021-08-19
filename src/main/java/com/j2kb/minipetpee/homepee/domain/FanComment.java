@@ -3,13 +3,14 @@ package com.j2kb.minipetpee.homepee.domain;
 import com.j2kb.minipetpee.BaseTimeEntity;
 import lombok.Getter;
 import javax.persistence.*;
+import com.j2kb.minipetpee.api.member.domain.Member;
 
 @Getter
 @Entity
 public class FanComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

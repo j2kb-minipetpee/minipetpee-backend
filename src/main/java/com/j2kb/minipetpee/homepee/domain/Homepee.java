@@ -4,7 +4,8 @@ import lombok.Getter;
 import javax.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.ArrayList;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.tab.domain.Tab;
 import java.util.List;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.List;
 public class Homepee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "member_id", nullable = false)
@@ -26,5 +27,5 @@ public class Homepee {
     private int visitCount;
 
     @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
-    private List<Tab> tabList = new ArrayList<>();
+    private List<Tab> tabs;
 }
