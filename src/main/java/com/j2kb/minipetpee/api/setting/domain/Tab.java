@@ -1,11 +1,14 @@
 package com.j2kb.minipetpee.api.setting.domain;
 
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Tab {
@@ -22,6 +25,10 @@ public class Tab {
     private boolean visible;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hompee_id")
+    @JoinColumn(name = "hompee_id", nullable = false)
     private Homepee homepee;
+
+    public void setHomepee(Homepee homepee) {
+        this.homepee = homepee;
+    }
 }

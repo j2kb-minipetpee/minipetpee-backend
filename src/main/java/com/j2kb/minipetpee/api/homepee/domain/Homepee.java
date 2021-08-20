@@ -2,13 +2,18 @@ package com.j2kb.minipetpee.api.homepee.domain;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
-import lombok.Getter;
+import lombok.*;
+
 import javax.persistence.*;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Homepee {
@@ -27,6 +32,12 @@ public class Homepee {
     @ColumnDefault("0")
     private int visitCount;
 
+    @Builder.Default
     @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
     private List<Tab> tabList = new ArrayList<>();
+
+    public void setTab(Tab tab) {
+        this.getTabList().add(tab);
+        tab.setHomepee(this);
+    }
 }

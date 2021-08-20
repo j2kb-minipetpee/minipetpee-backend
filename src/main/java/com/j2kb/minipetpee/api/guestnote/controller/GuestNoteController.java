@@ -5,47 +5,51 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteR
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteMemberResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
+import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/apis/{homepee-id}/guest/guest-notes")
 public class GuestNoteController {
+
+    private final GuestNoteService guestNoteService;
 
     //방명록 조회
     @GetMapping
     public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
-        GuestNoteMemberResponse mem1 = new GuestNoteMemberResponse(1L,"mem1", "url1111");
-        GuestNoteMemberResponse mem2 = new GuestNoteMemberResponse(2L,"mem2", "url2222");
-        GuestNoteMemberResponse mem3 = new GuestNoteMemberResponse(3L,"mem3", "url3333");
-        GuestNoteResponse guestNote1 = new GuestNoteResponse(4L,mem1,"방명록1", true, LocalDateTime.now());
-        GuestNoteResponse guestNote2 = new GuestNoteResponse(5L,mem2,"방명록2", true, LocalDateTime.now());
-        GuestNoteResponse guestNote3 = new GuestNoteResponse(6L,mem3,"방명록3", false, LocalDateTime.now());
+        List<GuestNote> guestNotes = guestNoteService.findGuestNote(homepeeId);
 
-        List<GuestNoteResponse> guestNotes = new ArrayList<>();
-        guestNotes.add(guestNote1);
-        guestNotes.add(guestNote2);
-        guestNotes.add(guestNote3);
+        List<GuestNoteResponse> guestNoteResponses = new ArrayList<>();
+        guestNotes.forEach(guestNote -> {
+            GuestNoteMemberResponse member = new GuestNoteMemberResponse(guestNote);
+            guestNoteResponses.add(new GuestNoteResponse(member, guestNote));
+        });
 
-        return ResponseEntity.ok(guestNotes);
+        return ResponseEntity.ok().body(guestNoteResponses);
     }
 
     //방명록 작성
     @PostMapping
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @RequestBody SaveGuestNoteRequest guestNoteRequest
+            @Valid @RequestBody SaveGuestNoteRequest guestNoteRequest
     ) {
-        GuestNoteMemberResponse guestNoteMember = new GuestNoteMemberResponse(guestNoteRequest.getMemberId(),"mem1",  "url1111");
-        SaveGuestNoteResponse guestNoteResponse =
-                new SaveGuestNoteResponse(1L, guestNoteMember, guestNoteRequest.getContent(), guestNoteRequest.isVisible(), LocalDateTime.now());
-        return ResponseEntity.ok(guestNoteResponse);
+        //저장
+        GuestNote guestNote = guestNoteService.saveGuestNote(homepeeId, guestNoteRequest);
+        GuestNoteMemberResponse member = new GuestNoteMemberResponse(guestNote);
+        return ResponseEntity.ok(new SaveGuestNoteResponse(guestNote, member));
     }
 
     //방명록 수정
