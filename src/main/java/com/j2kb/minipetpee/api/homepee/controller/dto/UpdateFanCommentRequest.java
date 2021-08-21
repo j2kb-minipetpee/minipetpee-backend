@@ -1,8 +1,7 @@
-package com.j2kb.minipetpee.homepee.controller.dto;
+package com.j2kb.minipetpee.api.homepee.controller.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor

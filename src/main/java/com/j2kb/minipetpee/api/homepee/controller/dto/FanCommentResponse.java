@@ -2,11 +2,13 @@ package com.j2kb.minipetpee.api.homepee.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.homepee.domain.FanComment;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor // HomepeeController의 임시 api로 인해 추가
 public class FanCommentResponse {
     private final Long id;
     private final Long memberId;
