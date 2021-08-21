@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -48,6 +50,7 @@ class GuestNoteControllerTest {
     public void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new GuestNoteController(guestNoteService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .alwaysDo(print())
                 .build();
     }
@@ -55,7 +58,9 @@ class GuestNoteControllerTest {
     @Test
     @DisplayName("방명록 조회")
     void findGuestNote() throws Exception {
-        GuestNote guestNote = GuestNote.builder()
+        Pageable pageable =  PageRequest.of(0, 4, Sort.by("id").descending());
+
+        GuestNote guestNote1 = GuestNote.builder()
                 .id(1L)
                 .content("ggg")
                 .visible(true)
@@ -73,10 +78,31 @@ class GuestNoteControllerTest {
                         .build())
                 .build();
 
-        List<GuestNote> guestNoteList = new ArrayList<>();
-        guestNoteList.add(guestNote);
 
-        given(guestNoteService.findGuestNote(any())).willReturn(guestNoteList);
+        GuestNote guestNote2 = GuestNote.builder()
+                .id(2L)
+                .content("반가워요!")
+                .visible(true)
+                .tab(Tab.builder()
+                        .type(Type.GUEST)
+                        .visible(true)
+                        .homepee(Homepee.builder()
+                                .id(2L)
+                                .build())
+                        .build())
+                .member(Member.builder()
+                        .id(1L)
+                        .name("minipet")
+                        .profileImageUrl("profileUrl")
+                        .build())
+                .build();
+
+        List<GuestNote> guestNoteList = new ArrayList<>();
+        guestNoteList.add(guestNote1);
+        guestNoteList.add(guestNote2);
+
+        Slice<GuestNote> result = new SliceImpl<>(guestNoteList);
+        given(guestNoteService.findGuestNote(any(),eq(pageable))).willReturn(result);
         mockMvc.perform(get(BASE_URL, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

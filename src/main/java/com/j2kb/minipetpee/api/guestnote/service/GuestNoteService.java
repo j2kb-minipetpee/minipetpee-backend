@@ -9,10 +9,10 @@ import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.domain.repository.TabRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,8 +23,8 @@ public class GuestNoteService {
     private final MemberRepository memberRepository;
     private final TabRepository tabRepository;
 
-    public List<GuestNote> findGuestNote(Long homepeeId) {
-         return guestNoteRepository.findByHomepeeId(homepeeId);
+    public Slice<GuestNote> findGuestNote(Long homepeeId, Pageable pageable) {
+         return guestNoteRepository.findByHomepeeId(homepeeId, pageable);
     }
 
     @Transactional

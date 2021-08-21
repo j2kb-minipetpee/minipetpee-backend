@@ -9,6 +9,10 @@ import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +31,10 @@ public class GuestNoteController {
     //방명록 조회
     @GetMapping
     public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
-            @PathVariable(name = "homepee-id") Long homepeeId
-    ) {
-        List<GuestNote> guestNotes = guestNoteService.findGuestNote(homepeeId);
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            ) {
+        Slice<GuestNote> guestNotes = guestNoteService.findGuestNote(homepeeId, pageable);
 
         List<GuestNoteResponse> guestNoteResponses = new ArrayList<>();
         guestNotes.forEach(guestNote -> {

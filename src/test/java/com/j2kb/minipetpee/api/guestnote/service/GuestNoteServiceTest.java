@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,23 +42,12 @@ class GuestNoteServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMemberRepository();
-        mockTabRepository();
         mockGuestNoteRepository();
         guestNoteService = new GuestNoteService(guestNoteRepository, memberRepository, tabRepository);
     }
 
-    private void mockTabRepository() {
-        Tab tab = Tab.builder()
-                .id(1L)
-                .type(Type.GUEST)
-                .visible(true)
-                .build();
 
-        given(tabRepository.findByHomepeeIdAndType(any(), eq(Type.GUEST))).willReturn(tab);
-    }
-
-    private void mockMemberRepository() {
+    private void mockGuestNoteRepository() {
         Member member = Member.builder()
                 .id(1L)
                 .email("emailExam@gmail.com")
@@ -72,58 +62,45 @@ class GuestNoteServiceTest {
                 .deleted(false)
                 .build();
 
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
-    }
-
-    private void mockGuestNoteRepository() {
+        Tab tab = Tab.builder()
+                .id(1L)
+                .type(Type.GUEST)
+                .visible(true)
+                .homepee(Homepee.builder()
+                        .id(1L)
+                        .build())
+                .build();
 
         List<GuestNote> guestNotes= new ArrayList<>();
         GuestNote guestNote = GuestNote.builder()
                 .id(1L)
                 .content("반가워요!")
                 .visible(true)
-                .tab(Tab.builder()
-                        .id(1L)
-                        .type(Type.GUEST)
-                        .visible(true)
-                        .homepee(Homepee.builder()
-                                .id(1L)
-                                .build())
-                        .build())
-                .member(Member.builder()
-                        .id(1L)
-                        .name("petDog")
-                        .profileImageUrl("profileUrl1")
-                        .build())
+                .tab(tab)
+                .member(member)
                 .build();
         guestNotes.add(guestNote);
 
-        given(guestNoteRepository.findByHomepeeId(any())).willReturn(guestNotes);
+        Slice<GuestNote> result = new SliceImpl<>(guestNotes);
+
+        given(memberRepository.findById(any())).willReturn(Optional.of(member));
+        given(tabRepository.findByHomepeeIdAndType(any(), eq(Type.GUEST))).willReturn(tab);
         given(guestNoteRepository.save(any())).willReturn(guestNote);
     }
 
-    //그냥 조회된 데이터를 넘겨주는 역할만 하므로 테스트 안해도 될것 같다.
-    @Test
-    public void findGuestNote() {
-        List<GuestNote> guestNotes = guestNoteService.findGuestNote(1L);
-
-        GuestNote guestNote = guestNotes.get(0);
-
-        assertEquals(guestNote.getId(), 1L);
-        assertEquals(guestNote.getMember().getId(), 1L);
-        assertEquals(guestNote.getMember().getName(), "petDog");
-        assertEquals(guestNote.getMember().getProfileImageUrl(), "profileUrl1");
-        assertEquals(guestNote.getTab().getType(), Type.GUEST);
-        assertEquals(guestNote.getContent(), "반가워요!");
-        assertEquals(guestNote.isVisible(), true);
-    }
-
+    //저장 성공하는 로직
     @Test
     public void saveGuestNote() {
-        SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(1L, "gggg", true);
-        GuestNote guestNote = guestNoteService.saveGuestNote(1L, saveGuestNote);
+        Long homepeeId = 1L;
+        SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(1L, "반가워요!", true);
+        GuestNote guestNote = guestNoteService.saveGuestNote(homepeeId, saveGuestNote);
 
         assertEquals(guestNote.getId(), 1L);
         assertEquals(guestNote.getContent(), saveGuestNote.getContent());
+        assertEquals(guestNote.getTab().getHomepee().getId(), homepeeId);
+        assertEquals(guestNote.getMember().getId(), saveGuestNote.getMemberId());
     }
+
+    //member 못 찾을 경우 exception 테스트 로직
+
 }

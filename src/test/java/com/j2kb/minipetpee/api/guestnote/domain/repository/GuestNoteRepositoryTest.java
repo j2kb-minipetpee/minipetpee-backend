@@ -9,9 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,19 +69,23 @@ class GuestNoteRepositoryTest {
 
        em.persist(guestNote);
 
+        PageRequest result = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "id"));
         //findGuestNote 리스트에서 tab의 visible 같은 것에 접근하려면 이것들은 프록시기 때문에 guest 조회하면서 함께 가져오기 위해 fetch join 사용
-        List<GuestNote> findGuestNote = guestNoteRepository.findByHomepeeId(homepee.getId());
-        GuestNote guestNote1 = findGuestNote.get(0);
+        Slice<GuestNote> findGuestNote = guestNoteRepository.findByHomepeeId(homepee.getId(),result);
 
-        assertEquals(guestNote1.getTab().getType(), Type.GUEST);
-        assertEquals(guestNote1.getId(), guestNote.getId());
-        assertEquals(guestNote1.getMember().getId(), guestMember.getId());
-        assertEquals(guestNote1.getMember().getName(), guestMember.getName());
-        assertEquals(guestNote1.getMember().getProfileImageUrl(), homepeeOwnner.getProfileImageUrl());
-        assertEquals(guestNote1.getContent(), guestNote.getContent());
-        assertEquals(guestNote1.isVisible(), guestNote.isVisible());
+        List<GuestNote> content = findGuestNote.getContent();
 
-        assertEquals(guestNote1.getTab().getHomepee().getId(), homepee.getId());
-        assertEquals(guestNote1.getTab().isVisible(), guestNote.getTab().isVisible());
+        assertEquals(findGuestNote.getNumber(), 0);
+
+        assertEquals(content.size(), 1);
+        assertEquals(content.get(0).getId(), guestNote.getId());
+        assertEquals(content.get(0).getMember().getId(), guestMember.getId());
+        assertEquals(content.get(0).getMember().getName(), guestMember.getName());
+        assertEquals(content.get(0).getMember().getProfileImageUrl(), homepeeOwnner.getProfileImageUrl());
+        assertEquals(content.get(0).getContent(), guestNote.getContent());
+        assertEquals(content.get(0).isVisible(), guestNote.isVisible());
+
+        assertEquals(content.get(0).getTab().getHomepee().getId(), homepee.getId());
+        assertEquals(content.get(0).getTab().isVisible(), guestNote.getTab().isVisible());
     }
 }
