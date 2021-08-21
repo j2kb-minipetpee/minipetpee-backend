@@ -1,8 +1,8 @@
 create table comment (
      id bigint AUTO_INCREMENT PRIMARY KEY,
      content varchar(255) not null,
-     member_id bigint,
-     post_id bigint,
+     member_id bigint not null,
+     post_id bigint not null,
      created_at timestamp not null,
      updated_at timestamp
 );
@@ -20,8 +20,8 @@ create table guest_note (
     id bigint AUTO_INCREMENT PRIMARY KEY,
     content varchar(255) not null,
     visible boolean default 1 not null,
-    member_id bigint,
-    tab_id bigint,
+    member_id bigint not null,
+    tab_id bigint not null,
     created_at timestamp not null,
     updated_at timestamp
 );
@@ -37,7 +37,7 @@ create table homepee (
 create table image (
     id bigint AUTO_INCREMENT PRIMARY KEY,
     url varchar(255) not null,
-    post_id bigint
+    post_id bigint not null
 );
 
 create table member (
@@ -60,7 +60,7 @@ create table post (
     title varchar(255) not null,
     view_count integer default 0,
     content varchar(255) null,
-    tab_id bigint,
+    tab_id bigint not null,
     dtype varchar(31) not null,
     created_at timestamp not null,
     updated_at timestamp
