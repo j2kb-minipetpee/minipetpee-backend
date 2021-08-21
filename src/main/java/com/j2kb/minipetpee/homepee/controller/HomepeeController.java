@@ -1,7 +1,7 @@
 package com.j2kb.minipetpee.homepee.controller;
 
+import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.homepee.controller.dto.*;
-import com.j2kb.minipetpee.member.domain.Gender;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

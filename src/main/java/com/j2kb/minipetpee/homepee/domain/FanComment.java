@@ -1,6 +1,6 @@
 package com.j2kb.minipetpee.homepee.domain;
 
-import com.j2kb.minipetpee.BaseTimeEntity;
+import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import lombok.Getter;
 import javax.persistence.*;
 import com.j2kb.minipetpee.api.member.domain.Member;

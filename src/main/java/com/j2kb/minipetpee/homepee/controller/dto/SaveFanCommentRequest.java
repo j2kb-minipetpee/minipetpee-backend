@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class SaveFanCommentRequest {
     private Long memberId;
     private String content;

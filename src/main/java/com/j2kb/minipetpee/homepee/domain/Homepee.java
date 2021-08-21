@@ -1,11 +1,11 @@
 package com.j2kb.minipetpee.homepee.domain;
 
+import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.Getter;
 import javax.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.tab.domain.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
