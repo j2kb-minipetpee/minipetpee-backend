@@ -8,10 +8,10 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Getter
-@DiscriminatorValue("board")
+@DiscriminatorValue("BOARD")
 @Entity
 public class BoardPost extends Post {
 
-    @Column(nullable = false)
+    @Column
     private String content;
 }

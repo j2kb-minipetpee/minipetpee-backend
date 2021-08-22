@@ -14,7 +14,7 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -22,21 +22,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String name;
-
-    private LocalDateTime birthday;
-    private String species;
-    private String personality;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
-
-    @Column(name = "gate_image_url")
-    private String gateImageUrl;
+    private Profile profile;
 
     @ColumnDefault("0")
     private boolean deleted;

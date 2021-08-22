@@ -1,4 +1,7 @@
 spring:
+  datasource:
+    generate-unique-name: false
+
   h2:
     console:
       enabled: true
@@ -11,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
