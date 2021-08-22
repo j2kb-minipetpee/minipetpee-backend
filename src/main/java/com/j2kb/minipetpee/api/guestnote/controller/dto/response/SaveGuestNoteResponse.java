@@ -13,18 +13,16 @@ import java.util.Objects;
 public class SaveGuestNoteResponse {
 
     private final Long id;
-    private GuestNoteMemberResponse member;
+    private final GuestNoteMemberResponse member;
     private final String content;
     private final boolean visible;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 
-    public SaveGuestNoteResponse(GuestNote guestNote, GuestNoteMemberResponse member) {
+    public SaveGuestNoteResponse(GuestNote guestNote) {
         this.id = guestNote.getId();
-        if (!Objects.isNull(member)) {
-            this.member = member;
-        }
+        this.member = new GuestNoteMemberResponse(guestNote);
         this.content = guestNote.getContent();
         this.visible = guestNote.isVisible();
         this.createdAt = guestNote.getCreatedAt();

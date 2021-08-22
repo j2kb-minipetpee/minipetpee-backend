@@ -25,7 +25,7 @@ public class Tab {
     private boolean visible;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hompee_id", nullable = false)
+    @JoinColumn(name = "homepee_id")
     private Homepee homepee;
 
     public void setHomepee(Homepee homepee) {

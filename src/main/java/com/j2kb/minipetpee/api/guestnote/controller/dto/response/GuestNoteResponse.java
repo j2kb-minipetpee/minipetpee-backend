@@ -2,6 +2,7 @@ package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,18 +13,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class GuestNoteResponse {
     private final Long id;
-    private GuestNoteMemberResponse member;
+    private final GuestNoteMemberResponse member;
     private final String content;
     private final boolean visible;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 
-    public GuestNoteResponse(GuestNoteMemberResponse member, GuestNote guestNote) {
+    public GuestNoteResponse(GuestNote guestNote) {
         this.id = guestNote.getId();
-        if(!Objects.isNull(member)) {
-            this.member = member;
-        }
+        this.member = new GuestNoteMemberResponse(guestNote);
         this.content = guestNote.getContent();
         this.visible = guestNote.isVisible();
         this.createdAt = guestNote.getCreatedAt();

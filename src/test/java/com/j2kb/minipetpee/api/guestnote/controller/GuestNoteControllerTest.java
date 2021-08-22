@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,47 +60,36 @@ class GuestNoteControllerTest {
     @DisplayName("방명록 조회")
     void findGuestNote() throws Exception {
         Pageable pageable =  PageRequest.of(0, 4, Sort.by("id").descending());
+        Homepee homepee = Homepee.builder()
+                .id(1L)
+                .build();
+
+        Tab tab = Tab.builder()
+                .type(Type.GUEST)
+                .visible(true)
+                .homepee(homepee)
+                .build();
+
+        Profile profile = Profile.builder()
+                .name("minipet")
+                .profileImageUrl("profileUrl")
+                .build();
+
+        Member member = Member.builder()
+                .id(1L)
+                .profile(profile)
+                .build();
 
         GuestNote guestNote1 = GuestNote.builder()
                 .id(1L)
                 .content("ggg")
                 .visible(true)
-                .tab(Tab.builder()
-                        .type(Type.GUEST)
-                        .visible(true)
-                        .homepee(Homepee.builder()
-                                .id(1L)
-                                .build())
-                        .build())
-                .member(Member.builder()
-                        .id(1L)
-                        .name("minipet")
-                        .profileImageUrl("profileUrl")
-                        .build())
-                .build();
-
-
-        GuestNote guestNote2 = GuestNote.builder()
-                .id(2L)
-                .content("반가워요!")
-                .visible(true)
-                .tab(Tab.builder()
-                        .type(Type.GUEST)
-                        .visible(true)
-                        .homepee(Homepee.builder()
-                                .id(2L)
-                                .build())
-                        .build())
-                .member(Member.builder()
-                        .id(1L)
-                        .name("minipet")
-                        .profileImageUrl("profileUrl")
-                        .build())
+                .tab(tab)
+                .member(member)
                 .build();
 
         List<GuestNote> guestNoteList = new ArrayList<>();
         guestNoteList.add(guestNote1);
-        guestNoteList.add(guestNote2);
 
         Slice<GuestNote> result = new SliceImpl<>(guestNoteList);
         given(guestNoteService.findGuestNote(any(),eq(pageable))).willReturn(result);
@@ -116,6 +106,26 @@ class GuestNoteControllerTest {
 
     @Test
     void saveGuestNote() throws Exception {
+        Homepee homepee = Homepee.builder()
+                .id(1L)
+                .build();
+
+        Tab tab = Tab.builder()
+                .type(Type.GUEST)
+                .visible(true)
+                .homepee(homepee)
+                .build();
+
+        Profile profile = Profile.builder()
+                .name("minipet")
+                .profileImageUrl("profileUrl")
+                .build();
+
+        Member member = Member.builder()
+                .id(1L)
+                .profile(profile)
+                .build();
+
         GuestNote savedGuestNote = GuestNote.builder()
                 .id(1L)
                 .content("반가워요!")
@@ -123,23 +133,9 @@ class GuestNoteControllerTest {
                 .tab(Tab.builder()
                         .type(Type.GUEST)
                         .visible(true)
-                        .homepee(Homepee.builder()
-                                .member(Member.builder()
-                                        .email("emailExam@gmail.com")
-                                        .password("1111")
-                                        .name("홈피주인")
-                                        .build())
-                                .title("홈피주인의 홈피")
-                                .visitCount(3)
-                                .build())
+                        .homepee(homepee)
                         .build())
-                .member(Member.builder()
-                        .id(3L)
-                        .email("writer@gmail.com")
-                        .password("2222")
-                        .name("방명록글쓴이")
-                        .profileImageUrl("profileUrl")
-                        .build())
+                .member(member)
                 .build();
 
         given(guestNoteService.saveGuestNote(eq(1L),any())).willReturn(savedGuestNote);

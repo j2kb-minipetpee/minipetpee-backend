@@ -1,8 +1,12 @@
 package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.member.domain.Profile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,8 +16,8 @@ public class GuestNoteMemberResponse {
     private final String profileImageUrl;
 
     public GuestNoteMemberResponse(GuestNote guestNote) {
-        this.id = guestNote.getMember().getId();
-        this.name = guestNote.getMember().getName();
-        this.profileImageUrl = guestNote.getMember().getProfileImageUrl();
+        this.id = guestNote.memberId();
+        this.name = guestNote.memberName();
+        this.profileImageUrl = guestNote.memberProfileImageUrl();
     }
 }

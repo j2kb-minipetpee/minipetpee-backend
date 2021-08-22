@@ -1,8 +1,9 @@
-package com.j2kb.minipetpee.api.guestnote.domain.repository;
+package com.j2kb.minipetpee.api.guestnote.repository;
 
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import org.junit.jupiter.api.Test;
@@ -31,18 +32,26 @@ class GuestNoteRepositoryTest {
 
     @Test
     void findByHomepeeId() {
+        Profile profile = Profile.builder()
+                .name("파트라슈1")
+                .build();
+
         Member homepeeOwnner = Member.builder()
                 .email("emailEx@gmail.com")
                 .password("1111")
-                .name("member1")
+                .profile(profile)
                 .build();
         em.persist(homepeeOwnner);
 
+        Profile profile2 = Profile.builder()
+                .name("파트라슈2")
+                .build();
         Member guestMember = Member.builder()
                 .email("emailEx2@gmail.com")
                 .password("2222")
-                .name("member2")
+                .profile(profile2)
                 .build();
+
         em.persist(guestMember);
 
         Tab tab = Tab.builder()
@@ -57,7 +66,7 @@ class GuestNoteRepositoryTest {
                 .visitCount(3)
                 .build();
 
-        homepee.setTab(tab);
+        homepee.addTabs(tab);
         em.persist(homepee);
 
         GuestNote guestNote = GuestNote.builder()
@@ -71,7 +80,7 @@ class GuestNoteRepositoryTest {
 
         PageRequest result = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "id"));
         //findGuestNote 리스트에서 tab의 visible 같은 것에 접근하려면 이것들은 프록시기 때문에 guest 조회하면서 함께 가져오기 위해 fetch join 사용
-        Slice<GuestNote> findGuestNote = guestNoteRepository.findByHomepeeId(homepee.getId(),result);
+        Slice<GuestNote> findGuestNote = guestNoteRepository.findAllByHomepeeId(homepee.getId(),result);
 
         List<GuestNote> content = findGuestNote.getContent();
 
@@ -80,8 +89,8 @@ class GuestNoteRepositoryTest {
         assertEquals(content.size(), 1);
         assertEquals(content.get(0).getId(), guestNote.getId());
         assertEquals(content.get(0).getMember().getId(), guestMember.getId());
-        assertEquals(content.get(0).getMember().getName(), guestMember.getName());
-        assertEquals(content.get(0).getMember().getProfileImageUrl(), homepeeOwnner.getProfileImageUrl());
+        assertEquals(content.get(0).getMember().getProfile().getName(), guestMember.getProfile().getName());
+        assertEquals(content.get(0).getMember().getProfile().getProfileImageUrl(), homepeeOwnner.getProfile().getProfileImageUrl());
         assertEquals(content.get(0).getContent(), guestNote.getContent());
         assertEquals(content.get(0).isVisible(), guestNote.isVisible());
 

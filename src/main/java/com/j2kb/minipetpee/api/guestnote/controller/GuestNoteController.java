@@ -7,6 +7,8 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteMember
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,13 +37,11 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
             ) {
-        Slice<GuestNote> guestNotes = guestNoteService.findGuestNote(homepeeId, pageable);
 
-        List<GuestNoteResponse> guestNoteResponses = new ArrayList<>();
-        guestNotes.forEach(guestNote -> {
-            GuestNoteMemberResponse member = new GuestNoteMemberResponse(guestNote);
-            guestNoteResponses.add(new GuestNoteResponse(member, guestNote));
-        });
+        List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNote(homepeeId, pageable)
+                .stream()
+                .map(GuestNoteResponse::new)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(guestNoteResponses);
     }
@@ -53,8 +54,7 @@ public class GuestNoteController {
     ) {
         //저장
         GuestNote guestNote = guestNoteService.saveGuestNote(homepeeId, guestNoteRequest);
-        GuestNoteMemberResponse member = new GuestNoteMemberResponse(guestNote);
-        return ResponseEntity.ok(new SaveGuestNoteResponse(guestNote, member));
+        return ResponseEntity.ok(new SaveGuestNoteResponse(guestNote));
     }
 
     //방명록 수정

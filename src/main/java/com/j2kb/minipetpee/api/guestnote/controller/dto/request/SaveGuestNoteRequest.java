@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.guestnote.controller.dto.request;
 
+import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

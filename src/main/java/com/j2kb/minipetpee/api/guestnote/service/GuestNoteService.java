@@ -2,20 +2,23 @@ package com.j2kb.minipetpee.api.guestnote.service;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
-import com.j2kb.minipetpee.api.guestnote.domain.repository.GuestNoteRepository;
+import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
-import com.j2kb.minipetpee.api.setting.domain.repository.TabRepository;
+import com.j2kb.minipetpee.api.setting.repository.TabRepository;
+import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class GuestNoteService {
 
@@ -23,18 +26,25 @@ public class GuestNoteService {
     private final MemberRepository memberRepository;
     private final TabRepository tabRepository;
 
+    @Transactional(readOnly = true)
     public Slice<GuestNote> findGuestNote(Long homepeeId, Pageable pageable) {
-         return guestNoteRepository.findByHomepeeId(homepeeId, pageable);
+         return guestNoteRepository.findAllByHomepeeId(homepeeId, pageable);
     }
 
-    @Transactional
     public GuestNote saveGuestNote(Long homepeeId, SaveGuestNoteRequest guestNoteRequest) {
         //member 객체 찾기 -> 예외처리 필요
-        Member member = memberRepository.findById(guestNoteRequest.getMemberId()).orElse(null);
-        //Tab 찾기
-        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST);
+        Member member = memberRepository.findById(guestNoteRequest.getMemberId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001));
+        //Tab 찾기 -> 못 찾을 경우, '방명록 저장에 실패하였습니다.' 에러 메시지 설정
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6001));
 
-        GuestNote guestNote = GuestNote.createGuestNote(guestNoteRequest, tab, member);
+        GuestNote guestNote = GuestNote.builder()
+                .content(guestNoteRequest.getContent())
+                .visible(guestNoteRequest.isVisible())
+                .tab(tab)
+                .member(member)
+                .build();
 
         return guestNoteRepository.save(guestNote);
     }

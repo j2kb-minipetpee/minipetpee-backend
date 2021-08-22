@@ -2,105 +2,106 @@ package com.j2kb.minipetpee.api.guestnote.service;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
-import com.j2kb.minipetpee.api.guestnote.domain.repository.GuestNoteRepository;
+import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
-import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
-import com.j2kb.minipetpee.api.setting.domain.repository.TabRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.j2kb.minipetpee.api.setting.repository.TabRepository;
+import com.j2kb.minipetpee.global.exception.ServiceException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class GuestNoteServiceTest {
-
-    private GuestNoteService guestNoteService;
 
     @Mock
     private GuestNoteRepository guestNoteRepository;
-
     @Mock
     private MemberRepository memberRepository;
     @Mock
     private TabRepository tabRepository;
 
+    @InjectMocks
+    private GuestNoteService guestNoteService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockGuestNoteRepository();
-        guestNoteService = new GuestNoteService(guestNoteRepository, memberRepository, tabRepository);
-    }
+    @Test
+    @DisplayName("방명록 정상 저장")
+    void saveGuestNoteSuccessfully() {
+        final Long homepeeId = 1L;
+        final SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(11L, "content", true);
 
+        Member guest = Member.builder()
+                .id(saveGuestNote.getMemberId())
+                .email("email")
+                .password("password")
+                .build();
 
-    private void mockGuestNoteRepository() {
-        Member member = Member.builder()
-                .id(1L)
-                .email("emailExam@gmail.com")
-                .password("11111")
-                .name("파트라슈")
-                .birthday(LocalDateTime.now())
-                .species("dog")
-                .personality("온순함")
-                .gender(Gender.valueOf("MALE"))
-                .profileImageUrl("profileUrl")
-                .gateImageUrl("gateImageUrl")
-                .deleted(false)
+        Homepee homepee = Homepee.builder()
+                .id(homepeeId)
                 .build();
 
         Tab tab = Tab.builder()
-                .id(1L)
+                .id(12L)
                 .type(Type.GUEST)
-                .visible(true)
-                .homepee(Homepee.builder()
-                        .id(1L)
-                        .build())
+                .homepee(homepee)
                 .build();
 
-        List<GuestNote> guestNotes= new ArrayList<>();
         GuestNote guestNote = GuestNote.builder()
-                .id(1L)
-                .content("반가워요!")
-                .visible(true)
+                .content(saveGuestNote.getContent())
+                .visible(saveGuestNote.isVisible())
                 .tab(tab)
-                .member(member)
+                .member(guest)
                 .build();
-        guestNotes.add(guestNote);
 
-        Slice<GuestNote> result = new SliceImpl<>(guestNotes);
+        given(memberRepository.findById(saveGuestNote.getMemberId())).willReturn(Optional.of(guest));
+        given(tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)).willReturn(Optional.of(tab));
+        given(guestNoteRepository.save(any(GuestNote.class))).willReturn(guestNote);
 
-        given(memberRepository.findById(any())).willReturn(Optional.of(member));
-        given(tabRepository.findByHomepeeIdAndType(any(), eq(Type.GUEST))).willReturn(tab);
-        given(guestNoteRepository.save(any())).willReturn(guestNote);
+        GuestNote savedGuestNote = guestNoteService.saveGuestNote(homepeeId, saveGuestNote);
+        assertNotNull(savedGuestNote);
+        verify(memberRepository).findById(anyLong());
+        verify(tabRepository).findByHomepeeIdAndType(anyLong(), any(Type.class));
+        verify(guestNoteRepository).save(any(GuestNote.class));
     }
 
-    //저장 성공하는 로직
     @Test
-    public void saveGuestNote() {
-        Long homepeeId = 1L;
-        SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(1L, "반가워요!", true);
-        GuestNote guestNote = guestNoteService.saveGuestNote(homepeeId, saveGuestNote);
+    @DisplayName("member 객체 찾기 오류 발생")
+    void saveGuestNoteMemberNotFound() {
+        final SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(11L, "content", true);
 
-        assertEquals(guestNote.getId(), 1L);
-        assertEquals(guestNote.getContent(), saveGuestNote.getContent());
-        assertEquals(guestNote.getTab().getHomepee().getId(), homepeeId);
-        assertEquals(guestNote.getMember().getId(), saveGuestNote.getMemberId());
+        given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
+        assertThrows(ServiceException.class,
+                () -> guestNoteService.saveGuestNote(anyLong(), saveGuestNote));
     }
 
-    //member 못 찾을 경우 exception 테스트 로직
+    @Test
+    @DisplayName("tab 객체 찾기 오류 발생")
+    void saveGuestNoteTabNotFound() {
+        final Long homepeeId = 1L;
+        final SaveGuestNoteRequest saveGuestNote = new SaveGuestNoteRequest(11L, "content", true);
 
+        Member guest = Member.builder()
+                .id(1L)
+                .email("email")
+                .password("password")
+                .build();
+
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(guest));
+        given(tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)).willReturn(Optional.empty());
+        assertThrows(ServiceException.class,
+                () -> guestNoteService.saveGuestNote(homepeeId, saveGuestNote));
+    }
 }
