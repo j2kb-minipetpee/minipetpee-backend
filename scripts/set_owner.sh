@@ -8,4 +8,4 @@ cd /var/www/minipetpee-backend
 
 gradle build
 
-nohup java -jar /var/www/minipetpee-backend/build/libs/minipetpee-0.0.1-SNAPSHOT.jar &
+nohup java -jar /var/www/minipetpee-backend/build/libs/minipetpee-0.0.1-SNAPSHOT.jar 1>/dev/null 2>/dev/null &
