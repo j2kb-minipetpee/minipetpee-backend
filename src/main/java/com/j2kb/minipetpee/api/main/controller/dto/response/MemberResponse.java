@@ -11,14 +11,14 @@ import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
-public class PopularPostMemberResponse {
+public class MemberResponse {
     private final Long id;
     private final String name;
     private final String profileImageUrl;
 
-    public PopularPostMemberResponse(Member member) {
+    public MemberResponse(Member member) {
         this.id = member.getId();
-        this.name = member.getProfile().getName();
-        this.profileImageUrl = member.getProfile().getProfileImageUrl();
+        this.name = member.name();
+        this.profileImageUrl = member.profileImageUrl();
     }
 }

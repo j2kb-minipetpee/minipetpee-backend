@@ -1,4 +1,4 @@
-package com.j2kb.minipetpee.api.main.controller.dto;
+package com.j2kb.minipetpee.api.main.controller.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 public class PopularPostResponse {
     private final Long homepeeId;
     private final PostResponse post;
-    private final PopularPostMemberResponse member;
+    private final MemberResponse member;
 
-    public PopularPostResponse(Long homepeeId, PostResponse post, PopularPostMemberResponse member) {
+    public PopularPostResponse(Long homepeeId, PostResponse post, MemberResponse member) {
         this.homepeeId = homepeeId;
         this.post = post;
         this.member = member;

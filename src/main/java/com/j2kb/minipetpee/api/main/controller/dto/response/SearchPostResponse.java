@@ -1,5 +1,6 @@
-package com.j2kb.minipetpee.api.main.controller.dto;
+package com.j2kb.minipetpee.api.main.controller.dto.response;
 
+import com.j2kb.minipetpee.global.domain.Post;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,4 +9,9 @@ import lombok.RequiredArgsConstructor;
 public class SearchPostResponse {
     private final String memberName;
     private final PostResponse postInfo;
+
+    public SearchPostResponse(Post post) {
+        this.memberName = post.getTab().getHomepee().getMember().getProfile().getName();
+        this.postInfo = new PostResponse(post);
+    }
 }

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class MainService {
-
     private final MemberRepository memberRepository;
     private final AlbumRepository albumRepository;
     private final BoardRepository boardRepository;
