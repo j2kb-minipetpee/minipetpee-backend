@@ -1,5 +1,8 @@
 package com.j2kb.minipetpee.global.domain;
 
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import com.j2kb.minipetpee.global.domain.Image;
@@ -37,10 +40,49 @@ public abstract class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Image> images;
 
+
+    public Homepee homepee() {
+        if (Objects.isNull(tab)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP9001);
+        }
+        if (Objects.isNull(tab.getHomepee())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        return this.getTab().getHomepee();
+    }
+
+    public Long homepeeId() {
+        return this.homepee().getId();
+    }
+
     public String imageUrl() {
-        if (!Objects.isNull(images)) {
+        if (Objects.isNull(images)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
         }
         return images.get(0).getUrl();
+    }
+
+    public Member member() {
+        if (Objects.isNull(tab)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        if (Objects.isNull(tab.getHomepee())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        if (Objects.isNull(tab.getHomepee().getMember())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
+        }
+        return this.getTab().getHomepee().getMember();
+    }
+
+    public String memberName() {
+        return this.member().getProfile().getName();
+    }
+
+    public Profile profile() {
+        if (Objects.isNull(member().getProfile())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2002);
+        }
+        return this.member().getProfile();
     }
 }

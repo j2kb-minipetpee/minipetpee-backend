@@ -11,7 +11,7 @@ public class SearchPostResponse {
     private final PostResponse postInfo;
 
     public SearchPostResponse(Post post) {
-        this.memberName = post.getTab().getHomepee().getMember().getProfile().getName();
+        this.memberName = post.memberName();
         this.postInfo = new PostResponse(post);
     }
 }

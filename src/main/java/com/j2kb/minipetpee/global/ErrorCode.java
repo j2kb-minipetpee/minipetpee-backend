@@ -28,7 +28,7 @@ public enum ErrorCode {
     /**
      * 5xxx: 사진첩 관련 에러
      */
-    EMP5001("사진첩을 찾을 수 없습니다");
+    EMP5001("사진첩을 찾을 수 없습니다"),
 
     /**
      * 6xxx: 방명록 관련 에러
@@ -43,8 +43,9 @@ public enum ErrorCode {
      */
 
     /**
-     * 9xxx: 메인 관련 에러
+     * 9xxx: 탭 관련 에러
      */
+    EMP9001("메뉴를 찾을 수 없습니다.");
 
     private String message;
 

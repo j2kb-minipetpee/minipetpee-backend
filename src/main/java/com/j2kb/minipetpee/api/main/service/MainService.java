@@ -1,7 +1,6 @@
 package com.j2kb.minipetpee.api.main.service;
 
-import com.j2kb.minipetpee.api.album.repository.AlbumRepository;
-import com.j2kb.minipetpee.api.board.repository.BoardRepository;
+import com.j2kb.minipetpee.api.board.repository.PostRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.global.domain.Post;
@@ -15,12 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MainService {
     private final MemberRepository memberRepository;
-    private final AlbumRepository albumRepository;
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public Page<Post> findPopularPosts(Pageable pageable) {
-        return albumRepository.findAllByOrderByViewCountDesc(pageable);
+        return postRepository.findAllByOrderByViewCountDesc(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -30,6 +28,6 @@ public class MainService {
 
     @Transactional(readOnly = true)
     public Page<Post> searchPosts(String title, Pageable pageable) {
-        return albumRepository.findAllByTitleContainingIgnoreCaseOrderByCreatedAtDesc(title, pageable);
+        return postRepository.findAllByTitleContainingIgnoreCaseOrderByCreatedAtDesc(title, pageable);
     }
 }
