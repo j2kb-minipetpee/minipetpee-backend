@@ -9,4 +9,10 @@ public class PopularPostResponse {
     private final Long homepeeId;
     private final PostResponse post;
     private final PopularPostMemberResponse member;
+
+    public PopularPostResponse(Long homepeeId, PostResponse post, PopularPostMemberResponse member) {
+        this.homepeeId = homepeeId;
+        this.post = post;
+        this.member = member;
+    }
 }
