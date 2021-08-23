@@ -30,6 +30,8 @@ public class PostResponse {
         // 개인적으로 인기 게시글 목록에 본문 노출이 필요할까.. 하는 생각이... 듭니다...
         if (post instanceof BoardPost) {
             this.content = ((BoardPost) post).getContent();
+        } else {
+            this.content = "";
         }
     }
 }

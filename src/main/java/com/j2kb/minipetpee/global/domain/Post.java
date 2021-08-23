@@ -59,7 +59,10 @@ public abstract class Post extends BaseTimeEntity {
         if (Objects.isNull(images)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
         }
-        return images.get(0).getUrl();
+        if (images.size() > 0) {
+            return images.get(0).getUrl();
+        }
+        return "";
     }
 
     public Member member() {
