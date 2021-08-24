@@ -34,7 +34,7 @@ public class GuestNoteController {
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
             ) {
 
-        List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNote(homepeeId, pageable)
+        List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNotes(homepeeId, pageable)
                 .stream()
                 .map(GuestNoteResponse::new)
                 .collect(Collectors.toList());
@@ -58,8 +58,10 @@ public class GuestNoteController {
     public ResponseEntity<Void> updateGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
-            @RequestBody UpdateGuestNoteRequest updateGuestNote
+            @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
+        //수정 권한 체크 추가하기(토큰값으로)
+        guestNoteService.updateGuestNote(guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
@@ -69,6 +71,8 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
+        //삭제 권한 체크 추가하기(토큰값으로)
+        guestNoteService.deleteGuestNote(guestNoteId);
         return ResponseEntity.noContent().build();
     }
 }

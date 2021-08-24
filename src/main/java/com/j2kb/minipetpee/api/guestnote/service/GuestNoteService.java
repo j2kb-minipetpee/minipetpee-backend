@@ -1,6 +1,7 @@
 package com.j2kb.minipetpee.api.guestnote.service;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
+import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
@@ -27,7 +28,7 @@ public class GuestNoteService {
     private final TabRepository tabRepository;
 
     @Transactional(readOnly = true)
-    public Slice<GuestNote> findGuestNote(Long homepeeId, Pageable pageable) {
+    public Slice<GuestNote> findGuestNotes(Long homepeeId, Pageable pageable) {
          return guestNoteRepository.findAllByHomepeeId(homepeeId, pageable);
     }
 
@@ -47,5 +48,22 @@ public class GuestNoteService {
                 .build();
 
         return guestNoteRepository.save(guestNote);
+    }
+
+    public void updateGuestNote(Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
+
+        //guestNote 찾기
+        GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6002));
+        //update 로직
+        guestNote.updateGuestNote(guestNote, updateGuestNote);
+    }
+
+    public void deleteGuestNote(Long guestNoteId) {
+        //guestNote 찾기
+        GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6002));
+        //delete 로직
+        guestNoteRepository.deleteById(guestNoteId);
     }
 }

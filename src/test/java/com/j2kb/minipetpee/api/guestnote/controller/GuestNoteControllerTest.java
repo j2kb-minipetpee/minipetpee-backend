@@ -27,9 +27,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -92,7 +91,7 @@ class GuestNoteControllerTest {
         guestNoteList.add(guestNote1);
 
         Slice<GuestNote> result = new SliceImpl<>(guestNoteList);
-        given(guestNoteService.findGuestNote(any(),eq(pageable))).willReturn(result);
+        given(guestNoteService.findGuestNotes(any(),eq(pageable))).willReturn(result);
         mockMvc.perform(get(BASE_URL, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -105,6 +104,7 @@ class GuestNoteControllerTest {
     }
 
     @Test
+    @DisplayName("방명록 저장")
     void saveGuestNote() throws Exception {
         Homepee homepee = Homepee.builder()
                 .id(1L)
@@ -157,11 +157,34 @@ class GuestNoteControllerTest {
 
 
     @Test
-    void updateGuestNote() {
+    @DisplayName("방명록 수정 content 길이 2미만")
+    void updateGuestNoteValidationTest() throws Exception {
+        Member member = Member.builder()
+                .id(1L)
+                .build();
 
+        GuestNote updateGuestNote = GuestNote.builder()
+                .id(2L)
+                .member(member)
+                .content("c")
+                .visible(true)
+                .build();
+
+        mockMvc.perform(put(BASE_URL + "/{guest-note-id}", member.getId(), updateGuestNote.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateGuestNote)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
+
     @Test
-    void deleteGuestNote() {
+    @DisplayName("방명록 삭제")
+    void deleteGuestNote() throws Exception {
+        mockMvc.perform(delete(BASE_URL + "/{guest-note-id}", 1L, 2L))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(guestNoteService).deleteGuestNote(2L);
     }
 }

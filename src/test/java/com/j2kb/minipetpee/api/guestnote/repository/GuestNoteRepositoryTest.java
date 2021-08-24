@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,4 +97,5 @@ class GuestNoteRepositoryTest {
         assertEquals(content.get(0).getTab().getHomepee().getId(), homepee.getId());
         assertEquals(content.get(0).getTab().isVisible(), guestNote.getTab().isVisible());
     }
+
 }
