@@ -38,9 +38,9 @@ public class BoardController {
             @PathVariable(name = "homepee-id") Long hompeeId,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "image1");
-        BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "image2");
-        BoardPostImageResponse boardImg3 = new BoardPostImageResponse(3L, "image3");
+        BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        BoardPostImageResponse boardImg3 = new BoardPostImageResponse(3L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
         BoardPostSummaryResponse boardPost1 = new BoardPostSummaryResponse(1L, "title1", boardImg1, LocalDateTime.now());
         BoardPostSummaryResponse boardPost2 = new BoardPostSummaryResponse(2L, "title2", boardImg2, LocalDateTime.now());
@@ -63,7 +63,7 @@ public class BoardController {
         String title = "title";
         String content = "content";
         int viewCount = 100;
-        BoardPostImageResponse postImageResponse = new BoardPostImageResponse(1L, "imageURL!");
+        BoardPostImageResponse postImageResponse = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
         LocalDateTime createdAt = LocalDateTime.now();
 
         BoardPostResponse boardPostResponse = new BoardPostResponse(postId,title,content,viewCount,postImageResponse, createdAt);

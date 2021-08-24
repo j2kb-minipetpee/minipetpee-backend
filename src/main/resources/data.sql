@@ -1,13 +1,13 @@
 INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (1, 'test1@naver.com', '1234', '죠르디', 'MALE', '2021-09-15 15:55:58', '공룡', '착하고 순함', 'profile image url', now(), null, false);
+VALUES (1, 'test1@naver.com', '1234', '죠르디', 'MALE', '2021-09-15 15:55:58', '공룡', '착하고 순함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', now(), null, false);
 INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (2, 'test2@naver.com', '1234', '앙몬드', 'MALE', '2021-09-15 15:55:58', '물개', '게으르고 초콜릿을 좋아함', 'profile image url', now(), null, false);
+VALUES (2, 'test2@naver.com', '1234', '앙몬드', 'MALE', '2021-09-15 15:55:58', '물개', '게으르고 초콜릿을 좋아함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpgl', now(), null, false);
 INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (3, 'test3@naver.com', '1234', '스카피', 'MALE', '2021-09-15 15:55:58', '토끼', '비밀이 많음', 'profile image url', now(), null, false);
+VALUES (3, 'test3@naver.com', '1234', '스카피', 'MALE', '2021-09-15 15:55:58', '토끼', '비밀이 많음', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', now(), null, false);
 
-INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (1, 1, 'gate image url', '죠르디의 취준일기', 350);
-INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (2, 2, 'gate image url', '앙몬드의 촤컬릿 리뷰', 120);
-INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (3, 3, 'gate image url', '스카피의 요리비책', 500);
+INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (1, 1, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', '죠르디의 취준일기', 350);
+INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (2, 2, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', '앙몬드의 촤컬릿 리뷰', 120);
+INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (3, 3, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', '스카피의 요리비책', 500);
 
 INSERT INTO tab(id, homepee_id, type, visible) VALUES (1, 1, 'BOARD', 1);
 INSERT INTO tab(id, homepee_id, type, visible) VALUES (2, 1, 'ALBUM', 1);
@@ -26,15 +26,15 @@ INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, upda
 INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (5, 2, 'ALBUM', '취준 5일째', null, 21, now(), null);
 INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (6, 2, 'ALBUM', '취준 6일째', null, 8, now(), null);
 
-INSERT INTO image(id, post_id, url) VALUES (1, 1, 'image url1');
-INSERT INTO image(id, post_id, url) VALUES (2, 2, 'image url2');
-INSERT INTO image(id, post_id, url) VALUES (3, 4, 'image url3');
-INSERT INTO image(id, post_id, url) VALUES (4, 4, 'image url4');
-INSERT INTO image(id, post_id, url) VALUES (5, 4, 'image url5');
-INSERT INTO image(id, post_id, url) VALUES (6, 5, 'image url6');
-INSERT INTO image(id, post_id, url) VALUES (7, 5, 'image url7');
-INSERT INTO image(id, post_id, url) VALUES (8, 6, 'image url8');
-INSERT INTO image(id, post_id, url) VALUES (9, 6, 'image url9');
+INSERT INTO image(id, post_id, url) VALUES (1, 1, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (2, 2, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (3, 4, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (4, 4, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (5, 4, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (6, 5, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (7, 5, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (8, 6, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
+INSERT INTO image(id, post_id, url) VALUES (9, 6, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
 
 INSERT INTO comment(id, member_id, post_id, content, created_at, updated_at) VALUES (1, 2, 1, '누가 월급 가져갔엉', now(), null);
 INSERT INTO comment(id, member_id, post_id, content, created_at, updated_at) VALUES (2, 3, 1, '...ㅠ', now(), null);

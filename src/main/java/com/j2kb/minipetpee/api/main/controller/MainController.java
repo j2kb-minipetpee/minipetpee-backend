@@ -24,16 +24,16 @@ public class MainController {
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         // popular post example
-        PostResponse post1 = new PostResponse(101L, "루피는 연예인", LocalDateTime.now(), "postImage1", "화려한 조명이 루피를 감싸네");
-        PostResponse post2 = new PostResponse(102L, "루피는 배고파", LocalDateTime.now(), "postImage2", "군침이 싸악 도노");
-        PostResponse post3 = new PostResponse(103L, "루피 보호 위원회", LocalDateTime.now(), "postImage3", "끊임없이 고통 받는 루피를 쉬게 도와주세요!");
-        PostResponse post4 = new PostResponse(104L, "프론트엔드 짱", LocalDateTime.now(), "postImage4", "열정!열정!열정!");
+        PostResponse post1 = new PostResponse(101L, "루피는 연예인", LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "화려한 조명이 루피를 감싸네");
+        PostResponse post2 = new PostResponse(102L, "루피는 배고파", LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "군침이 싸악 도노");
+        PostResponse post3 = new PostResponse(103L, "루피 보호 위원회", LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "끊임없이 고통 받는 루피를 쉬게 도와주세요!");
+        PostResponse post4 = new PostResponse(104L, "프론트엔드 짱", LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "열정!열정!열정!");
 
         // popular post author example
-        PopularPostMemberResponse member1 = new PopularPostMemberResponse(11L, "루피루", "rupeeImg1");
-        PopularPostMemberResponse member2 = new PopularPostMemberResponse(12L, "헝그리 루피", "rupeeImg2");
-        PopularPostMemberResponse member3 = new PopularPostMemberResponse(13L, "루못미", "rupeeImg3");
-        PopularPostMemberResponse member4 = new PopularPostMemberResponse(14L, "moon", "yeoljeongImg");
+        PopularPostMemberResponse member1 = new PopularPostMemberResponse(11L, "루피루", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        PopularPostMemberResponse member2 = new PopularPostMemberResponse(12L, "헝그리 루피", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        PopularPostMemberResponse member3 = new PopularPostMemberResponse(13L, "루못미", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        PopularPostMemberResponse member4 = new PopularPostMemberResponse(14L, "moon", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
         // popular post response example
         PopularPostResponse popularPost1 = new PopularPostResponse(111L, post1, member1);
@@ -58,9 +58,9 @@ public class MainController {
             @RequestParam("name") String memberName,
             @PageableDefault(size = 8, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        SearchMemberResponse member1 = new SearchMemberResponse(1011L, memberName, "rupeeImg1", 1011);
-        SearchMemberResponse member2 = new SearchMemberResponse(1022L, memberName, "rupeeImg2", 1032);
-        SearchMemberResponse member3 = new SearchMemberResponse(1033L, memberName, "rupeeImg3", 1040);
+        SearchMemberResponse member1 = new SearchMemberResponse(1011L, memberName, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", 1011);
+        SearchMemberResponse member2 = new SearchMemberResponse(1022L, memberName, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", 1032);
+        SearchMemberResponse member3 = new SearchMemberResponse(1033L, memberName, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", 1040);
 
         List<SearchMemberResponse> members = new ArrayList<>();
         members.add(member1);
@@ -76,9 +76,9 @@ public class MainController {
             @RequestParam("name") String postName,
             @PageableDefault(size = 8, sort = "title", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        PostResponse post1 = new PostResponse(11L, postName, LocalDateTime.now(), "hungryImg1", "초밥 먹고 싶다");
-        PostResponse post2 = new PostResponse(22L, postName, LocalDateTime.now(), "hungryImg2", "배고파퍗파퍗파퍄퍗");
-        PostResponse post3 = new PostResponse(33L, postName, LocalDateTime.now(), "hungryImg3", "점심은 미역국");
+        PostResponse post1 = new PostResponse(11L, postName, LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "초밥 먹고 싶다");
+        PostResponse post2 = new PostResponse(22L, postName, LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "배고파퍗파퍗파퍄퍗");
+        PostResponse post3 = new PostResponse(33L, postName, LocalDateTime.now(), "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "점심은 미역국");
 
         List<SearchPostResponse> posts = new ArrayList<>();
         posts.add(new SearchPostResponse("프론트대장", post1));

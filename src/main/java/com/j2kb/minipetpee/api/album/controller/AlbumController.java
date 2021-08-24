@@ -40,15 +40,15 @@ public class AlbumController {
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<AlbumPostImageResponse> albumImage1 = new ArrayList<>();
-        albumImage1.add(new AlbumPostImageResponse(1L, "image1URL"));
-        albumImage1.add(new AlbumPostImageResponse(2L, "image2URL"));
-        albumImage1.add(new AlbumPostImageResponse(3L, "image3URL"));
+        albumImage1.add(new AlbumPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
+        albumImage1.add(new AlbumPostImageResponse(2L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
+        albumImage1.add(new AlbumPostImageResponse(3L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
 
         AlbumPostResponse album1 = new AlbumPostResponse(1L,"title1", albumImage1, 100, true);
 
         List<AlbumPostImageResponse> albumImage2 = new ArrayList<>();
-        albumImage2.add(new AlbumPostImageResponse(4L, "image3URL"));
-        albumImage2.add(new AlbumPostImageResponse(5L, "image4URL"));
+        albumImage2.add(new AlbumPostImageResponse(4L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
+        albumImage2.add(new AlbumPostImageResponse(5L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
 
         AlbumPostResponse album2 = new AlbumPostResponse(2L,"title2", albumImage2, 1000, true);
 

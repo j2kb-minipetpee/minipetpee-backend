@@ -24,7 +24,7 @@ public class SettingController {
     public ResponseEntity<SettingResponse> findSettings(
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
-        SettingProfileResponse profile = new SettingProfileResponse("enna@gmail.com", "enna", "2000-03-21", "dog", "순하고 똑똑함", Gender.FEMALE, "ssss", "iiii");
+        SettingProfileResponse profile = new SettingProfileResponse("enna@gmail.com", "enna", "2000-03-21", "dog", "순하고 똑똑함", Gender.FEMALE, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
         List<SettingTabResponse> tabs = new ArrayList<>();
         tabs.add(new SettingTabResponse(1L, homepeeId, Type.ALBUM, true));

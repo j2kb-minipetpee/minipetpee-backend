@@ -21,9 +21,9 @@ public class GuestNoteController {
     public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
-        GuestNoteMemberResponse mem1 = new GuestNoteMemberResponse(1L,"mem1", "url1111");
-        GuestNoteMemberResponse mem2 = new GuestNoteMemberResponse(2L,"mem2", "url2222");
-        GuestNoteMemberResponse mem3 = new GuestNoteMemberResponse(3L,"mem3", "url3333");
+        GuestNoteMemberResponse mem1 = new GuestNoteMemberResponse(1L,"mem1", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        GuestNoteMemberResponse mem2 = new GuestNoteMemberResponse(2L,"mem2", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        GuestNoteMemberResponse mem3 = new GuestNoteMemberResponse(3L,"mem3", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
         GuestNoteResponse guestNote1 = new GuestNoteResponse(4L,mem1,"방명록1", true, LocalDateTime.now());
         GuestNoteResponse guestNote2 = new GuestNoteResponse(5L,mem2,"방명록2", true, LocalDateTime.now());
         GuestNoteResponse guestNote3 = new GuestNoteResponse(6L,mem3,"방명록3", false, LocalDateTime.now());
@@ -42,7 +42,7 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @RequestBody SaveGuestNoteRequest guestNoteRequest
     ) {
-        GuestNoteMemberResponse guestNoteMember = new GuestNoteMemberResponse(guestNoteRequest.getMemberId(),"mem1",  "url1111");
+        GuestNoteMemberResponse guestNoteMember = new GuestNoteMemberResponse(guestNoteRequest.getMemberId(),"mem1",  "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
         SaveGuestNoteResponse guestNoteResponse =
                 new SaveGuestNoteResponse(1L, guestNoteMember, guestNoteRequest.getContent(), guestNoteRequest.isVisible(), LocalDateTime.now());
         return ResponseEntity.ok(guestNoteResponse);
