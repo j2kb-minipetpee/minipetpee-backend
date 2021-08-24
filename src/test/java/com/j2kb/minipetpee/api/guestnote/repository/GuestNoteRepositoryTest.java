@@ -12,13 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -80,7 +79,7 @@ class GuestNoteRepositoryTest {
 
         PageRequest result = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "id"));
         //findGuestNote 리스트에서 tab의 visible 같은 것에 접근하려면 이것들은 프록시기 때문에 guest 조회하면서 함께 가져오기 위해 fetch join 사용
-        Slice<GuestNote> findGuestNote = guestNoteRepository.findAllByHomepeeId(homepee.getId(),result);
+        Page<GuestNote> findGuestNote = guestNoteRepository.findAllByHomepeeId(homepee.getId(),result);
 
         List<GuestNote> content = findGuestNote.getContent();
 

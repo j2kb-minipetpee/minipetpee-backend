@@ -12,8 +12,8 @@ import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class GuestNoteService {
     private final TabRepository tabRepository;
 
     @Transactional(readOnly = true)
-    public Slice<GuestNote> findGuestNotes(Long homepeeId, Pageable pageable) {
+    public Page<GuestNote> findGuestNotes(Long homepeeId, Pageable pageable) {
          return guestNoteRepository.findAllByHomepeeId(homepeeId, pageable);
     }
 

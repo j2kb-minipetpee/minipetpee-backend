@@ -90,7 +90,7 @@ class GuestNoteControllerTest {
         List<GuestNote> guestNoteList = new ArrayList<>();
         guestNoteList.add(guestNote1);
 
-        Slice<GuestNote> result = new SliceImpl<>(guestNoteList);
+        Page<GuestNote> result = new PageImpl<>(guestNoteList);
         given(guestNoteService.findGuestNotes(any(),eq(pageable))).willReturn(result);
         mockMvc.perform(get(BASE_URL, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
