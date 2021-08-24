@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.homepee.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -26,7 +27,8 @@ public class Homepee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -40,7 +42,9 @@ public class Homepee {
     @ColumnDefault("0")
     private int visitCount;
 
+    @Builder.Default
     @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Tab> tabs = new ArrayList<>();
 
     public Profile memberProfile() {

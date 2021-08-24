@@ -2,8 +2,10 @@ package com.j2kb.minipetpee.api.guestnote.repository;
 
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import org.junit.jupiter.api.Test;
@@ -15,8 +17,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,10 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class GuestNoteRepositoryTest {
 
-    @Autowired
-    EntityManager em;
-
     @Autowired private GuestNoteRepository guestNoteRepository;
+    @Autowired private HomepeeRepository homepeeRepository;
+    @Autowired private MemberRepository memberRepository;
 
     @Test
     void findByHomepeeId() {
@@ -36,12 +35,12 @@ class GuestNoteRepositoryTest {
                 .name("파트라슈1")
                 .build();
 
-        Member homepeeOwnner = Member.builder()
+        Member homepeeOwner = Member.builder()
                 .email("emailEx@gmail.com")
                 .password("1111")
                 .profile(profile)
                 .build();
-        em.persist(homepeeOwnner);
+        memberRepository.save(homepeeOwner);
 
         Profile profile2 = Profile.builder()
                 .name("파트라슈2")
@@ -52,7 +51,7 @@ class GuestNoteRepositoryTest {
                 .profile(profile2)
                 .build();
 
-        em.persist(guestMember);
+        memberRepository.save(guestMember);
 
         Tab tab = Tab.builder()
                 .type(Type.GUEST)
@@ -61,13 +60,13 @@ class GuestNoteRepositoryTest {
 
         //cascade.all
         Homepee homepee = Homepee.builder()
-                .member(homepeeOwnner)
+                .member(homepeeOwner)
                 .title("title11")
+                .member(homepeeOwner)
                 .visitCount(3)
                 .build();
-
-        homepee.addTabs(tab);
-        em.persist(homepee);
+        //homepee.addTabs(tab);
+        homepeeRepository.save(homepee);
 
         GuestNote guestNote = GuestNote.builder()
                 .content("방명록 입니다.")
@@ -76,7 +75,7 @@ class GuestNoteRepositoryTest {
                 .member(guestMember)
                 .build();
 
-       em.persist(guestNote);
+       guestNoteRepository.save(guestNote);
 
         PageRequest result = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "id"));
         //findGuestNote 리스트에서 tab의 visible 같은 것에 접근하려면 이것들은 프록시기 때문에 guest 조회하면서 함께 가져오기 위해 fetch join 사용
@@ -88,9 +87,9 @@ class GuestNoteRepositoryTest {
 
         assertEquals(content.size(), 1);
         assertEquals(content.get(0).getId(), guestNote.getId());
-        assertEquals(content.get(0).getMember().getId(), guestMember.getId());
-        assertEquals(content.get(0).getMember().getProfile().getName(), guestMember.getProfile().getName());
-        assertEquals(content.get(0).getMember().getProfile().getProfileImageUrl(), homepeeOwnner.getProfile().getProfileImageUrl());
+        assertEquals(content.get(0).memberId(), guestMember.getId());
+        assertEquals(content.get(0).memberName(), guestMember.getProfile().getName());
+        assertEquals(content.get(0).memberProfileImageUrl(), homepeeOwner.getProfile().getProfileImageUrl());
         assertEquals(content.get(0).getContent(), guestNote.getContent());
         assertEquals(content.get(0).isVisible(), guestNote.isVisible());
 

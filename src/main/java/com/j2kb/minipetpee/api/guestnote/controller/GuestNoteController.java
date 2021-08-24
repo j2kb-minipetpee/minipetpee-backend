@@ -3,12 +3,9 @@ package com.j2kb.minipetpee.api.guestnote.controller;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
-import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteMemberResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
-import com.j2kb.minipetpee.api.homepee.domain.Homepee;
-import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

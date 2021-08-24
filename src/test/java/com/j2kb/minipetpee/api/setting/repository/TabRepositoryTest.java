@@ -1,12 +1,12 @@
 package com.j2kb.minipetpee.api.setting.repository;
 
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
-import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +28,9 @@ class TabRepositoryTest {
 
     @Autowired
     private TabRepository tabRepository;
+    @Autowired private HomepeeRepository homepeeRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     void findMyHomepeeId() {
@@ -38,7 +42,7 @@ class TabRepositoryTest {
                 .password("exexex")
                 .profile(profile)
                 .build();
-        em.persist(member);
+        memberRepository.save(member);
 
         Tab tab = Tab.builder()
                 .type(Type.GUEST)
@@ -52,13 +56,12 @@ class TabRepositoryTest {
                 .build();
 
         homepee.addTabs(tab);
-        em.persist(homepee);
+        homepeeRepository.save(homepee);
 
         //homepeeId로 tab 찾기
-        Tab result = tabRepository.findByHomepeeIdAndType(homepee.getId(),Type.GUEST)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6001));
-
-        assertEquals(result.getType(), tab.getType());
-        assertEquals(result.isVisible(), tab.isVisible());
+        Optional<Tab> findTab = tabRepository.findByHomepeeIdAndType(homepee.getId(),Type.GUEST);
+        findTab.ifPresent(value -> assertEquals(homepee.getId(),value.getHomepee().getId()));
+        findTab.ifPresent(value -> assertEquals(tab.getType(), value.getType()));
+        findTab.ifPresent(value -> assertEquals(tab.isVisible(), value.isVisible()));
     }
 }
