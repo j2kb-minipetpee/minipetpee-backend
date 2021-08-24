@@ -13,6 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,7 +39,7 @@ public abstract class Post extends BaseTimeEntity {
     private Tab tab;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Image> images;
+    private List<Image> images = new ArrayList<>();
 
 
     public Homepee homepee() {

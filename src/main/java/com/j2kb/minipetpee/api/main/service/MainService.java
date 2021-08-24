@@ -10,24 +10,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class MainService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    @Transactional(readOnly = true)
     public Page<Post> findPopularPosts(Pageable pageable) {
         return postRepository.findAllByOrderByViewCountDesc(pageable);
     }
 
-    @Transactional(readOnly = true)
     public Page<Member> searchMembers(String name, Pageable pageable) {
         return memberRepository.findAllByName(name, pageable);
     }
 
-    @Transactional(readOnly = true)
     public Page<Post> searchPosts(String title, Pageable pageable) {
-        return postRepository.findAllByTitleContainingIgnoreCaseOrderByCreatedAtDesc(title, pageable);
+        return postRepository.findAllByTitleContainingIgnoreCase(title, pageable);
     }
 }

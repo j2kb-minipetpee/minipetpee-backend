@@ -35,7 +35,7 @@ public class Member extends BaseTimeEntity {
     @ColumnDefault("0")
     private boolean deleted;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Homepee homepee;
 
     public String profileImageUrl() {

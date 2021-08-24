@@ -25,7 +25,7 @@ public class MainController {
     // 인기 컨텐츠 요청
     @GetMapping("/popular-posts")
     public ResponseEntity<List<PopularPostResponse>> findPopularPosts(
-            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(size = 5) Pageable pageable
     ) {
         List<PopularPostResponse> postsResponse = mainService.findPopularPosts(pageable)
                 .stream()
