@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @DiscriminatorValue("ALBUM")
