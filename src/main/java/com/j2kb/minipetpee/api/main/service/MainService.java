@@ -23,7 +23,7 @@ public class MainService {
 
     @Transactional(readOnly = true)
     public Page<Member> searchMembers(String name, Pageable pageable) {
-        return memberRepository.findAllByProfile_NameLikeOrderByProfile_NameAsc(name, pageable);
+        return memberRepository.findAllByName(name, pageable);
     }
 
     @Transactional(readOnly = true)

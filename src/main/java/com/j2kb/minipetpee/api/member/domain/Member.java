@@ -29,6 +29,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
+    @Embedded
     private Profile profile;
 
     @ColumnDefault("0")

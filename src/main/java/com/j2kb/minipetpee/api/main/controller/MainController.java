@@ -38,10 +38,10 @@ public class MainController {
     // 계정 검색
     @GetMapping("/search-member")
     public ResponseEntity<List<SearchMemberResponse>> searchMembers(
-            @RequestParam("name") String memberName,
+            @RequestParam("name") String name,
             @PageableDefault(size = 8, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        List<SearchMemberResponse> membersResponse = mainService.searchMembers(memberName, pageable)
+        List<SearchMemberResponse> membersResponse = mainService.searchMembers(name, pageable)
                 .stream()
                 .map(SearchMemberResponse::new)
                 .collect(Collectors.toList());
