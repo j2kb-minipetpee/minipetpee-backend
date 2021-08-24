@@ -32,7 +32,7 @@ public class GuestNoteController {
     public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-            ) {
+    ) {
 
         List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNote(homepeeId, pageable)
                 .stream()
