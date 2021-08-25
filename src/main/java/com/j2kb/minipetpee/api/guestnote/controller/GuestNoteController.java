@@ -2,6 +2,7 @@ package com.j2kb.minipetpee.api.guestnote.controller;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
+import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNotePaginationResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
@@ -9,6 +10,7 @@ import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -30,20 +32,21 @@ public class GuestNoteController {
 
     //방명록 조회
     @GetMapping
-    public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
+    public ResponseEntity<GuestNotePaginationResponse> findGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         //homepeeId에 해당하는 homepee 존재하는지 조회
         homepeeService.findById(homepeeId);
 
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
         //homepeeId에 해당하는 방명록 조회
-        List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNotes(homepeeId, pageable)
+        List<GuestNoteResponse> guestNoteResponses = guestNotesPage
                 .stream()
                 .map(GuestNoteResponse::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(guestNoteResponses);
+        return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNoteResponses,guestNotesPage.getTotalPages(), guestNotesPage.getTotalElements()));
     }
 
     //방명록 작성

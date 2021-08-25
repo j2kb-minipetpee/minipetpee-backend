@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -44,11 +45,14 @@ class GuestNoteControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
+    private HomepeeService homepeeService;
+
+    @MockBean
     private GuestNoteService guestNoteService;
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new GuestNoteController(guestNoteService))
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new GuestNoteController(homepeeService,guestNoteService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .alwaysDo(print())
@@ -91,16 +95,17 @@ class GuestNoteControllerTest {
         guestNoteList.add(guestNote1);
 
         Page<GuestNote> result = new PageImpl<>(guestNoteList);
+        given(homepeeService.findById(any())).willReturn(homepee);
         given(guestNoteService.findGuestNotes(any(),eq(pageable))).willReturn(result);
         mockMvc.perform(get(BASE_URL, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").value(1L))
-                .andExpect(jsonPath("$.[0].member.id").value(1L))
-                .andExpect(jsonPath("$.[0].member.name").value("minipet"))
-                .andExpect(jsonPath("$.[0].member.profileImageUrl").value("profileUrl"))
-                .andExpect(jsonPath("$.[0].content").value("ggg"))
-                .andExpect(jsonPath("$.[0].visible").value(true));
+                .andExpect(jsonPath("$.content[0].id").value(1L))
+                .andExpect(jsonPath("$.content[0].member.id").value(1L))
+                .andExpect(jsonPath("$.content[0].member.name").value("minipet"))
+                .andExpect(jsonPath("$.content[0].member.profileImageUrl").value("profileUrl"))
+                .andExpect(jsonPath("$.content[0].content").value("ggg"))
+                .andExpect(jsonPath("$.content[0].visible").value(true));
     }
 
     @Test
@@ -130,11 +135,7 @@ class GuestNoteControllerTest {
                 .id(1L)
                 .content("반가워요!")
                 .visible(true)
-                .tab(Tab.builder()
-                        .type(Type.GUEST)
-                        .visible(true)
-                        .homepee(homepee)
-                        .build())
+                .tab(tab)
                 .member(member)
                 .build();
 
@@ -146,8 +147,8 @@ class GuestNoteControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.member.id").value(3L))
-                .andExpect(jsonPath("$.member.name").value("방명록글쓴이"))
+                .andExpect(jsonPath("$.member.id").value(1L))
+                .andExpect(jsonPath("$.member.name").value("minipet"))
                 .andExpect(jsonPath("$.member.profileImageUrl").value("profileUrl"))
                 .andExpect(jsonPath("$.content").value("반가워요!"))
                 .andExpect(jsonPath("$.visible").value(true));
