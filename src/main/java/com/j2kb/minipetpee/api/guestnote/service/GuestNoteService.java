@@ -54,7 +54,7 @@ public class GuestNoteService {
 
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6002));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND,  ErrorCode.EMP6002));
         //update 로직
         guestNote.updateGuestNote(guestNote, updateGuestNote);
     }
@@ -62,7 +62,7 @@ public class GuestNoteService {
     public void deleteGuestNote(Long guestNoteId) {
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6002));
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6003));
         //delete 로직
         guestNoteRepository.deleteById(guestNoteId);
     }

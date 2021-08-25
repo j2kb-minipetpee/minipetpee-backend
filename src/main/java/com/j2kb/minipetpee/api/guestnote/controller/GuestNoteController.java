@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteRespon
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/apis/{homepee-id}/guest/guest-notes")
 public class GuestNoteController {
 
+    private final HomepeeService homepeeService;
     private final GuestNoteService guestNoteService;
 
     //방명록 조회
@@ -32,7 +34,10 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        //homepeeId에 해당하는 homepee 존재하는지 조회
+        homepeeService.findById(homepeeId);
 
+        //homepeeId에 해당하는 방명록 조회
         List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNotes(homepeeId, pageable)
                 .stream()
                 .map(GuestNoteResponse::new)
@@ -59,6 +64,9 @@ public class GuestNoteController {
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
+        //homepeeId에 해당하는 homepee 존재하는지 조회
+        homepeeService.findById(homepeeId);
+
         //수정 권한 체크 추가하기(토큰값으로)
         guestNoteService.updateGuestNote(guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
@@ -70,6 +78,9 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
+        //homepeeId에 해당하는 homepee 존재하는지 조회
+        homepeeService.findById(homepeeId);
+
         //삭제 권한 체크 추가하기(토큰값으로)
         guestNoteService.deleteGuestNote(guestNoteId);
         return ResponseEntity.noContent().build();

@@ -111,7 +111,7 @@ class GuestNoteServiceTest {
     void updateGuestSuccessfully() {
         final Long guestNoteId = 1L;
         final UpdateGuestNoteRequest updateGuestNote =
-                new UpdateGuestNoteRequest(guestNoteId, 2L, "update content", false);
+                new UpdateGuestNoteRequest(2L, "update content", false);
 
         GuestNote guestNote = GuestNote.builder()
                 .content("content")
@@ -129,7 +129,7 @@ class GuestNoteServiceTest {
     void updateGuestNoteFailure() {
         final Long guestNoteId = 1L;
         final UpdateGuestNoteRequest updateGuestNote =
-                new UpdateGuestNoteRequest(guestNoteId, 2L, "update content", false);
+                new UpdateGuestNoteRequest(2L, "update content", false);
 
         given(guestNoteRepository.findById(anyLong())).willReturn(Optional.empty());
 
