@@ -1,20 +1,26 @@
 package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 
+import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Getter
 public class GuestNotePaginationResponse {
-    private final List<GuestNoteResponse> content;
-    private final int totalPage;
-    private final long totalElements;
+    private List<GuestNoteResponse> content;
+    private final GuestNotePageResponse page;
 
-    public GuestNotePaginationResponse(List<GuestNoteResponse> content, int totalPage, long totalElements) {
-        this.content = new ArrayList<>(content);
-        this.totalPage = totalPage;
-        this.totalElements = totalElements;
+    public GuestNotePaginationResponse(Page<GuestNote> guestNotePage) {
+        if (!Objects.isNull(guestNotePage)) {
+            this.content = guestNotePage
+                    .stream()
+                    .map(GuestNoteResponse::new)
+                    .collect(Collectors.toList());
+        }
+        this.page = new GuestNotePageResponse(guestNotePage);
     }
 }

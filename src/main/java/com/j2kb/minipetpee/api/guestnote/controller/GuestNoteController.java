@@ -40,13 +40,7 @@ public class GuestNoteController {
         homepeeService.findById(homepeeId);
 
         Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
-        //homepeeId에 해당하는 방명록 조회
-        List<GuestNoteResponse> guestNoteResponses = guestNotesPage
-                .stream()
-                .map(GuestNoteResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNoteResponses,guestNotesPage.getTotalPages(), guestNotesPage.getTotalElements()));
+        return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
     //방명록 작성
