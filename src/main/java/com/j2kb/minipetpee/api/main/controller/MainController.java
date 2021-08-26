@@ -39,7 +39,7 @@ public class MainController {
     @GetMapping("/search-member")
     public ResponseEntity<List<SearchMemberResponse>> searchMembers(
             @RequestParam("name") String name,
-            @PageableDefault(size = 8, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(size = 8) Pageable pageable
     ) {
         List<SearchMemberResponse> membersResponse = mainService.searchMembers(name, pageable)
                 .stream()

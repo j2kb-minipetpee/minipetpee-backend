@@ -5,12 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 멤버 이름 검색(유사 이름) + 이름 오름차순 정렬
-//    Page<Member> findAllByProfile_NameLikeOrderByProfile_NameAsc(String name, Pageable pageable);
-
-    @Query("select m from Member m where m.profile.name = :name")
-    Page<Member> findAllByName(String name, Pageable pageable);
+    // @Query("SELECT m From Member m WHERE m.profile.name LIKE '%:name%'")
+    Page<Member> findMembersByProfileNameContainingOrderByProfileNameAsc(@Param("name") String name, Pageable pageable);
 }
