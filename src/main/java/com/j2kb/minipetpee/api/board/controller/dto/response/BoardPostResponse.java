@@ -15,6 +15,6 @@ public class BoardPostResponse {
     private final int viewCount;
     private final BoardPostImageResponse image;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 }

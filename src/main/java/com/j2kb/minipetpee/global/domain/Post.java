@@ -35,7 +35,7 @@ public abstract class Post extends BaseTimeEntity {
     private int viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tab_id")
+    @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

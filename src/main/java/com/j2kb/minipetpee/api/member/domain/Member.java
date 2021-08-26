@@ -9,8 +9,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +28,7 @@ public class Member extends BaseTimeEntity {
     private String password;
 
     @Embedded
+    @Column(nullable = false)
     private Profile profile;
 
     @ColumnDefault("0")
