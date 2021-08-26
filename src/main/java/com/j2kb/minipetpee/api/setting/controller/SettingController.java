@@ -1,35 +1,39 @@
 package com.j2kb.minipetpee.api.setting.controller;
 
-import com.j2kb.minipetpee.api.setting.controller.dto.request.SettingTabsRequest;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.TabsRequest;
 import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateProfileRequest;
 import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateTabsRequest;
-import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingProfileResponse;
+import com.j2kb.minipetpee.api.setting.controller.dto.response.ProfileResponse;
 import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingResponse;
-import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingTabResponse;
+import com.j2kb.minipetpee.api.setting.controller.dto.response.TabResponse;
 import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.api.setting.domain.Type;
-import lombok.extern.slf4j.Slf4j;
+import com.j2kb.minipetpee.api.setting.service.SettingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/apis/{homepee-id}/settings")
 public class SettingController {
 
+    private final SettingService settingService;
+
+    // 프로필 및 탭 목록 조회
     @GetMapping
     public ResponseEntity<SettingResponse> findSettings(
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
-        SettingProfileResponse profile = new SettingProfileResponse("enna@gmail.com", "enna", "2000-03-21", "dog", "순하고 똑똑함", Gender.FEMALE, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        ProfileResponse profile = new ProfileResponse("enna@gmail.com", "enna", "2000-03-21", "dog", "순하고 똑똑함", Gender.FEMALE, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
-        List<SettingTabResponse> tabs = new ArrayList<>();
-        tabs.add(new SettingTabResponse(1L, homepeeId, Type.ALBUM, true));
-        tabs.add(new SettingTabResponse(2L, homepeeId, Type.BOARD, true));
-        tabs.add(new SettingTabResponse(3L, homepeeId, Type.GUEST, true));
+        List<TabResponse> tabs = new ArrayList<>();
+        tabs.add(new TabResponse(1L, homepeeId, Type.ALBUM, true));
+        tabs.add(new TabResponse(2L, homepeeId, Type.BOARD, true));
+        tabs.add(new TabResponse(3L, homepeeId, Type.GUEST, true));
 
         SettingResponse settingResponse = new SettingResponse(profile, tabs);
         return ResponseEntity.ok(settingResponse);
@@ -50,9 +54,6 @@ public class SettingController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @RequestBody UpdateTabsRequest updateTabs
     ) {
-        for(SettingTabsRequest tab : updateTabs.getTabs()) {
-            log.info("tabId = {}, tabType = {}, tabVisible={}", tab.getId(),tab.getType(), tab.isVisible());
-        }
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,11 +1,13 @@
 package com.j2kb.minipetpee.api.member.domain;
 
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateProfileRequest;
 import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,5 +35,14 @@ public class Member extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Homepee homepee;
+
+    public void updateProfile(UpdateProfileRequest profileRequest) {
+        this.profile.setName(profileRequest.getName());
+        this.profile.setBirthday(LocalDateTime.parse(profileRequest.getBirthday()));
+        this.profile.setSpecies(profileRequest.getSpecies());
+        this.profile.setPersonality(profileRequest.getPersonality());
+        this.profile.setGender(Gender.valueOf(profileRequest.getGender()));
+        this.profile.setProfileImageUrl(profileRequest.getProfileImageUrl());
+    }
 }
 

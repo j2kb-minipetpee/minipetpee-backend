@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class UpdateTabsRequest {
-    private List<SettingTabsRequest> tabs;
+    private List<TabsRequest> tabs;
 }

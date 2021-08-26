@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class SettingResponse {
-    private final SettingProfileResponse profile;
-    private final List<SettingTabResponse> tabs;
+    private final ProfileResponse profile;
+    private final List<TabResponse> tabs;
 }

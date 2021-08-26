@@ -3,6 +3,7 @@ package com.j2kb.minipetpee.api.homepee.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateHomepeeRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -57,5 +58,10 @@ public class Homepee {
     public void setTabs(Tab tab) {
         this.getTabs().add(tab);
         tab.setHomepee(this);
+    }
+
+    public void update(UpdateHomepeeRequest homepeeRequest) {
+        this.title = homepeeRequest.getTitle();
+        this.gateImageUrl = homepeeRequest.getGateImageUrl();
     }
 }

@@ -13,5 +13,4 @@ public class UpdateProfileRequest {
     private String personality;
     private String gender;
     private String profileImageUrl;
-    private String gateImageUrl;
 }

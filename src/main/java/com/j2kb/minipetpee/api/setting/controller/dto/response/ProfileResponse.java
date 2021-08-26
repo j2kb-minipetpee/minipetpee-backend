@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class SettingProfileResponse {
+public class ProfileResponse {
     private final String email;
     private final String name;
     private final String birthday;

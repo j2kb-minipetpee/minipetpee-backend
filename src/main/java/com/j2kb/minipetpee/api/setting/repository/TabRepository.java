@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TabRepository extends JpaRepository<Tab, Long> {
 
     Optional<Tab> findByHomepeeIdAndType(Long homepeeId, Type type);
+    Optional<Tab> findByHomepeeId(Long homepeeId);
 }

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Embeddable
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
