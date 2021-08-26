@@ -36,9 +36,6 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeService.findById(homepeeId);
-
         Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
         return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
@@ -61,11 +58,9 @@ public class GuestNoteController {
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeService.findById(homepeeId);
 
         //수정 권한 체크 추가하기(토큰값으로)
-        guestNoteService.updateGuestNote(guestNoteId, updateGuestNote);
+        guestNoteService.updateGuestNote(homepeeId, guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
@@ -75,9 +70,6 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeService.findById(homepeeId);
-
         //삭제 권한 체크 추가하기(토큰값으로)
         guestNoteService.deleteGuestNote(guestNoteId);
         return ResponseEntity.noContent().build();

@@ -55,7 +55,7 @@ class TabRepositoryTest {
                 .visitCount(3)
                 .build();
 
-        homepee.addTabs(tab);
+        homepee.setTabs(tab);
         homepeeRepository.save(homepee);
 
         //homepeeId로 tab 찾기

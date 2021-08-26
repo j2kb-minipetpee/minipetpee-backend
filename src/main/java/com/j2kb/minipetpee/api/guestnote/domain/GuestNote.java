@@ -62,8 +62,8 @@ public class GuestNote extends BaseTimeEntity {
     }
 
     //방명록 수정 위한 메소드
-    public void updateGuestNote(GuestNote guestNote, UpdateGuestNoteRequest updateGuestNote) {
-        guestNote.content = updateGuestNote.getContent();
-        guestNote.visible = updateGuestNote.isVisible();
+    public void updateGuestNote(UpdateGuestNoteRequest updateGuestNote) {
+        this.content = updateGuestNote.getContent();
+        this.visible = updateGuestNote.isVisible();
     }
 }

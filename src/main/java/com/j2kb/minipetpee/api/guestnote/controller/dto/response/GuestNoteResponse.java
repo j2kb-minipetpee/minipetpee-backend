@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor
 public class GuestNoteResponse {
     private final Long id;
     private final GuestNoteMemberResponse member;

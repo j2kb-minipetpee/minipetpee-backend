@@ -66,7 +66,7 @@ class GuestNoteRepositoryTest {
                 .visitCount(3)
                 .build();
 
-        homepee.addTabs(tab);
+        homepee.setTabs(tab);
         homepeeRepository.save(homepee);
 
         GuestNote guestNote = GuestNote.builder()

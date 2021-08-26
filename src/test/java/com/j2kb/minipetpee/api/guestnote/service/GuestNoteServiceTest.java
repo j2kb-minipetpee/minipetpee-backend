@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteR
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -34,6 +35,8 @@ class GuestNoteServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private TabRepository tabRepository;
+    @Mock
+    private HomepeeRepository homepeeRepository;
 
     @InjectMocks
     private GuestNoteService guestNoteService;
@@ -113,14 +116,19 @@ class GuestNoteServiceTest {
         final UpdateGuestNoteRequest updateGuestNote =
                 new UpdateGuestNoteRequest(2L, "update content", false);
 
+        Homepee homepee = Homepee.builder()
+                .id(1L)
+                .build();
+
         GuestNote guestNote = GuestNote.builder()
                 .content("content")
                 .visible(true)
                 .build();
 
+        given(homepeeRepository.findById(anyLong())).willReturn(Optional.of(homepee));
         given(guestNoteRepository.findById(guestNoteId)).willReturn(Optional.of(guestNote));
 
-        guestNoteService.updateGuestNote(1L,updateGuestNote);
+        guestNoteService.updateGuestNote(anyLong(), 1L,updateGuestNote);
         verify(guestNoteRepository).findById(anyLong());
     }
 
@@ -134,6 +142,6 @@ class GuestNoteServiceTest {
         given(guestNoteRepository.findById(anyLong())).willReturn(Optional.empty());
 
         assertThrows(ServiceException.class,
-                () -> guestNoteService.updateGuestNote(guestNoteId, updateGuestNote));
+                () -> guestNoteService.updateGuestNote(anyLong(), guestNoteId, updateGuestNote));
     }
 }

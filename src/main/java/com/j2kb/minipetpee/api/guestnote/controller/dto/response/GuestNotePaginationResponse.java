@@ -1,6 +1,7 @@
 package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.global.dto.PageResponse;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 public class GuestNotePaginationResponse {
     private List<GuestNoteResponse> content;
-    private final GuestNotePageResponse page;
+    private final PageResponse page;
 
     public GuestNotePaginationResponse(Page<GuestNote> guestNotePage) {
         if (!Objects.isNull(guestNotePage)) {
@@ -21,6 +22,6 @@ public class GuestNotePaginationResponse {
                     .map(GuestNoteResponse::new)
                     .collect(Collectors.toList());
         }
-        this.page = new GuestNotePageResponse(guestNotePage);
+        this.page = new PageResponse(guestNotePage);
     }
 }

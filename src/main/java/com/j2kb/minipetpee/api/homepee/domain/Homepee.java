@@ -54,7 +54,7 @@ public class Homepee {
         return member.getProfile();
     }
 
-    public void addTabs(Tab tab) {
+    public void setTabs(Tab tab) {
         this.getTabs().add(tab);
         tab.setHomepee(this);
     }
