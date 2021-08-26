@@ -2,7 +2,10 @@ package com.j2kb.minipetpee.api.main.controller;
 
 import com.j2kb.minipetpee.api.main.controller.dto.response.*;
 import com.j2kb.minipetpee.api.main.service.MainService;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.global.domain.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -24,41 +27,30 @@ public class MainController {
 
     // 인기 컨텐츠 요청
     @GetMapping("/popular-posts")
-    public ResponseEntity<List<PopularPostResponse>> findPopularPosts(
+    public ResponseEntity<PopularPostPaginationResponse> findPopularPosts(
             @PageableDefault(size = 5) Pageable pageable
     ) {
-        List<PopularPostResponse> postsResponse = mainService.findPopularPosts(pageable)
-                .stream()
-                .map(PopularPostResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(postsResponse);
+        Page<Post> popularPosts = mainService.findPopularPosts(pageable);
+        return ResponseEntity.ok(new PopularPostPaginationResponse(popularPosts));
     }
-
 
     // 계정 검색
     @GetMapping("/search-member")
-    public ResponseEntity<List<SearchMemberResponse>> searchMembers(
+    public ResponseEntity<SearchMemberPaginationResponse> searchMembers(
             @RequestParam("name") String name,
             @PageableDefault(size = 8) Pageable pageable
     ) {
-        List<SearchMemberResponse> membersResponse = mainService.searchMembers(name, pageable)
-                .stream()
-                .map(SearchMemberResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(membersResponse);
+        Page<Member> searchMembers = mainService.searchMembers(name, pageable);
+        return ResponseEntity.ok(new SearchMemberPaginationResponse(searchMembers));
     }
 
     // 게시글 검색
     @GetMapping("/search-post")
-    public ResponseEntity<List<SearchPostResponse>> searchPosts(
-            // api 명세에 title로 나와 있어서 그대로 작성하였는데, 본문 검색도 허용하게 될 경우 Keyword 등의 파라미터명이 더 적합할 거 같네요 :)
+    public ResponseEntity<SearchPostPaginationResponse> searchPosts(
             @RequestParam("title") String title,
             @PageableDefault(size = 8, sort = "title", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        List<SearchPostResponse> postsResponse = mainService.searchPosts(title, pageable)
-                .stream()
-                .map(SearchPostResponse::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(postsResponse);
+        Page<Post> searchPosts = mainService.searchPosts(title, pageable);
+        return ResponseEntity.ok(new SearchPostPaginationResponse(searchPosts));
     }
 }

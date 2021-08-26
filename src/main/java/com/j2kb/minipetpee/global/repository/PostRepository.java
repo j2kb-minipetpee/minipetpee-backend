@@ -12,7 +12,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 제목으로 검색
     Page<Post> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);
-
-    // 제목 + 본문 검색
-//    Page<Post> findAllByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(String title, String content, Pageable pageable);
 }
