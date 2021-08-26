@@ -2,50 +2,53 @@ package com.j2kb.minipetpee.api.guestnote.controller;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
+import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNotePaginationResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
-import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteMemberResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
+import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/apis/{homepee-id}/guest/guest-notes")
 public class GuestNoteController {
 
+    private final HomepeeService homepeeService;
+    private final GuestNoteService guestNoteService;
+
     //방명록 조회
     @GetMapping
-    public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
-            @PathVariable(name = "homepee-id") Long homepeeId
+    public ResponseEntity<GuestNotePaginationResponse> findGuestNote(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        GuestNoteMemberResponse mem1 = new GuestNoteMemberResponse(1L,"mem1", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        GuestNoteMemberResponse mem2 = new GuestNoteMemberResponse(2L,"mem2", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        GuestNoteMemberResponse mem3 = new GuestNoteMemberResponse(3L,"mem3", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        GuestNoteResponse guestNote1 = new GuestNoteResponse(4L,mem1,"방명록1", true, LocalDateTime.now());
-        GuestNoteResponse guestNote2 = new GuestNoteResponse(5L,mem2,"방명록2", true, LocalDateTime.now());
-        GuestNoteResponse guestNote3 = new GuestNoteResponse(6L,mem3,"방명록3", false, LocalDateTime.now());
-
-        List<GuestNoteResponse> guestNotes = new ArrayList<>();
-        guestNotes.add(guestNote1);
-        guestNotes.add(guestNote2);
-        guestNotes.add(guestNote3);
-
-        return ResponseEntity.ok(guestNotes);
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
+        return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
     //방명록 작성
     @PostMapping
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @RequestBody SaveGuestNoteRequest guestNoteRequest
+            @Valid @RequestBody SaveGuestNoteRequest guestNoteRequest
     ) {
-        GuestNoteMemberResponse guestNoteMember = new GuestNoteMemberResponse(guestNoteRequest.getMemberId(),"mem1",  "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        SaveGuestNoteResponse guestNoteResponse =
-                new SaveGuestNoteResponse(1L, guestNoteMember, guestNoteRequest.getContent(), guestNoteRequest.isVisible(), LocalDateTime.now());
-        return ResponseEntity.ok(guestNoteResponse);
+        //저장
+        GuestNote guestNote = guestNoteService.saveGuestNote(homepeeId, guestNoteRequest);
+        return ResponseEntity.ok(new SaveGuestNoteResponse(guestNote));
     }
 
     //방명록 수정
@@ -53,8 +56,11 @@ public class GuestNoteController {
     public ResponseEntity<Void> updateGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
-            @RequestBody UpdateGuestNoteRequest updateGuestNote
+            @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
+
+        //수정 권한 체크 추가하기(토큰값으로)
+        guestNoteService.updateGuestNote(homepeeId, guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
@@ -64,6 +70,8 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
+        //삭제 권한 체크 추가하기(토큰값으로)
+        guestNoteService.deleteGuestNote(guestNoteId);
         return ResponseEntity.noContent().build();
     }
 }

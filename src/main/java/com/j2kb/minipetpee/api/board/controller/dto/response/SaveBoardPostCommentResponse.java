@@ -13,7 +13,6 @@ public class SaveBoardPostCommentResponse {
     private final String content;
     private final BoardPostCommentMemberResponse member;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
-
 }

@@ -1,7 +1,5 @@
 package com.j2kb.minipetpee.global.domain;
 
-import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
-import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,7 +25,7 @@ public abstract class Post extends BaseTimeEntity {
     private int viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tab_id")
+    @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
