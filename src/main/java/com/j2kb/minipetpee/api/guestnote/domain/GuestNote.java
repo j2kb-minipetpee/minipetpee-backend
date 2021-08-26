@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.guestnote.domain;
 
+import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import com.j2kb.minipetpee.api.member.domain.Member;
@@ -58,5 +59,11 @@ public class GuestNote extends BaseTimeEntity {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
         }
         return member.getProfile().getProfileImageUrl();
+    }
+
+    //방명록 수정 위한 메소드
+    public void updateGuestNote(UpdateGuestNoteRequest updateGuestNote) {
+        this.content = updateGuestNote.getContent();
+        this.visible = updateGuestNote.isVisible();
     }
 }

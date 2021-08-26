@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor
 public class SaveGuestNoteResponse {
 
     private final Long id;

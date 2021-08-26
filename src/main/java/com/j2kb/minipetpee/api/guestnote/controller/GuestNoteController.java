@@ -2,14 +2,16 @@ package com.j2kb.minipetpee.api.guestnote.controller;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
+import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNotePaginationResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +27,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/apis/{homepee-id}/guest/guest-notes")
 public class GuestNoteController {
 
+    private final HomepeeService homepeeService;
     private final GuestNoteService guestNoteService;
 
     //방명록 조회
     @GetMapping
-    public ResponseEntity<List<GuestNoteResponse>> findGuestNote(
+    public ResponseEntity<GuestNotePaginationResponse> findGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-
-        List<GuestNoteResponse> guestNoteResponses = guestNoteService.findGuestNote(homepeeId, pageable)
-                .stream()
-                .map(GuestNoteResponse::new)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok().body(guestNoteResponses);
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
+        return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
     //방명록 작성
@@ -58,8 +56,11 @@ public class GuestNoteController {
     public ResponseEntity<Void> updateGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
-            @RequestBody UpdateGuestNoteRequest updateGuestNote
+            @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
+
+        //수정 권한 체크 추가하기(토큰값으로)
+        guestNoteService.updateGuestNote(homepeeId, guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
@@ -69,6 +70,8 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
+        //삭제 권한 체크 추가하기(토큰값으로)
+        guestNoteService.deleteGuestNote(guestNoteId);
         return ResponseEntity.noContent().build();
     }
 }

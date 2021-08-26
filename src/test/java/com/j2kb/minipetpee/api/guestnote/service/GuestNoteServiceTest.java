@@ -1,9 +1,11 @@
 package com.j2kb.minipetpee.api.guestnote.service;
 
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
+import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -33,6 +35,8 @@ class GuestNoteServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private TabRepository tabRepository;
+    @Mock
+    private HomepeeRepository homepeeRepository;
 
     @InjectMocks
     private GuestNoteService guestNoteService;
@@ -103,5 +107,41 @@ class GuestNoteServiceTest {
         given(tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)).willReturn(Optional.empty());
         assertThrows(ServiceException.class,
                 () -> guestNoteService.saveGuestNote(homepeeId, saveGuestNote));
+    }
+
+    @Test
+    @DisplayName("방명록 정상 수정")
+    void updateGuestSuccessfully() {
+        final Long guestNoteId = 1L;
+        final UpdateGuestNoteRequest updateGuestNote =
+                new UpdateGuestNoteRequest(2L, "update content", false);
+
+        Homepee homepee = Homepee.builder()
+                .id(1L)
+                .build();
+
+        GuestNote guestNote = GuestNote.builder()
+                .content("content")
+                .visible(true)
+                .build();
+
+        given(homepeeRepository.findById(anyLong())).willReturn(Optional.of(homepee));
+        given(guestNoteRepository.findById(guestNoteId)).willReturn(Optional.of(guestNote));
+
+        guestNoteService.updateGuestNote(anyLong(), 1L,updateGuestNote);
+        verify(guestNoteRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("방명록 찾기 실패")
+    void updateGuestNoteFailure() {
+        final Long guestNoteId = 1L;
+        final UpdateGuestNoteRequest updateGuestNote =
+                new UpdateGuestNoteRequest(2L, "update content", false);
+
+        given(guestNoteRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        assertThrows(ServiceException.class,
+                () -> guestNoteService.updateGuestNote(anyLong(), guestNoteId, updateGuestNote));
     }
 }

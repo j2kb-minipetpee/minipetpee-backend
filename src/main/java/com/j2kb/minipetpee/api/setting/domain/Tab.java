@@ -24,11 +24,8 @@ public class Tab {
     @ColumnDefault("1")
     private boolean visible;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "homepee_id")
     private Homepee homepee;
-
-    public void setHomepee(Homepee homepee) {
-        this.homepee = homepee;
-    }
 }

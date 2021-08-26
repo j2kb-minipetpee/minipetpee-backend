@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor
 public class GuestNoteMemberResponse {
     private final Long id;
     private final String name;
