@@ -25,10 +25,6 @@ public abstract class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "view_count")
-    @ColumnDefault("0")
-    private int viewCount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;

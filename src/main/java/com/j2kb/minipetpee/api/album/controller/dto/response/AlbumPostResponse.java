@@ -11,7 +11,6 @@ public class AlbumPostResponse {
     private final Long id;
     private final String title;
     private List<AlbumPostImageResponse> images;
-    private final int viewCount;
 
     public AlbumPostResponse(AlbumPost albumPost) {
         this.id = albumPost.getId();
@@ -22,6 +21,5 @@ public class AlbumPostResponse {
                     .map(AlbumPostImageResponse::new)
                     .collect(Collectors.toList());
         }
-        this.viewCount = albumPost.getViewCount();
     }
 }
