@@ -1,14 +1,19 @@
 package com.j2kb.minipetpee.api.album.service;
 
+import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostCommentRequest;
 import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostRequest;
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.global.exception.ServiceException;
+import com.j2kb.minipetpee.global.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +32,8 @@ public class AlbumService {
 
     private final PostRepository postRepository;
     private final TabRepository tabRepository;
+    private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
     public AlbumPost saveAlbumPost(Long homepeeId, SaveAlbumPostRequest saveAlbumPost) {
 
@@ -82,5 +89,53 @@ public class AlbumService {
     ) {
         //Post 와 Image 연관관계 설정 및 제거
         albumPost.updateAlbum(updateAlbumPost, addFileList, deleteImage);
+    }
+
+    public Comment saveAlbumPostComment(Long homepeeId, Long postId, SaveAlbumPostCommentRequest albumComment) {
+        //홈피 id와 연관된 tab id 찾고
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        //게시물 찾기
+        AlbumPost albumPost = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
+
+        //댓글 쓴 멤버 찾기
+        Member member = memberRepository.findById(albumComment.getMemberId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP2001));
+
+        //댓글 객체 생성
+        Comment comment = Comment.builder()
+                .content(albumComment.getContent())
+                .member(member)
+                .build();
+
+        albumPost.setComments(comment);
+        return commentRepository.save(comment);
+    }
+
+    public void deleteAlbumPost(Long homepeeId, Long postId) {
+        //홈피 id와 연관된 tab id 찾고
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        //게시글 찾기
+        AlbumPost albumPost = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
+
+        //게시글 삭제
+        postRepository.delete(albumPost);
+    }
+
+    public void deleteAlbumComment(Long homepeeId, Long postId, Long commentId) {
+        //홈피 id와 연관된 tab id 찾고
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        //게시글 찾기
+        AlbumPost albumPost = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
+        //댓글 찾기
+        Comment comment = commentRepository.findByIdAndPostId(commentId, albumPost.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5003));
+        //댓글 삭제
+        commentRepository.delete(comment);
     }
 }

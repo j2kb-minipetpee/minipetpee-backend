@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostReque
 import com.j2kb.minipetpee.api.album.controller.dto.response.*;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
+import com.j2kb.minipetpee.global.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,27 +96,31 @@ public class AlbumController {
         return ResponseEntity.noContent().build();
     }
 
-    //게시글에 댓글 작성 - 미완성
+    //게시글에 댓글 작성
     @PostMapping("/{post-id}/comments")
     public ResponseEntity<SaveAlbumPostCommentResponse> saveAlbumPostComment(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
-            @RequestBody SaveAlbumPostCommentRequest albumCommentRequest
+            @Valid @RequestBody SaveAlbumPostCommentRequest albumCommentRequest
     ) {
-        return ResponseEntity.ok(null);
+
+        Comment comment = albumService.saveAlbumPostComment(homepeeId, postId, albumCommentRequest);
+        return ResponseEntity.ok().body(new SaveAlbumPostCommentResponse(comment));
     }
 
-    //게시글 삭제 - 미완성
+    //게시글 삭제
     @DeleteMapping("/{post-id}")
     public ResponseEntity<Void> deleteAlbumPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
         //홈피 주인만 게시글 삭제 가능(권한 체크)
+
+        albumService.deleteAlbumPost(homepeeId, postId);
         return ResponseEntity.noContent().build();
     }
 
-    //게시글 댓글 삭제 - 미완성
+    //게시글 댓글 삭제
     @DeleteMapping("/{post-id}/comments/{comment-id}")
     public ResponseEntity<Void> deleteAlbumComment(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -123,6 +128,8 @@ public class AlbumController {
             @PathVariable(name = "comment-id") Long commentId
     ) {
         //댓글 작성자만 댓글 삭제 가능(권한 체크)
+
+        albumService.deleteAlbumComment(homepeeId, postId, commentId);
         return ResponseEntity.noContent().build();
     }
 }

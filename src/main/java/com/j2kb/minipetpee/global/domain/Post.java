@@ -3,7 +3,6 @@ package com.j2kb.minipetpee.global.domain;
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,9 +31,17 @@ public abstract class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     public void setImages(Image image) {
         this.getImages().add(image);
         image.setPost(this);
+    }
+
+    public void setComments(Comment comment) {
+        this.getComments().add(comment);
+        comment.setPost(this);
     }
 
     public Post(String title, Tab tab, List<Image> images) {
