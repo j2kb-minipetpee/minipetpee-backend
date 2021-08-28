@@ -18,7 +18,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().permitAll();
 
         httpSecurity.csrf()
-            .ignoringAntMatchers("/h2-console/**");
+            .disable();
 
         httpSecurity.headers()
             .frameOptions().disable();

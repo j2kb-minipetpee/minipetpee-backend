@@ -1,12 +1,7 @@
 package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
-import com.j2kb.minipetpee.api.homepee.domain.Homepee;
-import com.j2kb.minipetpee.api.member.domain.Profile;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import java.util.Objects;
 
 @Getter
 public class GuestNoteMemberResponse {

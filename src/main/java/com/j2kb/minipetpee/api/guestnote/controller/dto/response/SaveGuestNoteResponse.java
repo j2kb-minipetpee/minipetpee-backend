@@ -3,10 +3,8 @@ package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 public class SaveGuestNoteResponse {
