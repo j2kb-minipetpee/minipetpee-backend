@@ -4,6 +4,8 @@ import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostComment
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,12 +17,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "게시판 API")
 @Slf4j
 @RestController
 @RequestMapping("/apis/{homepee-id}/board/posts")
 public class BoardController {
 
-    //게시글 등록
+    @Operation(summary = "게시판 게시글 등록")
     @PostMapping
     public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -32,7 +35,7 @@ public class BoardController {
         return ResponseEntity.ok(boardPostResponse);
     }
 
-    //게시글 목록 조회
+    @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
     public ResponseEntity<List<BoardPostSummaryResponse>> findBoardPosts(
             @PathVariable(name = "homepee-id") Long hompeeId,
@@ -54,7 +57,7 @@ public class BoardController {
         return ResponseEntity.ok(boardPosts);
     }
 
-    //게시글 조회
+    @Operation(summary = "게시판 게시글 조회")
     @GetMapping("/{post-id}")
     public ResponseEntity<BoardPostResponse> findBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -71,7 +74,7 @@ public class BoardController {
         return ResponseEntity.ok(boardPostResponse);
     }
 
-    //게시글 수정
+    @Operation(summary = "게시판 게시글 수정")
     @PutMapping("/{post-id}")
     public ResponseEntity<Void> updateBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -81,7 +84,7 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
-    //게시글 댓글 추가
+    @Operation(summary = "게시판 게시글 댓글 작성")
     @PostMapping("/{post-id}/comment")
     public ResponseEntity<SaveBoardPostCommentResponse> saveBoardPostComment(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -97,7 +100,7 @@ public class BoardController {
         return ResponseEntity.ok(boardPostComment);
     }
 
-    //게시글 삭제
+    @Operation(summary = "게시판 게시글 삭제")
     @DeleteMapping("/{post-id}")
     public ResponseEntity<Void> deleteBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -106,7 +109,7 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
-    //게시글 댓글 삭제
+    @Operation(summary = "게시판 게시글 댓글 삭제")
     @DeleteMapping("/{post-id}/comments/{comment-id}")
     public ResponseEntity<Void> deleteBoardPostComment(
             @PathVariable(name = "homepee-id") Long homepeeId,
