@@ -4,14 +4,17 @@ import com.j2kb.minipetpee.api.member.controller.dto.LoginRequest;
 import com.j2kb.minipetpee.api.member.controller.dto.LoginResponse;
 import com.j2kb.minipetpee.api.member.controller.dto.SaveMemberRequest;
 import com.j2kb.minipetpee.api.member.controller.dto.ValidateEmailResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "회원 API")
 @RestController
 @RequestMapping("/apis")
 public class MemberController {
 
-    // 회원가입
+    @Operation(summary = "회원가입")
     @PostMapping("/members")
     public ResponseEntity<Void> saveMember(@RequestBody SaveMemberRequest member) {
         /**
@@ -20,7 +23,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    // 이메일 중복 확인
+    @Operation(summary = "이메일 중복 확인")
     @GetMapping("/validate-email")
     public ResponseEntity<ValidateEmailResponse> validateEmail(@RequestParam("email") String email){
         /**
@@ -30,7 +33,7 @@ public class MemberController {
         return ResponseEntity.ok(emailResponse);
     }
 
-    // 로그인
+    @Operation(summary = "로그인")
     @GetMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest member) {
         /**
