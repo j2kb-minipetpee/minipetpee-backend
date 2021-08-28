@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class PostResponse {
     private final Long id;
     private final String title;
