@@ -1,10 +1,14 @@
 package com.j2kb.minipetpee.api.setting.domain;
 
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,4 +32,11 @@ public class Tab {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "homepee_id")
     private Homepee homepee;
+
+    public Long homepeeId() {
+        if (Objects.isNull(homepee)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        return this.homepee.getId();
+    }
 }
