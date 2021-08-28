@@ -1,6 +1,6 @@
 package com.j2kb.minipetpee.api.main.service;
 
-import com.j2kb.minipetpee.api.board.repository.PostRepository;
+import com.j2kb.minipetpee.global.repository.PostRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.global.domain.Post;

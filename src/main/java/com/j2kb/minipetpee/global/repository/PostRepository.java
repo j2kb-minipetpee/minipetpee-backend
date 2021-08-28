@@ -1,4 +1,4 @@
-package com.j2kb.minipetpee.api.board.repository;
+package com.j2kb.minipetpee.global.repository;
 
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.global.domain.Post;

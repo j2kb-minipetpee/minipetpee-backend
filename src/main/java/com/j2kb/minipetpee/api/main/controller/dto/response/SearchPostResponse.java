@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class SearchPostResponse {
     private final String memberName;
     private final PostResponse postInfo;
