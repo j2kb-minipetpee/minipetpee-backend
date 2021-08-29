@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.main.controller.dto.response;
 
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.PageResponse;
 import com.j2kb.minipetpee.global.domain.Post;
@@ -17,7 +18,7 @@ public class SearchPostPaginationResponse {
     private final List<SearchPostResponse> content;
     private final PageResponse page;
 
-    public SearchPostPaginationResponse(Page<Post> searchPosts) {
+    public SearchPostPaginationResponse(Page<BoardPost> searchPosts) {
         if (Objects.isNull(searchPosts)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }

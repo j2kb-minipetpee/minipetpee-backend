@@ -20,15 +20,11 @@ public class PostResponse {
     private String imageUrl;
     private String content;
 
-    public PostResponse(Post post) {
+    public PostResponse(BoardPost post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.createdAt = post.getCreatedAt();
         this.imageUrl = post.imageUrl();
-        if (post instanceof BoardPost) {
-            this.content = ((BoardPost) post).getContent();
-        } else {
-            this.content = "";
-        }
+        this.content = post.getContent();
     }
 }
