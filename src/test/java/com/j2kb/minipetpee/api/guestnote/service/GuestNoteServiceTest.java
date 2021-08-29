@@ -7,7 +7,7 @@ import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
+import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;

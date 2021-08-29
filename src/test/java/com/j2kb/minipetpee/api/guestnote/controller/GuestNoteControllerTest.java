@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
-import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -45,14 +44,11 @@ class GuestNoteControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    private HomepeeService homepeeService;
-
-    @MockBean
     private GuestNoteService guestNoteService;
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new GuestNoteController(homepeeService,guestNoteService))
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new GuestNoteController(guestNoteService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .alwaysDo(print())
@@ -95,7 +91,6 @@ class GuestNoteControllerTest {
         guestNoteList.add(guestNote1);
 
         Page<GuestNote> result = new PageImpl<>(guestNoteList);
-        given(homepeeService.findById(any())).willReturn(homepee);
         given(guestNoteService.findGuestNotes(any(),eq(pageable))).willReturn(result);
         mockMvc.perform(get(BASE_URL, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -186,6 +181,6 @@ class GuestNoteControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(guestNoteService).deleteGuestNote(2L);
+        verify(guestNoteService).deleteGuestNote(1L, 2L);
     }
 }

@@ -37,10 +37,10 @@ public class GuestNoteService {
     }
 
     public GuestNote saveGuestNote(Long homepeeId, SaveGuestNoteRequest guestNoteRequest) {
-        //member 객체 찾기 -> 예외처리 필요
+        //member 객체 찾기
         Member member = memberRepository.findById(guestNoteRequest.getMemberId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001));
-        //Tab 찾기 -> 못 찾을 경우, '방명록 저장에 실패하였습니다.' 에러 메시지 설정
+        //Tab 찾기
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6001));
 
@@ -54,7 +54,7 @@ public class GuestNoteService {
         return guestNoteRepository.save(guestNote);
     }
 
-    public void updateGuestNote(Long homepeeId,Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
+    public void updateGuestNote(Long homepeeId, Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
         //homepeeId에 해당하는 homepee 존재하는지 조회
         homepeeRepository.findById(homepeeId);
         //guestNote 찾기
@@ -64,7 +64,9 @@ public class GuestNoteService {
         guestNote.updateGuestNote(updateGuestNote);
     }
 
-    public void deleteGuestNote(Long guestNoteId) {
+    public void deleteGuestNote(Long homepeeId, Long guestNoteId) {
+        //homepeeId에 해당하는 homepee 존재하는지 조회
+        homepeeRepository.findById(homepeeId);
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6003));
