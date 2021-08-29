@@ -13,4 +13,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<AlbumPost> findAllByTabId(Long tabId, Pageable pagable);
 
     Optional<AlbumPost> findByIdAndTabId(Long id, Long tabId);
+
+    // 검색 - 조회순
+    Page<Post> findAllByOrderByViewCountDesc(Pageable pageable);
+
+    // 제목으로 검색
+    Page<Post> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);
 }

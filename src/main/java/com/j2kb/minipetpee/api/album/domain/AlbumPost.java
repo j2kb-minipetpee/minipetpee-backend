@@ -3,7 +3,10 @@ package com.j2kb.minipetpee.api.album.domain;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.global.domain.Post;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -19,4 +22,5 @@ public class AlbumPost extends Post {
     public AlbumPost(String title, Tab tab, List<Image> images) {
         super(title, tab, images);
     }
+
 }

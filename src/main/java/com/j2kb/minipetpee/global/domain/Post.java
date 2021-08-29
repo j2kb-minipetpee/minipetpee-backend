@@ -3,6 +3,13 @@ package com.j2kb.minipetpee.global.domain;
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.*;
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.exception.ServiceException;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,9 +61,57 @@ public abstract class Post extends BaseTimeEntity {
     //사진첩 게시글 수정
     public void updateAlbum(UpdateAlbumPostRequest updateAlbumPost, List<Image> addFileList, List<Image> deleteImage) {
         this.title = updateAlbumPost.getTitle();
-        if(!Objects.isNull(updateAlbumPost.getImages())) {
+        if (!Objects.isNull(updateAlbumPost.getImages())) {
             deleteImage.forEach(image -> this.images.remove(image));
             addFileList.forEach(image -> this.setImages(image));
         }
+    }
+
+    public Homepee homepee() {
+        if (Objects.isNull(tab)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP9001);
+        }
+        if (Objects.isNull(tab.getHomepee())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        return this.getTab().getHomepee();
+    }
+
+    public Long homepeeId() {
+        return this.homepee().getId();
+    }
+
+    public String imageUrl() {
+        if (Objects.isNull(images)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
+        }
+        if (images.size() > 0) {
+            return images.get(0).getUrl();
+        }
+        return "";
+    }
+
+    public Member member() {
+        if (Objects.isNull(tab)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        if (Objects.isNull(tab.getHomepee())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
+        }
+        if (Objects.isNull(tab.getHomepee().getMember())){
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
+        }
+        return this.getTab().getHomepee().getMember();
+    }
+
+    public String memberName() {
+        return this.member().getProfile().getName();
+    }
+
+    public Profile profile() {
+        if (Objects.isNull(member().getProfile())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2002);
+        }
+        return this.member().getProfile();
     }
 }

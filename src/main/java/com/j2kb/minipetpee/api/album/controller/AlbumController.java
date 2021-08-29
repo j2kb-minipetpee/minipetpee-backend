@@ -8,6 +8,8 @@ import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
 import com.j2kb.minipetpee.global.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Image;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "갤러리 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +34,7 @@ public class AlbumController {
     private final AlbumService albumService;
 
     //게시글 등록
+    @Operation(summary = "갤러리 게시글 등록")
     @PostMapping
     public ResponseEntity<SaveAlbumPostResponse> saveAlbumPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -43,7 +47,7 @@ public class AlbumController {
         return ResponseEntity.ok().body(new SaveAlbumPostResponse(saveAlbumPost));
     }
 
-    //게시글 조회 - 전체 사진첩 내용 모두 조회
+    @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
     @GetMapping
     public ResponseEntity<AlbumPaginationResponse> findAlbumPosts(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -53,7 +57,7 @@ public class AlbumController {
         return ResponseEntity.ok().body(new AlbumPaginationResponse(albumPosts));
     }
 
-    //게시글 수정
+    @Operation(summary = "갤러리 게시글 수정")
     @PutMapping
     public ResponseEntity<Void> updateAlbumPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -96,7 +100,7 @@ public class AlbumController {
         return ResponseEntity.noContent().build();
     }
 
-    //게시글에 댓글 작성
+    @Operation(summary = "갤러리 게시글 댓글 작성")
     @PostMapping("/{post-id}/comments")
     public ResponseEntity<SaveAlbumPostCommentResponse> saveAlbumPostComment(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -108,7 +112,8 @@ public class AlbumController {
         return ResponseEntity.ok().body(new SaveAlbumPostCommentResponse(comment));
     }
 
-    //게시글 삭제
+
+    @Operation(summary = "갤러리 게시글 삭제")
     @DeleteMapping("/{post-id}")
     public ResponseEntity<Void> deleteAlbumPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -120,7 +125,7 @@ public class AlbumController {
         return ResponseEntity.noContent().build();
     }
 
-    //게시글 댓글 삭제
+    @Operation(summary = "갤러리 게시글 댓글 삭제")
     @DeleteMapping("/{post-id}/comments/{comment-id}")
     public ResponseEntity<Void> deleteAlbumComment(
             @PathVariable(name = "homepee-id") Long homepeeId,

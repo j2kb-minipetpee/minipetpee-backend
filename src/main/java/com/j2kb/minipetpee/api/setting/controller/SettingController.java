@@ -8,6 +8,8 @@ import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingResponse;
 import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingTabResponse;
 import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.api.setting.domain.Type;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "관리 API")
 @Slf4j
 @RestController
 @RequestMapping("/apis/{homepee-id}/settings")
 public class SettingController {
 
+    @Operation(summary = "관리 탭 조회")
     @GetMapping
     public ResponseEntity<SettingResponse> findSettings(
             @PathVariable(name = "homepee-id") Long homepeeId
@@ -35,7 +39,7 @@ public class SettingController {
         return ResponseEntity.ok(settingResponse);
     }
 
-    //프로필 변경
+    @Operation(summary = "프로필 변경")
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -44,7 +48,7 @@ public class SettingController {
         return ResponseEntity.noContent().build();
     }
 
-    //탭 공개여부 설정
+    @Operation(summary = "탭 공개여부 설정")
     @PutMapping("/tabs")
     public ResponseEntity<Void> updateTabs(
             @PathVariable(name = "homepee-id") Long homepeeId,

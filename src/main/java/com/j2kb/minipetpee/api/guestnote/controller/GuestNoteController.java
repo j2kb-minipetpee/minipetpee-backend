@@ -3,11 +3,11 @@ package com.j2kb.minipetpee.api.guestnote.controller;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNotePaginationResponse;
-import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
-import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,21 +18,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@Tag(name = "방명록 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/apis/{homepee-id}/guest/guest-notes")
 public class GuestNoteController {
 
-    private final HomepeeService homepeeService;
     private final GuestNoteService guestNoteService;
 
-    //방명록 조회
+    @Operation(summary = "방명록 조회")
     @GetMapping
-    public ResponseEntity<GuestNotePaginationResponse> findGuestNote(
+    public ResponseEntity<GuestNotePaginationResponse> findGuestNotes(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -40,7 +38,7 @@ public class GuestNoteController {
         return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
-    //방명록 작성
+    @Operation(summary = "방명록 작성")
     @PostMapping
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -51,27 +49,26 @@ public class GuestNoteController {
         return ResponseEntity.ok(new SaveGuestNoteResponse(guestNote));
     }
 
-    //방명록 수정
+    @Operation(summary = "방명록 수정")
     @PutMapping("/{guest-note-id}")
     public ResponseEntity<Void> updateGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
-
         //수정 권한 체크 추가하기(토큰값으로)
         guestNoteService.updateGuestNote(homepeeId, guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
-    //방명록 삭제
+    @Operation(summary = "방명록 삭제")
     @DeleteMapping("/{guest-note-id}")
     public ResponseEntity<Void> deleteGuestNote(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
         //삭제 권한 체크 추가하기(토큰값으로)
-        guestNoteService.deleteGuestNote(guestNoteId);
+        guestNoteService.deleteGuestNote(homepeeId, guestNoteId);
         return ResponseEntity.noContent().build();
     }
 }

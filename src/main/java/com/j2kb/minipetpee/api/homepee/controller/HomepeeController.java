@@ -8,6 +8,8 @@ import com.j2kb.minipetpee.api.homepee.domain.FanComment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.homepee.service.FanCommentService;
 import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "홈피 API")
 @RestController
 @RequestMapping("apis/{homepee-id}")
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class HomepeeController {
     private final HomepeeService homepeeService;
     private final FanCommentService fanCommentService;
 
+    @Operation(summary = "홈피 조회")
     @GetMapping
     public ResponseEntity<HomepeeResponse> find(@PathVariable(name = "homepee-id") Long homepeeId) {
         Homepee homepee = homepeeService.findById(homepeeId);
@@ -31,7 +35,7 @@ public class HomepeeController {
         return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments));
     }
 
-    // 공생평 작성
+    @Operation(summary = "공생평 작성")
     @PostMapping("/fan-comments")
     public ResponseEntity<FanCommentResponse> saveFanComment(
             @PathVariable("homepee-id") Long homepeeId,
@@ -48,7 +52,7 @@ public class HomepeeController {
         return ResponseEntity.ok(fanCommentResponse);
     }
 
-    // 공생평 수정
+    @Operation(summary = "공생평 수정")
     @PutMapping("/fan-comments")
     public ResponseEntity<Void> updateFanComment(
             @PathVariable("homepee-id") Long homepeeId,
@@ -58,7 +62,7 @@ public class HomepeeController {
         return ResponseEntity.noContent().build();
     }
 
-    // 공생평 삭제
+    @Operation(summary = "공생평 삭제")
     @DeleteMapping("/fan-comments/{fan-comment-id}")
     public ResponseEntity<Void> deleteFanComment(
             @PathVariable("homepee-id") Long homepeeId,
