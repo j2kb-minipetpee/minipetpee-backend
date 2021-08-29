@@ -40,13 +40,8 @@ public class Member extends BaseTimeEntity {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Homepee homepee;
 
-    public void updateProfile(UpdateProfileRequest profileRequest) {
-        this.profile.setName(profileRequest.getName());
-        this.profile.setBirthday(LocalDateTime.parse(profileRequest.getBirthday()));
-        this.profile.setSpecies(profileRequest.getSpecies());
-        this.profile.setPersonality(profileRequest.getPersonality());
-        this.profile.setGender(Gender.valueOf(profileRequest.getGender()));
-        this.profile.setProfileImageUrl(profileRequest.getProfileImageUrl());
+    public void updateProfile(UpdateProfileRequest profile) {
+        this.profile.update(profile);
     }
 
     public String profileImageUrl() {
