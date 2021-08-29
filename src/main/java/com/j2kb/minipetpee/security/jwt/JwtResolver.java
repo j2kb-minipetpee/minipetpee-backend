@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class JwtResolver implements InitializingBean {
     private final String secretKey;
     private final long accessTokenExpirySeconds;
@@ -100,13 +102,10 @@ public class JwtResolver implements InitializingBean {
 
     public String parseToken(HttpServletRequest request) {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (Objects.isNull(authorization)) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP1008);
+        if (!Objects.isNull(authorization) && authorization.startsWith("Bearer")) {
+            return authorization.substring(7);
         }
-        if (!authorization.startsWith("Bearer")) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1000);
-        }
-        return authorization.substring(7);
+        return null;
     }
 
     public boolean validateToken(String token) {

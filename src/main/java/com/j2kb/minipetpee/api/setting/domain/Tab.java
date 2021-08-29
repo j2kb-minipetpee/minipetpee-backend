@@ -33,6 +33,12 @@ public class Tab {
     @JoinColumn(name = "homepee_id")
     private Homepee homepee;
 
+    public Tab(Long id, Type type, boolean visible) {
+        this.id = id;
+        this.type = type;
+        this.visible = visible;
+    }
+
     public Long homepeeId() {
         if (Objects.isNull(homepee)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);

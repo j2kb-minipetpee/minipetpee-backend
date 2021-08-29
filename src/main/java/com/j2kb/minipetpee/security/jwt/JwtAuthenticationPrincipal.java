@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.security.jwt;
 
+import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Role;
 import lombok.Getter;
 
@@ -16,10 +17,10 @@ public class JwtAuthenticationPrincipal {
         this.name = name;
     }
 
-    public JwtAuthenticationPrincipal(Long id, String email, String name, Role role) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.role = role;
+    public JwtAuthenticationPrincipal(Member member) {
+        this.id = member.getId();
+        this.email = member.getEmail();
+        this.name = member.name();
+        this.role = member.getRole();
     }
 }

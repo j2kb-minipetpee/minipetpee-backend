@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,6 +65,7 @@ class GuestNoteRepositoryTest {
                 .title("title11")
                 .member(homepeeOwner)
                 .visitCount(3)
+                .tabs(new ArrayList<>())
                 .build();
 
         homepee.setTabs(tab);
