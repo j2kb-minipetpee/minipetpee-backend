@@ -4,7 +4,9 @@ import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.TabRequest;
 import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateSettingRequest;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateTabsRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
@@ -27,13 +29,16 @@ public class SettingService {
     private final HomepeeRepository homepeeRepository;
 
     // 프로필 조회 - 설정 가능한 계정 정보 및 탭 목록 조회
-    public Member findSettingByHomepeeId(Long homepeeId) {
+    @Transactional(readOnly = true)
+    public Member findMemberByHomepeeId(Long homepeeId) {
         Member member = memberRepository.findByHomepeeId(homepeeId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7001));
-        Tab tab = tabRepository.findByHomepeeId(homepeeId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7002));
-        // 고민중
         return member;
+    }
+
+    public List<Tab> findTabsByHomepeeId(Long homepeeId) {
+        List<Tab> tabs = tabRepository.findAllByHomepeeId(homepeeId);
+        return tabs;
     }
 
     // 프로필 변경
@@ -46,5 +51,13 @@ public class SettingService {
         homepee.update(settingRequest.getHomepee());
     }
 
-    // 탭 목록 조회
+    // 탭 공개 여부 변경
+    public void updateTabs(Long homepeeId, UpdateTabsRequest updateTabsRequest){
+        for (TabRequest tabRequest : updateTabsRequest.getTabs()){
+            Tab tab = tabRepository.findById(tabRequest.getId())
+                    .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7004));
+            tab.updateVisibility(tabRequest.isVisible());
+        }
+    }
+
 }

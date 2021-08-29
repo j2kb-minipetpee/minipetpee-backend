@@ -1,13 +1,13 @@
 package com.j2kb.minipetpee.api.setting.controller;
 
-import com.j2kb.minipetpee.api.setting.controller.dto.request.TabsRequest;
+import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
+import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateProfileRequest;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateSettingRequest;
 import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateTabsRequest;
-import com.j2kb.minipetpee.api.setting.controller.dto.response.ProfileResponse;
 import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingResponse;
-import com.j2kb.minipetpee.api.setting.controller.dto.response.TabResponse;
-import com.j2kb.minipetpee.api.member.domain.Gender;
-import com.j2kb.minipetpee.api.setting.domain.Type;
+import com.j2kb.minipetpee.api.setting.domain.Tab;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 public class SettingController {
 
     private final SettingService settingService;
+    private final HomepeeService homepeeService;
 
     // 프로필 및 탭 목록 조회
     @Operation(summary = "관리 탭 조회")
@@ -34,23 +36,21 @@ public class SettingController {
     public ResponseEntity<SettingResponse> findSettings(
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
-        ProfileResponse profile = new ProfileResponse("enna@gmail.com", "enna", "2000-03-21", "dog", "순하고 똑똑함", Gender.FEMALE, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
+        Member member = settingService.findMemberByHomepeeId(homepeeId); // 멤버 서비스 구현 되면 바꾸기
+        List<Tab> tabs = settingService.findTabsByHomepeeId(homepeeId);
+        Homepee homepee = homepeeService.findById(homepeeId);
 
-        List<TabResponse> tabs = new ArrayList<>();
-        tabs.add(new TabResponse(1L, homepeeId, Type.ALBUM, true));
-        tabs.add(new TabResponse(2L, homepeeId, Type.BOARD, true));
-        tabs.add(new TabResponse(3L, homepeeId, Type.GUEST, true));
-
-        SettingResponse settingResponse = new SettingResponse(profile, tabs);
+        SettingResponse settingResponse = new SettingResponse(homepee, member, tabs);
         return ResponseEntity.ok(settingResponse);
     }
 
-    @Operation(summary = "프로필 변경")
+    @Operation(summary = "설정 변경")
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @RequestBody UpdateProfileRequest profile
+            @Valid @RequestBody UpdateSettingRequest setting
     ) {
+        settingService.updateSettings(homepeeId, setting);
         return ResponseEntity.noContent().build();
     }
 
@@ -58,8 +58,9 @@ public class SettingController {
     @PutMapping("/tabs")
     public ResponseEntity<Void> updateTabs(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @RequestBody UpdateTabsRequest updateTabs
+            @Valid @RequestBody UpdateTabsRequest updateTabs
     ) {
+        settingService.updateTabs(homepeeId, updateTabs);
         return ResponseEntity.noContent().build();
     }
 }

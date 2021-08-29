@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class TabsRequest {
+public class TabRequest {
     private Long id;
     private Type type;
     private boolean visible;
