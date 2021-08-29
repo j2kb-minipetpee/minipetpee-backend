@@ -5,7 +5,7 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostRequest
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.member.domain.repository.MemberRepository;
+import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
