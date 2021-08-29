@@ -1,8 +1,8 @@
-package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
+package com.j2kb.minipetpee.api.main.controller.dto.response;
 
-import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.PageResponse;
+import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @Getter
-public class GuestNotePaginationResponse {
-    private final List<GuestNoteResponse> content;
+public class SearchPostPaginationResponse {
+    private final List<SearchPostResponse> content;
     private final PageResponse page;
 
-    public GuestNotePaginationResponse(Page<GuestNote> guestNotePage) {
-        if (Objects.isNull(guestNotePage)) {
+    public SearchPostPaginationResponse(Page<Post> searchPosts) {
+        if (Objects.isNull(searchPosts)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.content = guestNotePage.stream()
-                .map(GuestNoteResponse::new)
+        this.content = searchPosts
+                .stream()
+                .map(SearchPostResponse::new)
                 .collect(Collectors.toList());
-        this.page = new PageResponse(guestNotePage);
+        this.page = new PageResponse(searchPosts);
     }
 }

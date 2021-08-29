@@ -1,6 +1,8 @@
 package com.j2kb.minipetpee.api.star.controller;
 
 import com.j2kb.minipetpee.api.star.controller.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +11,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "스타/팬 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/apis")
 public class StarController {
 
-    // 스타
+    @Operation(summary = "스타(팔로우)")
     @PostMapping("/stars/{star-id}")
     public ResponseEntity<Void> star(@PathVariable("star-id") long starId){
         /**
@@ -23,7 +26,7 @@ public class StarController {
         return ResponseEntity.noContent().build();
     }
 
-    // 언스타
+    @Operation(summary = "언스타(언팔로우)")
     @DeleteMapping("/stars/{star-id}")
     public ResponseEntity<Void> unstar(@PathVariable("star-id") long starId){
         /**
@@ -33,7 +36,7 @@ public class StarController {
     }
 
 
-    // 스타 목록
+    @Operation(summary = "스타 목록")
     @GetMapping("/{member-id}/stars")
     public ResponseEntity<List<StarResponse>> findStars(@PathVariable("member-id") long memberId) {
         StarResponse starMember1 = new StarResponse(11, 1, "뽀로로", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
@@ -49,6 +52,7 @@ public class StarController {
     }
 
 
+    @Operation(summary = "팬 목록")
     @GetMapping("/{member-id}/fans")
     public ResponseEntity<List<FanResponse>> findFans(@PathVariable("member-id") long memberId) {
         FanResponse fanMember1 = new FanResponse(44, 5, "크롱", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());

@@ -1,6 +1,6 @@
-package com.j2kb.minipetpee.api.guestnote.controller.dto.response;
+package com.j2kb.minipetpee.api.main.controller.dto.response;
 
-import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
+import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.PageResponse;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @Getter
-public class GuestNotePaginationResponse {
-    private final List<GuestNoteResponse> content;
+public class SearchMemberPaginationResponse {
+
+    private final List<SearchMemberResponse> content;
     private final PageResponse page;
 
-    public GuestNotePaginationResponse(Page<GuestNote> guestNotePage) {
-        if (Objects.isNull(guestNotePage)) {
+    public SearchMemberPaginationResponse(Page<Member> searchMembers) {
+        if (Objects.isNull(searchMembers)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.content = guestNotePage.stream()
-                .map(GuestNoteResponse::new)
+        this.content = searchMembers.stream()
+                .map(SearchMemberResponse::new)
                 .collect(Collectors.toList());
-        this.page = new PageResponse(guestNotePage);
+        this.page = new PageResponse(searchMembers);
     }
 }
