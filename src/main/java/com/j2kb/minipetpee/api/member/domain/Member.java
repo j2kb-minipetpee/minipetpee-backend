@@ -38,6 +38,8 @@ public class Member extends BaseTimeEntity {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Homepee homepee;
 
+    private Role role = Role.OWNER;
+
     public String profileImageUrl() {
         if (Objects.isNull(profile)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2002);
