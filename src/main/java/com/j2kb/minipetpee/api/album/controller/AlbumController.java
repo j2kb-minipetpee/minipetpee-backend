@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Tag(name = "갤러리 API")
@@ -53,9 +55,26 @@ public class AlbumController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        //게시글 찾기
         Page<AlbumPost> albumPosts = albumService.findAlbumPosts(homepeeId, pageable);
-        return ResponseEntity.ok().body(new AlbumPaginationResponse(albumPosts));
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdAt");
+        //게시글의 댓글 찾기
+        Map<Long, Page<Comment>> albumComments = albumService.findAlbumComments(albumPosts, pageRequest);
+        return ResponseEntity.ok().body(new AlbumPaginationResponse(albumPosts,albumComments));
     }
+
+    @Operation(summary = "갤러리 게시글의 댓글 더보기", description = "댓글 더보기를 누르면 댓글 3개씩 조회")
+    @GetMapping("/{post-id}/comments")
+    public ResponseEntity<AlbumCommentPaginationResponse> findAlbumComments(
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId,
+            @PageableDefault(size = 3, page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Comment> albumComments = albumService.findAlbumCommentsById(homepeeId, postId, pageable);
+        return ResponseEntity.ok().body(new AlbumCommentPaginationResponse(albumComments));
+    }
+
 
     @Operation(summary = "갤러리 게시글 수정")
     @PutMapping
@@ -107,7 +126,6 @@ public class AlbumController {
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody SaveAlbumPostCommentRequest albumCommentRequest
     ) {
-
         Comment comment = albumService.saveAlbumPostComment(homepeeId, postId, albumCommentRequest);
         return ResponseEntity.ok().body(new SaveAlbumPostCommentResponse(comment));
     }
