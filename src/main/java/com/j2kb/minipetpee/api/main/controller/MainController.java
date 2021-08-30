@@ -1,9 +1,9 @@
 package com.j2kb.minipetpee.api.main.controller;
 
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.api.main.controller.dto.response.*;
 import com.j2kb.minipetpee.api.main.service.MainService;
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class MainController {
     public ResponseEntity<PopularPostPaginationResponse> findPopularPosts(
             @PageableDefault(size = 5) Pageable pageable
     ) {
-        Page<Post> popularPosts = mainService.findPopularPosts(pageable);
+        Page<BoardPost> popularPosts = mainService.findPopularPosts(pageable);
         return ResponseEntity.ok(new PopularPostPaginationResponse(popularPosts));
     }
 
@@ -50,7 +50,7 @@ public class MainController {
             @RequestParam("title") String title,
             @PageableDefault(size = 8, sort = "title", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<Post> searchPosts = mainService.searchPosts(title, pageable);
+        Page<BoardPost> searchPosts = mainService.searchPosts(title, pageable);
         return ResponseEntity.ok(new SearchPostPaginationResponse(searchPosts));
     }
 }

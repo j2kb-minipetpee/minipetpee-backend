@@ -38,9 +38,17 @@ public abstract class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     public void setImages(Image image) {
         this.getImages().add(image);
         image.setPost(this);
+    }
+
+    public void setComments(Comment comment) {
+        this.getComments().add(comment);
+        comment.setPost(this);
     }
 
     public Post(String title, Tab tab, List<Image> images) {

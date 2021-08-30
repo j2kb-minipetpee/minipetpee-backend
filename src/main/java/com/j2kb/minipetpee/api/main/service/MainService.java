@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.main.service;
 
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.global.repository.PostRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
@@ -17,7 +18,7 @@ public class MainService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    public Page<Post> findPopularPosts(Pageable pageable) {
+    public Page<BoardPost> findPopularPosts(Pageable pageable) {
         return postRepository.findAllByOrderByViewCountDesc(pageable);
     }
 
@@ -25,7 +26,7 @@ public class MainService {
         return memberRepository.findMembersByProfileNameContainingOrderByProfileNameAsc(name, pageable);
     }
 
-    public Page<Post> searchPosts(String title, Pageable pageable) {
+    public Page<BoardPost> searchPosts(String title, Pageable pageable) {
         return postRepository.findAllByTitleContainingIgnoreCase(title, pageable);
     }
 }
