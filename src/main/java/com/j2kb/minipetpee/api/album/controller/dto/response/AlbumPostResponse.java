@@ -3,6 +3,7 @@ package com.j2kb.minipetpee.api.album.controller.dto.response;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,7 @@ public class AlbumPostResponse {
     private final Long id;
     private final String title;
     private final List<AlbumPostImageResponse> images;
-    private final AlbumCommentPaginationResponse comments;
+    private final CommentPaginationResponse comments;
 
     public AlbumPostResponse(AlbumPost albumPost, Page<Comment> albumComments) {
         this.id = albumPost.getId();
@@ -34,6 +35,6 @@ public class AlbumPostResponse {
         if(Objects.isNull(albumComments)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.comments = new AlbumCommentPaginationResponse(albumComments);
+        this.comments = new CommentPaginationResponse(albumComments);
     }
 }
