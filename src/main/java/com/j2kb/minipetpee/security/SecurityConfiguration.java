@@ -67,6 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/apis/members").permitAll()
                 .mvcMatchers("/apis/login").permitAll()
                 .regexMatchers("/apis/[0-9]*").permitAll()
+                .regexMatchers("/apis/[0-9]*/guest/guest-notes").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
