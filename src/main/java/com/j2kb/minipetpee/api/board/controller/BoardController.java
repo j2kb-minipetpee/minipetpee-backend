@@ -41,18 +41,18 @@ public class BoardController {
     }
 
     @Parameter(in = ParameterIn.QUERY
-            , description = "페이지 0 부터 시작"
+            , description = "페이지 (0 부터 시작)"
             , name = "page"
             , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
     @Parameter(in = ParameterIn.QUERY
-            , description = "반환될 페이지 수"
+            , description = "반환할 데이터 수"
             , name = "size"
             , content = @Content(schema = @Schema(type = "integer", defaultValue = "10")))
     @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
     public ResponseEntity<List<BoardPostSummaryResponse>> findBoardPosts(
-            @PathVariable(name = "homepee-id") Long homepeeId,
-            @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PathVariable(name = "homepee-id") Long hompeeId,
+            @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
         BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
