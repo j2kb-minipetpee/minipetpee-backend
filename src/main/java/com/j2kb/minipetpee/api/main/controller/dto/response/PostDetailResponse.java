@@ -25,10 +25,6 @@ public class PostDetailResponse {
         this.title = post.getTitle();
         this.createdAt = post.getCreatedAt();
         this.imageUrl = post.imageUrl();
-        if (post instanceof BoardPost) {
-            this.content = ((BoardPost) post).getContent();
-        } else {
-            this.content = "";
-        }
+        this.content = post instanceof BoardPost? ((BoardPost) post).getContent(): "";
     }
 }
