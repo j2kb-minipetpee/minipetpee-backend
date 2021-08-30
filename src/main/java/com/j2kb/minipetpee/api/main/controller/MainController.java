@@ -27,11 +27,11 @@ public class MainController {
 
     @Operation(summary = "인기 컨텐츠 조회")
     @GetMapping("/popular-posts")
-    public ResponseEntity<PopularPostPaginationResponse> findPopularPosts(
+    public ResponseEntity<PostPaginationResponse> findPopularPosts(
             @PageableDefault(size = 5) Pageable pageable
     ) {
         Page<Post> popularPosts = mainService.findPopularPosts(pageable);
-        return ResponseEntity.ok(new PopularPostPaginationResponse(popularPosts));
+        return ResponseEntity.ok(new PostPaginationResponse(popularPosts));
     }
 
     @Operation(summary = "계정 검색")
@@ -46,11 +46,11 @@ public class MainController {
 
     @Operation(summary = "게시글 검색")
     @GetMapping("/search-post")
-    public ResponseEntity<SearchPostPaginationResponse> searchPosts(
+    public ResponseEntity<PostPaginationResponse> searchPosts(
             @RequestParam("title") String title,
             @PageableDefault(size = 8, sort = "title", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         Page<Post> searchPosts = mainService.searchPosts(title, pageable);
-        return ResponseEntity.ok(new SearchPostPaginationResponse(searchPosts));
+        return ResponseEntity.ok(new PostPaginationResponse(searchPosts));
     }
 }

@@ -22,7 +22,7 @@ public class MainService {
     }
 
     public Page<Member> searchMembers(String name, Pageable pageable) {
-        return memberRepository.findMembersByProfileNameContainingOrderByProfileNameAsc(name, pageable);
+        return memberRepository.findMembersByProfileNameContainingIgnoreCaseOrderByProfileNameAsc(name, pageable);
     }
 
     public Page<Post> searchPosts(String title, Pageable pageable) {

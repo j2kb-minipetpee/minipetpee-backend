@@ -13,16 +13,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
-public class PopularPostPaginationResponse {
-    private final List<PopularPostResponse> content;
+public class PostPaginationResponse {
+    private final List<PostResponse> content;
     private final PageResponse page;
 
-    public PopularPostPaginationResponse(Page<Post> popularPosts) {
+    public PostPaginationResponse(Page<Post> popularPosts) {
         if (Objects.isNull(popularPosts)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
         this.content = popularPosts.stream()
-                .map(PopularPostResponse::new)
+                .map(PostResponse::new)
                 .collect(Collectors.toList());
         this.page = new PageResponse(popularPosts);
     }
