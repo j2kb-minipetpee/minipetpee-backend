@@ -45,6 +45,7 @@ public class JwtResolver implements InitializingBean {
     public String issueAccessToken(JwtAuthenticationPrincipal principal) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", principal.getId());
+        claims.put("homepeeId", principal.getHomepeeId());
         claims.put("name", principal.getName());
         claims.put("email", principal.getEmail());
         claims.put("role", principal.getRole());
@@ -80,6 +81,9 @@ public class JwtResolver implements InitializingBean {
         if (Objects.isNull(claims.get("id", Long.class))) {
             throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1004);
         }
+        if (Objects.isNull(claims.get("homepeeId", Long.class))) {
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1016);
+        }
         if (Objects.isNull(claims.get("name", String.class))) {
             throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1005);
         }
@@ -95,7 +99,12 @@ public class JwtResolver implements InitializingBean {
                         .map(authority -> new SimpleGrantedAuthority(authority.name()))
                         .collect(Collectors.toList());
 
-        JwtAuthenticationPrincipal principal = new JwtAuthenticationPrincipal(claims.get("id", Long.class), claims.get("name", String.class), claims.get("email", String.class));
+        JwtAuthenticationPrincipal principal = new JwtAuthenticationPrincipal(
+                claims.get("id", Long.class),
+                claims.get("homepeeId", Long.class),
+                claims.get("name", String.class),
+                claims.get("email", String.class)
+        );
 
         return new JwtAuthenticationToken(authorities, principal, null);
     }

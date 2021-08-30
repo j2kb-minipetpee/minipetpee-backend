@@ -68,4 +68,8 @@ public class Homepee {
     private String defaultTitle(String name) {
         return name + "님의 미니홈피";
     }
+
+    public void increaseVisitCount() {
+        this.visitCount = this.visitCount+ 1;
+    }
 }
