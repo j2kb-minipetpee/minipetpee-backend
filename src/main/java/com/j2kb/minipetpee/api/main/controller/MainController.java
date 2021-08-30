@@ -6,6 +6,10 @@ import com.j2kb.minipetpee.api.main.service.MainService;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -27,7 +31,15 @@ public class MainController {
 
     private final MainService mainService;
 
-    @Operation(summary = "인기 컨텐츠 조회")
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 페이지(0 이상)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "5")))
+    @Operation(summary = "인기 게시글 조회(board만 조회, album 조회x)")
     @GetMapping("/popular-posts")
     public ResponseEntity<PopularPostPaginationResponse> findPopularPosts(
             @ParameterObject @PageableDefault(size = 5) Pageable pageable
@@ -36,6 +48,14 @@ public class MainController {
         return ResponseEntity.ok(new PopularPostPaginationResponse(popularPosts));
     }
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 페이지(0 이상)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "8")))
     @Operation(summary = "계정 검색")
     @GetMapping("/search-member")
     public ResponseEntity<SearchMemberPaginationResponse> searchMembers(
@@ -46,6 +66,14 @@ public class MainController {
         return ResponseEntity.ok(new SearchMemberPaginationResponse(searchMembers));
     }
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 페이지(0 이상)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "요청할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "8")))
     @Operation(summary = "게시글 검색")
     @GetMapping("/search-post")
     public ResponseEntity<SearchPostPaginationResponse> searchPosts(
