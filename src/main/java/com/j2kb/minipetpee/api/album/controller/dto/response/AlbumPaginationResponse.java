@@ -29,14 +29,13 @@ public class AlbumPaginationResponse {
         }
 
         List<AlbumPostResponse> content = new ArrayList<>();
+
         albumPosts.forEach(data -> {
-            for (Long albumCommentsId : albumComments.keySet()) {
-                //albumPost id와 comment 의 post id 가 동일한 경우
-                if(data.getId() == albumCommentsId) {
-                    content.add(new AlbumPostResponse(data, albumComments.get(albumCommentsId)));
-                }
+            if (albumComments.containsKey(data.getId())) {
+                content.add(new AlbumPostResponse(data, albumComments.get(data.getId())));
             }
         });
+
         this.content = content;
         this.page = new PageResponse(albumPosts);
     }
