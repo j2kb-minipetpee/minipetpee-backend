@@ -51,7 +51,7 @@ public class BoardController {
     @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
     public ResponseEntity<List<BoardPostSummaryResponse>> findBoardPosts(
-            @PathVariable(name = "homepee-id") Long hompeeId,
+            @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
