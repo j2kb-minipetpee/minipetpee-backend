@@ -5,8 +5,13 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostRequest
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
 import com.j2kb.minipetpee.api.album.controller.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -36,11 +41,19 @@ public class AlbumController {
         return ResponseEntity.ok(saveAlbumPostResponse);
     }
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 0 부터 시작"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환될 페이지 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "4")))
     @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
     @GetMapping
     public ResponseEntity<List<AlbumPostResponse>> findAlbumPosts(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<AlbumPostImageResponse> albumImage1 = new ArrayList<>();
         albumImage1.add(new AlbumPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg"));
