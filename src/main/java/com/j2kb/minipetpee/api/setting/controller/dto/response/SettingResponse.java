@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 @Getter
 public class SettingResponse {
     private final ProfileResponse profile;
+    private final HomepeeResponse homepee;
     private final List<TabResponse> tabs;
 
     public SettingResponse(Homepee homepee, Member member, List<Tab> tabs) {
-        this.profile = new ProfileResponse(member.getProfile(), homepee);
+        this.profile = new ProfileResponse(member.getProfile());
+        this.homepee = new HomepeeResponse(homepee);
         this.tabs = tabs.stream()
                 .map(TabResponse::new)
                 .collect(Collectors.toList());

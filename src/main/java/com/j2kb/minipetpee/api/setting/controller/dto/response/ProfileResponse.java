@@ -16,9 +16,8 @@ public class ProfileResponse {
     private final String personality;
     private final Gender gender;
     private final String profileImageUrl;
-    private final String gateImageUrl;
 
-    public ProfileResponse(Profile profile, Homepee homepee) {
+    public ProfileResponse(Profile profile) {
         this.email = profile.getProfileImageUrl();
         this.name = profile.getName();
         this.birthday = profile.getBirthday();
@@ -26,6 +25,5 @@ public class ProfileResponse {
         this.personality = profile.getPersonality();
         this.gender = profile.getGender();
         this.profileImageUrl = profile.getProfileImageUrl();
-        this.gateImageUrl = homepee.getGateImageUrl();
     }
 }
