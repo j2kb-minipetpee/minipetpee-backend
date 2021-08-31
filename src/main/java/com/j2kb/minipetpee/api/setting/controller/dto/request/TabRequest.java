@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TabRequest {
     private Long id;
-    private Type type;
     private boolean visible;
 }

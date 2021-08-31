@@ -44,7 +44,7 @@ public class SettingController {
         return ResponseEntity.ok(settingResponse);
     }
 
-    @Operation(summary = "설정 변경")
+    @Operation(summary = "프로필 및 홈피 설정 변경")
     @PutMapping("/profile")
     public ResponseEntity<Void> updateProfile(
             @PathVariable(name = "homepee-id") Long homepeeId,

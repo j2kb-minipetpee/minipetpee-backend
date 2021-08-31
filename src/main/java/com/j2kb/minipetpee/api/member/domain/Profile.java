@@ -35,7 +35,7 @@ public class Profile {
     public void update(UpdateProfileRequest profileRequest) {
         this.name = profileRequest.getName();
         this.birthday = profileRequest.getBirthday();
-        this.species = profileRequest.getSpecies());
+        this.species = profileRequest.getSpecies();
         this.personality = profileRequest.getPersonality();
         this.gender = profileRequest.getGender();
         this.profileImageUrl = profileRequest.getProfileImageUrl();
