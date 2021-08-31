@@ -9,6 +9,7 @@ import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Getter
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,19 +53,18 @@ public abstract class Post extends BaseTimeEntity {
         comment.setPost(this);
     }
 
-    public Post(String title, Tab tab, List<Image> images) {
+    public Post(String title, Tab tab) {
         this.title = title;
         this.tab = tab;
-        this.images = images;
     }
 
     //사진첩 게시글 수정
     public void updateAlbum(UpdateAlbumPostRequest updateAlbumPost, List<Image> sendImages) {
         this.title = updateAlbumPost.getTitle();
-        //원래 저장된 사진들 모두 제거
-        while(images.size() > 0) {
-            images.remove(0);
-        }
+
+        while(this.getImages().size() > 0)
+            this.getImages().remove(0);
+
         //받아온 사진들 추가
         for (Image image : sendImages) {
             this.setImages(image);

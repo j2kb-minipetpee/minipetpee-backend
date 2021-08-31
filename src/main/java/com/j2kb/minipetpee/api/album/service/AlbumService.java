@@ -16,6 +16,7 @@ import com.j2kb.minipetpee.global.exception.ServiceException;
 import com.j2kb.minipetpee.global.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -81,7 +83,7 @@ public class AlbumService {
                 .map(Image::new)
                 .collect(Collectors.toList());
 
-        //Post 와 Image 연관관계 설정 및 제거
+        //Post 와 Image 연관관계 설정
         albumPost.updateAlbum(updateAlbumPost, sendFromImage);
     }
 

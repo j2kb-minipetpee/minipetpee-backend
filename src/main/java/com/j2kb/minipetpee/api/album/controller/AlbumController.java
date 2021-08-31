@@ -50,7 +50,7 @@ public class AlbumController {
     @GetMapping
     public ResponseEntity<AlbumPaginationResponse> findAlbumPosts(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         //게시글 찾기
         Page<AlbumPost> albumPosts = albumService.findAlbumPosts(homepeeId, pageable);
@@ -66,7 +66,7 @@ public class AlbumController {
     public ResponseEntity<CommentPaginationResponse> findAlbumPostComments(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
-            @PageableDefault(size = 3, page = 1, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 3, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<Comment> albumComments = albumService.findAlbumPostCommentsById(homepeeId, postId, pageable);
         return ResponseEntity.ok().body(new CommentPaginationResponse(albumComments));

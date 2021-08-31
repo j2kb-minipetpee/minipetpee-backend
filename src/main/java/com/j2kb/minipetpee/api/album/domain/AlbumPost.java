@@ -19,8 +19,8 @@ import java.util.List;
 public class AlbumPost extends Post {
 
     @Builder
-    public AlbumPost(String title, Tab tab, List<Image> images) {
-        super(title, tab, images);
+    public AlbumPost(String title, Tab tab) {
+        super(title, tab);
     }
 
 }
