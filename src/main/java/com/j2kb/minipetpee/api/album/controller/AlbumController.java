@@ -7,7 +7,6 @@ import com.j2kb.minipetpee.api.album.controller.dto.response.*;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
 import com.j2kb.minipetpee.global.domain.Comment;
-import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Tag(name = "갤러리 API")
 @Slf4j
@@ -88,35 +84,7 @@ public class AlbumController {
         //hompeeId에 해당하는 album 찾기
         AlbumPost albumPost = albumService.findAlbumPost(homepeeId, updateAlbumPost);
 
-        //전달된 이미지 Image 객체로 변경
-        List<Image> sendFromImage = updateAlbumPost.getImages()
-                .stream()
-                .map(Image::new)
-                .collect(Collectors.toList());
-
-        List<Image> deleteImage = new ArrayList<>();  //삭제할 이미지
-        List<Image> fromSendImage = new ArrayList<>();  //전달받은 이미지 중 서버에 있는 이미지
-        List<Image> addFileList = new ArrayList<>(); //전달받은 이미지 중 서버에 없는 이미지
-
-        //전달되어 온 사진에서 서버의 사진 포함하고 있지 않으면 삭제
-        for (Image image : albumPost.getImages()) {
-            if(!sendFromImage.contains(image)) {
-                //서버의 이미지 삭제
-                deleteImage.add(image);
-            }else {
-                //image에 저장되어 있으면서 전달되어 온 사진 정보
-                fromSendImage.add(image);
-            }
-        }
-
-        //image 에 저장되어 있으면서 전달되어 온 사진 정보에 전달되어 온 정보 비교 후 없는건 저장
-        for (Image updateImage : sendFromImage) {
-            if(!fromSendImage.contains(updateImage)) {
-                addFileList.add(updateImage);
-            }
-        }
-
-        albumService.updateAlbumPost(albumPost, updateAlbumPost, addFileList, deleteImage);
+        albumService.updateAlbumPost(albumPost, updateAlbumPost);
         return ResponseEntity.noContent().build();
     }
 

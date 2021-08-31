@@ -54,16 +54,19 @@ public abstract class Post extends BaseTimeEntity {
     public Post(String title, Tab tab, List<Image> images) {
         this.title = title;
         this.tab = tab;
-        if(!Objects.isNull(images))
-            this.images = images;
+        this.images = images;
     }
 
     //사진첩 게시글 수정
-    public void updateAlbum(UpdateAlbumPostRequest updateAlbumPost, List<Image> addFileList, List<Image> deleteImage) {
+    public void updateAlbum(UpdateAlbumPostRequest updateAlbumPost, List<Image> sendImages) {
         this.title = updateAlbumPost.getTitle();
-        if (!Objects.isNull(updateAlbumPost.getImages())) {
-            deleteImage.forEach(image -> this.images.remove(image));
-            addFileList.forEach(image -> this.setImages(image));
+        //원래 저장된 사진들 모두 제거
+        while(images.size() > 0) {
+            images.remove(0);
+        }
+        //받아온 사진들 추가
+        for (Image image : sendImages) {
+            this.setImages(image);
         }
     }
 

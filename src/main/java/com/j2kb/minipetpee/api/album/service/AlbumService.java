@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Transactional
 @RequiredArgsConstructor
@@ -71,12 +73,16 @@ public class AlbumService {
         return albumPost;
     }
 
-    public void updateAlbumPost(
-            AlbumPost albumPost, UpdateAlbumPostRequest updateAlbumPost,
-            List<Image> addFileList, List<Image> deleteImage
-    ) {
+    public void updateAlbumPost(AlbumPost albumPost, UpdateAlbumPostRequest updateAlbumPost) {
+
+        //전달된 이미지 Image 객체로 변경
+        List<Image> sendFromImage = updateAlbumPost.getImages()
+                .stream()
+                .map(Image::new)
+                .collect(Collectors.toList());
+
         //Post 와 Image 연관관계 설정 및 제거
-        albumPost.updateAlbum(updateAlbumPost, addFileList, deleteImage);
+        albumPost.updateAlbum(updateAlbumPost, sendFromImage);
     }
 
     public Comment saveAlbumPostComment(Long homepeeId, Long postId, SaveAlbumPostCommentRequest albumComment) {
@@ -140,7 +146,7 @@ public class AlbumService {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
-        //album 상태가 공개인지 비공개인지 체크 -> 비공개 일 때, 자신의 홈피인 경우 볼 수 있어야 해서 spring security로 처리 필요**
+        //album 상태가 공개인지 비공개인지 체크 -> 비공개 일 때, 자신의 홈피인 경우 볼 수 있어야 해서 spring security 적용 후 처리 필요**
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP5001);
         return tab;
