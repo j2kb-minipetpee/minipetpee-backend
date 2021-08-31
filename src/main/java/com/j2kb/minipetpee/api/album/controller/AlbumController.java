@@ -43,7 +43,7 @@ public class AlbumController {
 
         AlbumPost saveAlbumPost =
                 albumService.saveAlbumPost(homepeeId, saveAlbumPostRequest);
-        return ResponseEntity.ok().body(new SaveAlbumPostResponse(saveAlbumPost));
+        return ResponseEntity.ok(new SaveAlbumPostResponse(saveAlbumPost));
     }
 
     @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
@@ -55,10 +55,10 @@ public class AlbumController {
         //게시글 찾기
         Page<AlbumPost> albumPosts = albumService.findAlbumPosts(homepeeId, pageable);
 
-        PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글의 댓글 찾기
         Map<Long, Page<Comment>> albumComments = albumService.findAlbumPostComments(albumPosts, pageRequest);
-        return ResponseEntity.ok().body(new AlbumPaginationResponse(albumPosts,albumComments));
+        return ResponseEntity.ok(new AlbumPaginationResponse(albumPosts,albumComments));
     }
 
     @Operation(summary = "갤러리 게시글의 댓글 더보기", description = "댓글 더보기를 누르면 댓글 3개씩 조회")
@@ -69,7 +69,7 @@ public class AlbumController {
             @PageableDefault(size = 3, page = 1, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<Comment> albumComments = albumService.findAlbumPostCommentsById(homepeeId, postId, pageable);
-        return ResponseEntity.ok().body(new CommentPaginationResponse(albumComments));
+        return ResponseEntity.ok(new CommentPaginationResponse(albumComments));
     }
 
 
@@ -96,7 +96,7 @@ public class AlbumController {
             @Valid @RequestBody SaveAlbumPostCommentRequest albumCommentRequest
     ) {
         Comment comment = albumService.saveAlbumPostComment(homepeeId, postId, albumCommentRequest);
-        return ResponseEntity.ok().body(new SaveAlbumPostCommentResponse(comment));
+        return ResponseEntity.ok(new SaveAlbumPostCommentResponse(comment));
     }
 
 
