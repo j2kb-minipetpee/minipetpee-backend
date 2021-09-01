@@ -16,7 +16,6 @@ import com.j2kb.minipetpee.global.exception.ServiceException;
 import com.j2kb.minipetpee.global.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -42,7 +39,7 @@ public class AlbumService {
 
     public AlbumPost saveAlbumPost(Long homepeeId, SaveAlbumPostRequest saveAlbumPost) {
 
-        Tab tab = findTab(homepeeId);
+        Tab tab = findTabByHomepeeId(homepeeId);
 
         //AlbumPost 생성
         AlbumPost albumPost = AlbumPost.builder()
@@ -61,7 +58,7 @@ public class AlbumService {
 
     @Transactional(readOnly = true)
     public Page<AlbumPost> findAlbumPosts(Long homepeeId, Pageable pageable) {
-        Tab tab = findTab(homepeeId);
+        Tab tab = findTabByHomepeeId(homepeeId);
 
         //tab id로 album 조회
         return postRepository.findAllByTabId(tab.getId(), pageable);
@@ -70,8 +67,8 @@ public class AlbumService {
     @Transactional(readOnly = true)
     public AlbumPost findAlbumPost(Long homepeeId, UpdateAlbumPostRequest updateAlbumPost) {
 
-        Tab tab = findTab(homepeeId);
-        AlbumPost albumPost = findAlbumPost(updateAlbumPost.getId(), tab.getId());
+        Tab tab = findTabByHomepeeId(homepeeId);
+        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(updateAlbumPost.getId(), tab.getId());
         return albumPost;
     }
 
@@ -88,8 +85,8 @@ public class AlbumService {
     }
 
     public Comment saveAlbumPostComment(Long homepeeId, Long postId, SaveAlbumPostCommentRequest albumComment) {
-        Tab tab = findTab(homepeeId);
-        AlbumPost albumPost = findAlbumPost(postId, tab.getId());
+        Tab tab = findTabByHomepeeId(homepeeId);
+        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
 
         //댓글 쓴 멤버 찾기
         Member member = memberRepository.findById(albumComment.getMemberId())
@@ -106,16 +103,16 @@ public class AlbumService {
     }
 
     public void deleteAlbumPost(Long homepeeId, Long postId) {
-        Tab tab = findTab(homepeeId);
-        AlbumPost albumPost = findAlbumPost(postId, tab.getId());
+        Tab tab = findTabByHomepeeId(homepeeId);
+        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
 
         //게시글 삭제
         postRepository.delete(albumPost);
     }
 
     public void deleteAlbumPostComment(Long homepeeId, Long postId, Long commentId) {
-        Tab tab = findTab(homepeeId);
-        AlbumPost albumPost = findAlbumPost(postId, tab.getId());
+        Tab tab = findTabByHomepeeId(homepeeId);
+        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
 
         //댓글 찾기
         Comment comment = commentRepository.findByIdAndPostId(commentId, albumPost.getId())
@@ -137,25 +134,26 @@ public class AlbumService {
 
     //post Id로 album 찾고 albumId로 comment 찾기
     public Page<Comment> findAlbumPostCommentsById(Long homepeeId, Long postId, Pageable pageable) {
-        Tab tab = findTab(homepeeId);
-        AlbumPost albumPost = findAlbumPost(postId, tab.getId());
+        Tab tab = findTabByHomepeeId(homepeeId);
+        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
 
         return commentRepository.findByPostId(albumPost.getId(),pageable);
     }
 
     //homepeeId 로 tab 찾기
-    public Tab findTab(Long homepeeId) {
+    @Transactional(readOnly = true)
+    public Tab findTabByHomepeeId(Long homepeeId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-
-        //album 상태가 공개인지 비공개인지 체크 -> 비공개 일 때, 자신의 홈피인 경우 볼 수 있어야 해서 spring security 적용 후 처리 필요**
+        //tab 공개인지 비공개 인지 확인
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP5001);
         return tab;
     }
 
     //postId, tabId로 albumPost 찾기
-    public AlbumPost findAlbumPost(Long postId, Long tabId) {
+    @Transactional(readOnly = true)
+    public AlbumPost findAlbumPostByPostIdAndTabId(Long postId, Long tabId) {
         AlbumPost albumPost = postRepository.findByIdAndTabId(postId, tabId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
         return albumPost;
