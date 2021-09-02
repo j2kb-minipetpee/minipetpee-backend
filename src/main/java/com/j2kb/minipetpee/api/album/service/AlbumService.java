@@ -100,7 +100,7 @@ public class AlbumService {
     }
 
     //homepeeId 로 tab 찾기
-    @Transactional(readOnly = true, propagation=Propagation.REQUIRED)
+    @Transactional(propagation=Propagation.MANDATORY, readOnly = true)
     public Tab findTabByHomepeeId(Long homepeeId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
@@ -111,7 +111,7 @@ public class AlbumService {
     }
 
     //postId, tabId로 albumPost 찾기
-    @Transactional(readOnly = true, propagation=Propagation.REQUIRED)
+    @Transactional(propagation=Propagation.MANDATORY, readOnly = true)
     public Post findAlbumPostByPostIdAndTabId(Long postId, Long tabId) {
         Post albumPost = postRepository.findByIdAndTabId(postId, tabId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
