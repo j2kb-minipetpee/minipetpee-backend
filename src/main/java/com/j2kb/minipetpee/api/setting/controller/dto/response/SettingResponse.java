@@ -23,7 +23,7 @@ public class SettingResponse {
     public SettingResponse(Homepee homepee, Member member, List<Tab> tabs) {
         this.profile = new ProfileResponse(member.getProfile());
         this.homepee = new HomepeeResponse(homepee);
-        if (Objects.isNull(tabs)) {
+        if (tabs.isEmpty()) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7004);
         }
         this.tabs = tabs.stream()
