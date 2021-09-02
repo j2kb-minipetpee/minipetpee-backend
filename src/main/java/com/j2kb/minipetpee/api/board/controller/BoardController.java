@@ -58,9 +58,9 @@ public class BoardController {
         BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
         BoardPostImageResponse boardImg3 = new BoardPostImageResponse(3L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
-        BoardPostSummaryResponse boardPost1 = new BoardPostSummaryResponse(1L, "title1", boardImg1, LocalDateTime.now());
-        BoardPostSummaryResponse boardPost2 = new BoardPostSummaryResponse(2L, "title2", boardImg2, LocalDateTime.now());
-        BoardPostSummaryResponse boardPost3 = new BoardPostSummaryResponse(3L, "title3", boardImg3, LocalDateTime.now());
+        BoardPostSummaryResponse boardPost1 = new BoardPostSummaryResponse(1L, "title1", boardImg1, 100, LocalDateTime.now());
+        BoardPostSummaryResponse boardPost2 = new BoardPostSummaryResponse(2L, "title2", boardImg2, 100, LocalDateTime.now());
+        BoardPostSummaryResponse boardPost3 = new BoardPostSummaryResponse(3L, "title3", boardImg3, 100, LocalDateTime.now());
 
         List<BoardPostSummaryResponse> boardPosts = new ArrayList<>();
         boardPosts.add(boardPost1);
