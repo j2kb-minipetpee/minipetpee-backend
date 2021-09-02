@@ -6,6 +6,10 @@ import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.comment.service.CommentService;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +29,14 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 (0 부터 시작)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "3")))
     @Operation(summary = "게시글의 댓글 더보기", description = "댓글 더보기를 누르면 댓글 3개씩 조회")
     @GetMapping
     public ResponseEntity<CommentPaginationResponse> findPostComments(
