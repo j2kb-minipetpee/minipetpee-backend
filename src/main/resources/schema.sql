@@ -50,6 +50,7 @@ create table member (
     personality varchar(255),
     profile_image_url varchar(255),
     species varchar(255),
+    role varchar(255),
     created_at timestamp not null,
     updated_at timestamp,
     deleted boolean default 0 not null

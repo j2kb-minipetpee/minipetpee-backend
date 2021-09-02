@@ -12,6 +12,6 @@ import org.springframework.data.repository.query.Param;
 public interface GuestNoteRepository extends JpaRepository<GuestNote, Long> {
 
     @EntityGraph(value = "GuestNote.member")
-    @Query("select g from GuestNote g join g.tab t join t.homepee h where h.id = :homepeeId and t.type = 'GUEST'")
-    Page<GuestNote> findAllByHomepeeId(@Param("homepeeId") Long homepeeId, Pageable pageable);
+    @Query("select g from GuestNote g join g.tab t where t.id = :tabId")
+    Page<GuestNote> findAllByTabId(@Param("tabId") Long tabId, Pageable pageable);
 }

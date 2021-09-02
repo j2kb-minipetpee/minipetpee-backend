@@ -4,7 +4,6 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.request.SaveGuestNoteReq
 import com.j2kb.minipetpee.api.guestnote.controller.dto.request.UpdateGuestNoteRequest;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.repository.GuestNoteRepository;
-import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class GuestNoteService {
@@ -27,15 +25,21 @@ public class GuestNoteService {
     private final GuestNoteRepository guestNoteRepository;
     private final MemberRepository memberRepository;
     private final TabRepository tabRepository;
-    private final HomepeeRepository homepeeRepository;
 
     @Transactional(readOnly = true)
-    public Page<GuestNote> findGuestNotes(Long homepeeId, Pageable pageable) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeRepository.findById(homepeeId);
-        return guestNoteRepository.findAllByHomepeeId(homepeeId, pageable);
+    public Page<GuestNote> findGuestNotes(Long homepeeId, Long currentUserHomepeeId, Pageable pageable) {
+        //homepeeId에 해당하는 Tab 조회
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
+
+        if (!tab.isVisible() && !homepeeId.equals(currentUserHomepeeId)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6008);
+        }
+
+        return guestNoteRepository.findAllByTabId(tab.getId(), pageable);
     }
 
+    @Transactional
     public GuestNote saveGuestNote(Long homepeeId, SaveGuestNoteRequest guestNoteRequest) {
         //member 객체 찾기
         Member member = memberRepository.findById(guestNoteRequest.getMemberId())
@@ -54,9 +58,11 @@ public class GuestNoteService {
         return guestNoteRepository.save(guestNote);
     }
 
+    @Transactional
     public void updateGuestNote(Long homepeeId, Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeRepository.findById(homepeeId);
+        //homepeeId에 해당하는 Tab 조회
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND,  ErrorCode.EMP6002));
@@ -64,9 +70,11 @@ public class GuestNoteService {
         guestNote.updateGuestNote(updateGuestNote);
     }
 
+    @Transactional
     public void deleteGuestNote(Long homepeeId, Long guestNoteId) {
-        //homepeeId에 해당하는 homepee 존재하는지 조회
-        homepeeRepository.findById(homepeeId);
+        //homepeeId에 해당하는 Tab 조회
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6003));

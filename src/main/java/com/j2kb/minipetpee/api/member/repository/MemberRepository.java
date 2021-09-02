@@ -14,4 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findMembersByProfileNameContainingOrderByProfileNameAsc(String name, Pageable pageable);
 
     Optional<Member> findByHomepeeId(Long homepeeId);
+  
+    Optional<Member> findByEmail(String email);
 }

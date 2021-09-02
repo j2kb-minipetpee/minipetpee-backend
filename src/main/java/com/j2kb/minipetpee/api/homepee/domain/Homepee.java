@@ -43,10 +43,16 @@ public class Homepee {
     @ColumnDefault("0")
     private int visitCount;
 
-    @Builder.Default
     @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Tab> tabs = new ArrayList<>();
+
+    public Homepee(Member member, List<Tab> tabs) {
+        for (Tab tab : tabs) {
+            setTabs(tab);
+        }
+        this.member = member;
+        this.title = defaultTitle(member.name());
+    }
 
     public Profile memberProfile() {
         if (Objects.isNull(member)) {
@@ -60,6 +66,14 @@ public class Homepee {
         tab.setHomepee(this);
     }
 
+    private String defaultTitle(String name) {
+        return name + "님의 미니홈피";
+    }
+
+    public void increaseVisitCount() {
+        this.visitCount = this.visitCount+ 1;
+    }
+  
     public void updateTitle(String title) {
         this.title = title;
     }
