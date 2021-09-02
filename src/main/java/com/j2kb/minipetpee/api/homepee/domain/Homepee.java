@@ -3,6 +3,7 @@ package com.j2kb.minipetpee.api.homepee.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateHomepeeRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -71,5 +72,13 @@ public class Homepee {
 
     public void increaseVisitCount() {
         this.visitCount = this.visitCount+ 1;
+    }
+  
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateGateImageUrl(String gateImageUrl){
+        this.gateImageUrl = gateImageUrl;
     }
 }

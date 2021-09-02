@@ -1,6 +1,7 @@
 package com.j2kb.minipetpee.api.member.domain;
 
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateProfileRequest;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -47,6 +48,10 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.profile = profile;
         this.deleted = false;
+    }
+  
+    public void updateProfile(UpdateProfileRequest profile) {
+        this.profile.updateProfile(profile);
     }
 
     public String profileImageUrl() {

@@ -13,5 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // @Query("SELECT m From Member m WHERE m.profile.name LIKE '%:name%'")
     Page<Member> findMembersByProfileNameContainingOrderByProfileNameAsc(String name, Pageable pageable);
 
+    Optional<Member> findByHomepeeId(Long homepeeId);
+  
     Optional<Member> findByEmail(String email);
 }
