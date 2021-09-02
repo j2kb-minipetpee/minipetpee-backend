@@ -48,6 +48,12 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    public Member findById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP1014));
+    }
+
+    @Transactional(readOnly = true)
     public Member findByEmail(final LoginRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP1014));

@@ -1,6 +1,5 @@
 package com.j2kb.minipetpee.api.setting.controller.dto.response;
 
-import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import lombok.Getter;

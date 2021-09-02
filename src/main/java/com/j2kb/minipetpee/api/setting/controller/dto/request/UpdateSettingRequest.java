@@ -1,19 +1,25 @@
 package com.j2kb.minipetpee.api.setting.controller.dto.request;
 
+import com.j2kb.minipetpee.api.member.domain.Profile;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateSettingRequest {
-    @NotNull
     @Valid
-    private final UpdateProfileRequest profile;
+    @NotNull(message = "EMP7017")
+    private UpdateProfileRequest profile;
 
-    @NotNull
     @Valid
-    private final UpdateHomepeeRequest homepee;
+    @NotNull(message = "EMP7018")
+    private UpdateHomepeeRequest homepee;
+
+    public Profile toProfile() {
+        return profile.toProfile();
+    }
 }

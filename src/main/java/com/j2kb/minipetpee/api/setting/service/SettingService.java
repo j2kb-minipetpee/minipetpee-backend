@@ -31,20 +31,10 @@ public class SettingService {
     private final TabRepository tabRepository;
     private final HomepeeRepository homepeeRepository;
 
-    // 프로필 조회 - 설정 가능한 계정 정보 및 탭 목록 조회
-    @Transactional(readOnly = true)
-    public Member findMemberByHomepeeId(Long homepeeId) {
-        Homepee homepee = findHomepeeById(homepeeId);
-        Member member = memberRepository.findByHomepeeId(homepee.getId())
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7001));
-        return member;
-    }
-
     @Transactional(readOnly = true)
     public List<Tab> findTabsByHomepeeId(Long homepeeId) {
         Homepee homepee = findHomepeeById(homepeeId);
-        List<Tab> tabs = tabRepository.findAllByHomepeeId(homepee.getId());
-        return tabs;
+        return tabRepository.findAllByHomepeeId(homepee.getId());
     }
 
     // 프로필 변경
@@ -53,7 +43,7 @@ public class SettingService {
         Homepee homepee = findHomepeeById(homepeeId);
         Member member = memberRepository.findByHomepeeId(homepee.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7001));
-        member.updateProfile(settingRequest.getProfile());
+        member.updateProfile(settingRequest.toProfile());
         homepee.updateTitle(settingRequest.getHomepee().getTitle());
         homepee.updateGateImageUrl(settingRequest.getHomepee().getGateImageUrl());
     }
@@ -63,7 +53,6 @@ public class SettingService {
     public void updateTabs(Long homepeeId, UpdateTabsRequest updateTabsRequest){
         // 홈피 확인
         Homepee homepee = findHomepeeById(homepeeId);
-        List<Tab> tabs = homepee.getTabs();
 
         for (TabRequest tabRequest : updateTabsRequest.getTabs()){
             Tab tab = tabRepository.findById(tabRequest.getId())

@@ -1,6 +1,5 @@
 package com.j2kb.minipetpee.api.member.domain;
 
-import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateProfileRequest;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -32,12 +31,12 @@ public class Profile {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    public void updateProfile(UpdateProfileRequest profileRequest) {
-        this.name = profileRequest.getName();
-        this.birthday = profileRequest.getBirthday();
-        this.species = profileRequest.getSpecies();
-        this.personality = profileRequest.getPersonality();
-        this.gender = profileRequest.getGender();
-        this.profileImageUrl = profileRequest.getProfileImageUrl();
+    public void update(String name, LocalDateTime birthday, String species, String personality, Gender gender, String profileImageUrl) {
+        this.name = name;
+        this.birthday = birthday;
+        this.species = species;
+        this.personality = personality;
+        this.gender = gender;
+        this.profileImageUrl = profileImageUrl;
     }
 }
