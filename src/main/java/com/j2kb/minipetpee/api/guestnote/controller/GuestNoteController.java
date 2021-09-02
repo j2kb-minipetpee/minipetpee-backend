@@ -34,16 +34,18 @@ public class GuestNoteController {
     @Operation(summary = "방명록 조회")
     @GetMapping
     public ResponseEntity<GuestNotePaginationResponse> findGuestNotes(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
+        Long currentUserHomepeeId = principal.getHomepeeId();
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, currentUserHomepeeId, pageable);
         return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
     @Operation(summary = "방명록 작성")
     @PostMapping
-    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS')")
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -56,7 +58,7 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 수정")
     @PutMapping("/{guest-note-id}")
-    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS')")
     public ResponseEntity<Void> updateGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -70,7 +72,7 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 삭제")
     @DeleteMapping("/{guest-note-id}")
-    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS')")
     public ResponseEntity<Void> deleteGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
