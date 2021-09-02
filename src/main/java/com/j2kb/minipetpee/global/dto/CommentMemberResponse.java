@@ -1,8 +1,7 @@
 package com.j2kb.minipetpee.global.dto;
 
-import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class CommentMemberResponse {

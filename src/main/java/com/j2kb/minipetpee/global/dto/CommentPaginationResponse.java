@@ -1,7 +1,7 @@
 package com.j2kb.minipetpee.global.dto;
 
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
 import org.springframework.data.domain.Page;

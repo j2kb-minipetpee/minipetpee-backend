@@ -1,54 +1,50 @@
 package com.j2kb.minipetpee.api.album.service;
 
-import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostCommentRequest;
 import com.j2kb.minipetpee.api.album.controller.dto.request.SaveAlbumPostRequest;
 import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
+import com.j2kb.minipetpee.api.album.controller.dto.response.AlbumPageResult;
+import com.j2kb.minipetpee.api.album.controller.dto.response.AlbumResult;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
-import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Image;
+import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
-import com.j2kb.minipetpee.global.repository.CommentRepository;
+import com.j2kb.minipetpee.api.comment.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class AlbumService {
 
     private final PostRepository postRepository;
     private final TabRepository tabRepository;
-    private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
 
-    public AlbumPost saveAlbumPost(Long homepeeId, SaveAlbumPostRequest saveAlbumPost) {
+    //게시물 저장
+    @Transactional
+    public AlbumPost saveAlbumPost(Long homepeeId, SaveAlbumPostRequest albumPostRequest) {
 
         Tab tab = findTabByHomepeeId(homepeeId);
 
         //AlbumPost 생성
-        AlbumPost albumPost = AlbumPost.builder()
-                .title(saveAlbumPost.getTitle())
-                .tab(tab)
-                .build();
+        AlbumPost albumPost = albumPostRequest.toEntity(tab);
 
         //string url 값 Image 객체로 변환
-        saveAlbumPost.getImages()
+        albumPostRequest.getImages()
                 .stream()
                 .map(Image::new)
                 .forEach(image -> albumPost.setImages(image));
@@ -56,92 +52,55 @@ public class AlbumService {
         return postRepository.save(albumPost);
     }
 
+    //갤러리 목록 조회
     @Transactional(readOnly = true)
-    public Page<AlbumPost> findAlbumPosts(Long homepeeId, Pageable pageable) {
+    public AlbumPageResult findAlbumPosts(Long homepeeId, Pageable pageablePost, Pageable pageableComment) {
         Tab tab = findTabByHomepeeId(homepeeId);
 
+        List<AlbumResult> albumResults = new ArrayList<>();
         //tab id로 album 조회
-        return postRepository.findAllByTabId(tab.getId(), pageable);
+        Page<Post> albumPosts = postRepository.findAllByTabId(tab.getId(), pageablePost);
+        //갤러리 포스트의 댓글 조회
+        for (Post albumPost : albumPosts) {
+            Page<Comment> postComment = commentRepository.findByPostId(albumPost.getId(), pageableComment);
+            albumResults.add(new AlbumResult(albumPost, postComment));
+        }
+
+        return new AlbumPageResult(albumResults, albumPosts);
     }
 
+    //갤러리 단건 조회 (게시글 수정 위해)
     @Transactional(readOnly = true)
-    public AlbumPost findAlbumPost(Long homepeeId, UpdateAlbumPostRequest updateAlbumPost) {
+    public Post findAlbumPost(Long homepeeId, UpdateAlbumPostRequest albumPostRequest) {
 
         Tab tab = findTabByHomepeeId(homepeeId);
-        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(updateAlbumPost.getId(), tab.getId());
+        Post albumPost = findAlbumPostByPostIdAndTabId(albumPostRequest.getId(), tab.getId());
         return albumPost;
     }
 
-    public void updateAlbumPost(AlbumPost albumPost, UpdateAlbumPostRequest updateAlbumPost) {
+    //게시글 수정
+    @Transactional
+    public void updateAlbumPost(Post albumPost, UpdateAlbumPostRequest albumPostRequest) {
 
         //전달된 이미지 Image 객체로 변경
-        List<Image> sendFromImage = updateAlbumPost.getImages()
-                .stream()
-                .map(Image::new)
-                .collect(Collectors.toList());
+        List<Image> images = albumPostRequest.toEntity();
 
-        //Post 와 Image 연관관계 설정
-        albumPost.updateAlbum(updateAlbumPost, sendFromImage);
+        albumPost.updatePostTitle(albumPostRequest.getTitle());
+        albumPost.updatePostImages(images);
     }
 
-    public Comment saveAlbumPostComment(Long homepeeId, Long postId, SaveAlbumPostCommentRequest albumComment) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
-
-        //댓글 쓴 멤버 찾기
-        Member member = memberRepository.findById(albumComment.getMemberId())
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP2001));
-
-        //댓글 객체 생성
-        Comment comment = Comment.builder()
-                .content(albumComment.getContent())
-                .member(member)
-                .build();
-
-        albumPost.setComments(comment);
-        return commentRepository.save(comment);
-    }
-
+    //게시글 삭제
+    @Transactional
     public void deleteAlbumPost(Long homepeeId, Long postId) {
         Tab tab = findTabByHomepeeId(homepeeId);
-        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
+        Post albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
 
         //게시글 삭제
         postRepository.delete(albumPost);
     }
 
-    public void deleteAlbumPostComment(Long homepeeId, Long postId, Long commentId) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
-
-        //댓글 찾기
-        Comment comment = commentRepository.findByIdAndPostId(commentId, albumPost.getId())
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5003));
-        //댓글 삭제
-        commentRepository.delete(comment);
-    }
-
-    public Map<Long, Page<Comment>> findAlbumPostComments(Page<AlbumPost> albumPosts, Pageable pageable) {
-        Map<Long, Page<Comment>> comments = new HashMap<>();
-
-        albumPosts.getContent()
-                .forEach(index -> {
-                    Page<Comment> postComment = commentRepository.findByPostId(index.getId(), pageable);
-                    comments.put(index.getId(), postComment);
-                });
-        return comments;
-    }
-
-    //post Id로 album 찾고 albumId로 comment 찾기
-    public Page<Comment> findAlbumPostCommentsById(Long homepeeId, Long postId, Pageable pageable) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        AlbumPost albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
-
-        return commentRepository.findByPostId(albumPost.getId(),pageable);
-    }
-
     //homepeeId 로 tab 찾기
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation=Propagation.REQUIRED)
     public Tab findTabByHomepeeId(Long homepeeId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
@@ -152,9 +111,9 @@ public class AlbumService {
     }
 
     //postId, tabId로 albumPost 찾기
-    @Transactional(readOnly = true)
-    public AlbumPost findAlbumPostByPostIdAndTabId(Long postId, Long tabId) {
-        AlbumPost albumPost = postRepository.findByIdAndTabId(postId, tabId)
+    @Transactional(readOnly = true, propagation=Propagation.REQUIRED)
+    public Post findAlbumPostByPostIdAndTabId(Long postId, Long tabId) {
+        Post albumPost = postRepository.findByIdAndTabId(postId, tabId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
         return albumPost;
     }

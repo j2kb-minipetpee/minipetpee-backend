@@ -1,6 +1,6 @@
 package com.j2kb.minipetpee.global.domain;
 
-import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostRequest;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.*;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
@@ -58,15 +58,18 @@ public abstract class Post extends BaseTimeEntity {
         this.tab = tab;
     }
 
-    //사진첩 게시글 수정
-    public void updateAlbum(UpdateAlbumPostRequest updateAlbumPost, List<Image> sendImages) {
-        this.title = updateAlbumPost.getTitle();
+    //게시글 제목 수정
+    public void updatePostTitle(String title) {
+        this.title = title;
+    }
 
+    //게시글 사진 수정
+    public void updatePostImages(List<Image> images) {
         while(this.getImages().size() > 0)
             this.getImages().remove(0);
 
         //받아온 사진들 추가
-        for (Image image : sendImages) {
+        for (Image image : images) {
             this.setImages(image);
         }
     }

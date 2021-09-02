@@ -3,10 +3,7 @@ package com.j2kb.minipetpee.api.album.domain;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.global.domain.Post;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

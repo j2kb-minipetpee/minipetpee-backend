@@ -1,12 +1,9 @@
 package com.j2kb.minipetpee.api.album.controller.dto.response;
 
-import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.Comment;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -20,21 +17,23 @@ public class AlbumPostResponse {
     private final List<AlbumPostImageResponse> images;
     private final CommentPaginationResponse comments;
 
-    public AlbumPostResponse(AlbumPost albumPost, Page<Comment> albumComments) {
-        this.id = albumPost.getId();
-        this.title = albumPost.getTitle();
-
-        if(Objects.isNull(albumPost.getImages())) {
+    public AlbumPostResponse(AlbumResult albumResult) {
+        if(Objects.isNull(albumResult.getAlbumPost())) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.images = albumPost.getImages()
+        if(Objects.isNull(albumResult.getAlbumPost().getImages())) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
+        }
+        if(Objects.isNull(albumResult.getAlbumComment())) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
+        }
+
+        this.id = albumResult.getAlbumPost().getId();
+        this.title = albumResult.getAlbumPost().getTitle();
+        this.images = albumResult.getAlbumPost().getImages()
                 .stream()
                 .map(AlbumPostImageResponse::new)
                 .collect(Collectors.toList());
-
-        if(Objects.isNull(albumComments)) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
-        }
-        this.comments = new CommentPaginationResponse(albumComments);
+        this.comments = new CommentPaginationResponse(albumResult.getAlbumComment());
     }
 }

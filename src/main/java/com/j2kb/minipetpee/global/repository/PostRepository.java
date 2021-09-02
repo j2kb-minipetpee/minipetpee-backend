@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<AlbumPost> findAllByTabId(Long tabId, Pageable pagable);
+    Page<Post> findAllByTabId(Long tabId, Pageable pagable);
 
-    Optional<AlbumPost> findByIdAndTabId(Long id, Long tabId);
+    Optional<Post> findByIdAndTabId(Long id, Long tabId);
 
     // 검색 - 조회순
     Page<BoardPost> findAllByOrderByViewCountDesc(Pageable pageable);
