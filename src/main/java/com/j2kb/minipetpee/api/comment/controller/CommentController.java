@@ -30,9 +30,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @Parameter(in = ParameterIn.QUERY
-            , description = "페이지 (0 부터 시작)"
+            , description = "페이지 (1 부터 시작)"
             , name = "page"
-            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "1")))
     @Parameter(in = ParameterIn.QUERY
             , description = "반환할 데이터 수"
             , name = "size"
