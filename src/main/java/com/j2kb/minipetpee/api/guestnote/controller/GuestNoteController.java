@@ -8,9 +8,14 @@ import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,12 +36,20 @@ public class GuestNoteController {
 
     private final GuestNoteService guestNoteService;
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 (0 부터 시작)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "4")))
     @Operation(summary = "방명록 조회")
     @GetMapping
     public ResponseEntity<GuestNotePaginationResponse> findGuestNotes(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long currentUserHomepeeId = principal.getHomepeeId();
         Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, currentUserHomepeeId, pageable);

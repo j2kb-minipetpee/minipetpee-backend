@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    // 검색 - 조회순
-    Page<Post> findAllByOrderByViewCountDesc(Pageable pageable);
+    // 조회순으로 게시글 받아오기 (조회수가 측정 불가한 앨범 제외)
+    Page<BoardPost> findByOrderByViewCountDesc(Pageable pageable);
 
-    // 제목으로 검색
-    Page<Post> findAllByTitleContainingIgnoreCase(String title, Pageable pageable);
+    // 제목으로 검색 (앨범 및 게시글 일괄)
+    Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 }
