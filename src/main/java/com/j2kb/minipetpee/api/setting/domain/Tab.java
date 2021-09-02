@@ -33,10 +33,21 @@ public class Tab {
     @JoinColumn(name = "homepee_id")
     private Homepee homepee;
 
+    public Tab(Long id, Type type, boolean visible) {
+        this.id = id;
+        this.type = type;
+        this.visible = visible;
+    }
+
     public Long homepeeId() {
         if (Objects.isNull(homepee)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
         }
         return this.homepee.getId();
+    }
+
+    public void updateVisibility(boolean visible){
+        // 필드 하나만 바꾸는 거라 엔티티 대신 boolean 값을 인자로 받아서 설정했는데 괜찮을까요?
+        this.visible = visible;
     }
 }

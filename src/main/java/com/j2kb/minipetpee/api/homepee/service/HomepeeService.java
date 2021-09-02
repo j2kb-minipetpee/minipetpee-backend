@@ -14,7 +14,10 @@ public class HomepeeService {
     private final HomepeeRepository homepeeRepository;
 
     public Homepee findById(Long id) {
-        return homepeeRepository.findById(id)
+        final Homepee homepee = homepeeRepository.findById(id)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001));
+        homepee.increaseVisitCount();
+
+        return homepee;
     }
 }

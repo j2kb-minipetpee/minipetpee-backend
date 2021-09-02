@@ -12,6 +12,7 @@ public class BoardPostSummaryResponse {
     private final Long id;
     private final String title;
     private final BoardPostImageResponse image;
+    private final Integer viewCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Embeddable
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,4 +30,13 @@ public class Profile {
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
+
+    public void update(String name, LocalDateTime birthday, String species, String personality, Gender gender, String profileImageUrl) {
+        this.name = name;
+        this.birthday = birthday;
+        this.species = species;
+        this.personality = personality;
+        this.gender = gender;
+        this.profileImageUrl = profileImageUrl;
+    }
 }

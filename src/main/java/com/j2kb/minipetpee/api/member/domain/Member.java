@@ -7,6 +7,7 @@ import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -38,6 +39,27 @@ public class Member extends BaseTimeEntity {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Homepee homepee;
 
+    private Role role = Role.OWNER;
+
+    public Member(Long id, String email, String password, Profile profile) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.profile = profile;
+        this.deleted = false;
+    }
+  
+    public void updateProfile(Profile profile) {
+        this.profile.update(
+            profile.getName(),
+            profile.getBirthday(),
+            profile.getSpecies(),
+            profile.getPersonality(),
+            profile.getGender(),
+            profile.getProfileImageUrl()
+        );
+    }
+
     public String profileImageUrl() {
         if (Objects.isNull(profile)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2002);
@@ -57,6 +79,16 @@ public class Member extends BaseTimeEntity {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP3001);
         }
         return this.homepee.getId();
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public void isMatchPassword(PasswordEncoder passwordEncoder, String rawPassword) {
+        if (!passwordEncoder.matches(rawPassword, this.password)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP1015);
+        }
     }
 }
 

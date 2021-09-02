@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +53,7 @@ class TabRepositoryTest {
                 .member(member)
                 .title("titleExample...")
                 .visitCount(3)
+                .tabs(new ArrayList<>())
                 .build();
 
         homepee.setTabs(tab);

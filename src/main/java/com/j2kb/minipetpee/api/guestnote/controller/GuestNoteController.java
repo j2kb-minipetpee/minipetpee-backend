@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNotePagina
 import com.j2kb.minipetpee.api.guestnote.controller.dto.response.SaveGuestNoteResponse;
 import com.j2kb.minipetpee.api.guestnote.domain.GuestNote;
 import com.j2kb.minipetpee.api.guestnote.service.GuestNoteService;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,16 +47,20 @@ public class GuestNoteController {
     @Operation(summary = "방명록 조회")
     @GetMapping
     public ResponseEntity<GuestNotePaginationResponse> findGuestNotes(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, pageable);
+        Long currentUserHomepeeId = principal.getHomepeeId();
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, currentUserHomepeeId, pageable);
         return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
     @Operation(summary = "방명록 작성")
     @PostMapping
+    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS')")
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveGuestNoteRequest guestNoteRequest
     ) {
@@ -64,7 +71,9 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 수정")
     @PutMapping("/{guest-note-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS')")
     public ResponseEntity<Void> updateGuestNote(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
@@ -76,7 +85,9 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 삭제")
     @DeleteMapping("/{guest-note-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS')")
     public ResponseEntity<Void> deleteGuestNote(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
