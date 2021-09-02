@@ -34,7 +34,7 @@ public class MainController {
     @Parameter(in = ParameterIn.QUERY
             , description = "요청할 페이지(0 이상)"
             , name = "page"
-            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+            , content = @Content(schema = @Schema(type = "`integer", defaultValue = "0")))
     @Parameter(in = ParameterIn.QUERY
             , description = "요청할 데이터 수"
             , name = "size"
@@ -44,7 +44,7 @@ public class MainController {
     public ResponseEntity<PopularPostPaginationResponse> findPopularPosts(
             @ParameterObject @PageableDefault(size = 5) Pageable pageable
     ) {
-        Page<Post> popularPosts = mainService.findPopularPosts(pageable);
+        Page<BoardPost> popularPosts = mainService.findPopularPosts(pageable);
         return ResponseEntity.ok(new PopularPostPaginationResponse(popularPosts));
     }
 

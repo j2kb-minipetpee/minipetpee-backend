@@ -18,7 +18,7 @@ public class MainService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    public Page<Post> findPopularPosts(Pageable pageable) {
+    public Page<BoardPost> findPopularPosts(Pageable pageable) {
         return postRepository.findByOrderByViewCountDesc(pageable);
     }
 

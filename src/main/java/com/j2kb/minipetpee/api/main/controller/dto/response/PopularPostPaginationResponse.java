@@ -18,7 +18,7 @@ public class PopularPostPaginationResponse {
     private final List<PostResponse> content;
     private final PageResponse page;
 
-    public PopularPostPaginationResponse(Page<Post> popularPosts) {
+    public PopularPostPaginationResponse(Page<BoardPost> popularPosts) {
         if (Objects.isNull(popularPosts)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
