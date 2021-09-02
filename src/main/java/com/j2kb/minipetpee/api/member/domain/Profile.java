@@ -32,7 +32,7 @@ public class Profile {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    public void update(UpdateProfileRequest profileRequest) {
+    public void updateProfile(UpdateProfileRequest profileRequest) {
         this.name = profileRequest.getName();
         this.birthday = profileRequest.getBirthday();
         this.species = profileRequest.getSpecies();

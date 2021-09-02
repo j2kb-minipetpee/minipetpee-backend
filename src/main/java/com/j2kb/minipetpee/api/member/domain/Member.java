@@ -10,7 +10,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
@@ -41,7 +40,7 @@ public class Member extends BaseTimeEntity {
     private Homepee homepee;
 
     public void updateProfile(UpdateProfileRequest profile) {
-        this.profile.update(profile);
+        this.profile.updateProfile(profile);
     }
 
     public String profileImageUrl() {

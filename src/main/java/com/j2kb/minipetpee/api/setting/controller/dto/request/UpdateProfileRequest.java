@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.setting.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.member.domain.Gender;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,14 +20,21 @@ public class UpdateProfileRequest {
     @Size(min = 2, max = 10, message = "EMP7009")
     private String name;
 
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime birthday;
 
+    @NotNull
     @Size(max = 30, message = "EMP7012")
     private String species;
 
+    @NotNull
     @Size(max = 30, message = "EMP7013")
     private String personality;
 
+    @NotNull
     private Gender gender;
+
+    @NotNull
     private String profileImageUrl;
 }

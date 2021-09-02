@@ -15,5 +15,6 @@ public class UpdateHomepeeRequest {
     @Size(min = 1, max = 20, message = "EMP7007")
     private String title;
 
+    @NotNull(message = "EMP7016")
     private String gateImageUrl;
 }

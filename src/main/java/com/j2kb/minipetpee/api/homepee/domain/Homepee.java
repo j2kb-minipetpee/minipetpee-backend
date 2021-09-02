@@ -60,8 +60,11 @@ public class Homepee {
         tab.setHomepee(this);
     }
 
-    public void update(UpdateHomepeeRequest homepeeRequest) {
-        this.title = homepeeRequest.getTitle();
-        this.gateImageUrl = homepeeRequest.getGateImageUrl();
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateGateImageUrl(String gateImageUrl){
+        this.gateImageUrl = gateImageUrl;
     }
 }

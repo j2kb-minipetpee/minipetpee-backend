@@ -14,15 +14,15 @@ import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class SettingService {
@@ -40,6 +40,7 @@ public class SettingService {
         return member;
     }
 
+    @Transactional(readOnly = true)
     public List<Tab> findTabsByHomepeeId(Long homepeeId) {
         Homepee homepee = findHomepeeById(homepeeId);
         List<Tab> tabs = tabRepository.findAllByHomepeeId(homepee.getId());
@@ -47,30 +48,24 @@ public class SettingService {
     }
 
     // 프로필 변경
+    @Transactional
     public void updateSettings(Long homepeeId, UpdateSettingRequest settingRequest) {
         Homepee homepee = findHomepeeById(homepeeId);
         Member member = memberRepository.findByHomepeeId(homepee.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7001));
         member.updateProfile(settingRequest.getProfile());
-        homepee.update(settingRequest.getHomepee());
+        homepee.updateTitle(settingRequest.getHomepee().getTitle());
+        homepee.updateGateImageUrl(settingRequest.getHomepee().getGateImageUrl());
     }
 
     // 탭 공개 여부 변경
+    @Transactional
     public void updateTabs(Long homepeeId, UpdateTabsRequest updateTabsRequest){
         // 홈피 확인
         Homepee homepee = findHomepeeById(homepeeId);
-
-        // tab id Set 생성
-        Set<Long> tabIdSet = tabRepository.findAllByHomepeeId(homepee.getId())
-                .stream()
-                .map((tab) -> tab.getId())
-                .collect(Collectors.toSet());
+        List<Tab> tabs = homepee.getTabs();
 
         for (TabRequest tabRequest : updateTabsRequest.getTabs()){
-            // 홈피가 가진 탭이 맞는지 확인
-            if (!tabIdSet.contains(tabRequest.getId())){
-                new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP7014);
-            }
             Tab tab = tabRepository.findById(tabRequest.getId())
                     .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP7004));
             tab.updateVisibility(tabRequest.isVisible());
@@ -78,6 +73,8 @@ public class SettingService {
     }
 
     // 홈피 조회 (유효성 검사용)
+    // mandatory 전파 옵션: 부모 트랜잭션에 합류, 부모 트랜잭션 없으면 예외
+    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
     public Homepee findHomepeeById(Long homepeeId) {
         Homepee homepee = homepeeRepository.findById(homepeeId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP7003));
