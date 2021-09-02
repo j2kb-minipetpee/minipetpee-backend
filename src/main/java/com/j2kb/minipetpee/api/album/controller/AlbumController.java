@@ -7,10 +7,15 @@ import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
 import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -42,11 +47,19 @@ public class AlbumController {
         return ResponseEntity.ok(new SaveAlbumPostResponse(saveAlbumPost));
     }
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 (0 부터 시작)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "4")))
     @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
     @GetMapping
     public ResponseEntity<AlbumPaginationResponse> findAlbumPosts(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글 찾기

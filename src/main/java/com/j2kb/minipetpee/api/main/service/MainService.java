@@ -18,15 +18,15 @@ public class MainService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    public Page<BoardPost> findPopularPosts(Pageable pageable) {
-        return postRepository.findAllByOrderByViewCountDesc(pageable);
+    public Page<Post> findPopularPosts(Pageable pageable) {
+        return postRepository.findByOrderByViewCountDesc(pageable);
     }
 
     public Page<Member> searchMembers(String name, Pageable pageable) {
-        return memberRepository.findMembersByProfileNameContainingOrderByProfileNameAsc(name, pageable);
+        return memberRepository.findMembersByProfileNameContainingIgnoreCaseOrderByProfileNameAsc(name, pageable);
     }
 
-    public Page<BoardPost> searchPosts(String title, Pageable pageable) {
-        return postRepository.findAllByTitleContainingIgnoreCase(title, pageable);
+    public Page<Post> searchPosts(String title, Pageable pageable) {
+        return postRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 }
