@@ -60,6 +60,7 @@ public class BoardController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+
         Page<Post> boardPosts = boardService.findBoardPosts(homepeeId, pageable);
         return ResponseEntity.ok(new BoardPaginationResponse(boardPosts));
     }

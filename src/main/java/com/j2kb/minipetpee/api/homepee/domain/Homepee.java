@@ -3,6 +3,7 @@ package com.j2kb.minipetpee.api.homepee.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import com.j2kb.minipetpee.api.setting.controller.dto.request.UpdateHomepeeRequest;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -42,10 +43,16 @@ public class Homepee {
     @ColumnDefault("0")
     private int visitCount;
 
-    @Builder.Default
     @OneToMany(mappedBy = "homepee", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Tab> tabs = new ArrayList<>();
+
+    public Homepee(Member member, List<Tab> tabs) {
+        for (Tab tab : tabs) {
+            setTabs(tab);
+        }
+        this.member = member;
+        this.title = defaultTitle(member.name());
+    }
 
     public Profile memberProfile() {
         if (Objects.isNull(member)) {
@@ -57,5 +64,21 @@ public class Homepee {
     public void setTabs(Tab tab) {
         this.getTabs().add(tab);
         tab.setHomepee(this);
+    }
+
+    private String defaultTitle(String name) {
+        return name + "님의 미니홈피";
+    }
+
+    public void increaseVisitCount() {
+        this.visitCount = this.visitCount+ 1;
+    }
+  
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateGateImageUrl(String gateImageUrl){
+        this.gateImageUrl = gateImageUrl;
     }
 }

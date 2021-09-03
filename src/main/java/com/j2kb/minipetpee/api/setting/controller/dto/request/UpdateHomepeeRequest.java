@@ -4,16 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UpdateTabsRequest {
-    @NotNull(message = "EMP7019")
-    @Size(min = 3, message = "EMP7014")
-    @Valid
-    private List<TabRequest> tabs;
+public class UpdateHomepeeRequest {
+
+    @NotBlank(message = "EMP7006")
+    @Size(min = 1, max = 20, message = "EMP7007")
+    private String title;
+
+    @NotNull(message = "EMP7016")
+    private String gateImageUrl;
 }
