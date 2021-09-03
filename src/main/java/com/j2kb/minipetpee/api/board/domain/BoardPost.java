@@ -1,20 +1,17 @@
 package com.j2kb.minipetpee.api.board.domain;
 
 import com.j2kb.minipetpee.api.setting.domain.Tab;
-import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.global.domain.Post;
-import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.http.HttpStatus;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.util.Objects;
 
 @Getter
+@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("BOARD")
@@ -28,8 +25,12 @@ public class BoardPost extends Post {
     @ColumnDefault("0")
     private int viewCount;
 
+    public void updateViewCount() {
+        this.viewCount = getViewCount() + 1;
+    }
+
     @Builder
-    public BoardPost(String title, Tab tab, String content) {
+    public BoardPost(String title, Tab tab, String content, boolean visible) {
         super(title, tab);
         this.content = content;
     }

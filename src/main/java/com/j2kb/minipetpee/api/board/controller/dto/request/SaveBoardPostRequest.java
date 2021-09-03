@@ -1,5 +1,7 @@
 package com.j2kb.minipetpee.api.board.controller.dto.request;
 
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
+import com.j2kb.minipetpee.api.setting.domain.Tab;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +23,12 @@ public class SaveBoardPostRequest {
 
     private String image;
 
-    private boolean visible;
+    public BoardPost toEntity(Tab tab) {
+        return BoardPost.builder()
+                .title(getTitle())
+                .tab(tab)
+                .content(getContent())
+                .build();
+    }
 }
+

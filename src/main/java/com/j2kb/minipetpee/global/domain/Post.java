@@ -1,18 +1,18 @@
 package com.j2kb.minipetpee.global.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
-import com.j2kb.minipetpee.global.domain.Image;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
+@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -39,9 +40,13 @@ public abstract class Post extends BaseTimeEntity {
     @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Post(String title, Tab tab) {
         this.title = title;
@@ -78,9 +83,7 @@ public abstract class Post extends BaseTimeEntity {
         return null;
     }
 
-    //여기서 size()가 0보다 큰게 아니면 null 보내는게 맞지 않을까요?
-    //얘는 BoardPost에만 해당하는 메서드니깐 BoardPost 클래스로 뺄까요?
-    //용도 : 인기 게시글 검색, 게시판 조회
+    //여기도 null 보내는게 나을까요?
     public String imageUrl() {
         if (Objects.isNull(images)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
