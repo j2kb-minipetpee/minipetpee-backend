@@ -1,11 +1,10 @@
 package com.j2kb.minipetpee.api.board.controller;
 
-import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostCommentRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
 import com.j2kb.minipetpee.api.board.service.BoardService;
-import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Tag(name = "게시판 API")
 @Slf4j
@@ -40,9 +38,9 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @Valid @RequestBody SaveBoardPostRequest boardPostRequest
+            @Valid @RequestBody SaveBoardPostRequest request
     ) {
-        Long boardPostId = boardService.saveBoardPost(homepeeId, boardPostRequest);
+        Long boardPostId = boardService.saveBoardPost(homepeeId, request);
         return ResponseEntity.ok(new SaveBoardPostResponse(boardPostId));
     }
 
@@ -83,25 +81,10 @@ public class BoardController {
     public ResponseEntity<Void> updateBoardPost(
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
-            @RequestBody UpdateBoardPostRequest updateBoardPostRequest
+            @Valid @RequestBody UpdateBoardPostRequest request
     ) {
+
         return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "게시판 게시글 댓글 작성")
-    @PostMapping("/{post-id}/comment")
-    public ResponseEntity<SaveBoardPostCommentResponse> saveBoardPostComment(
-            @PathVariable(name = "homepee-id") Long homepeeId,
-            @PathVariable(name = "post-id") Long postId,
-            @RequestBody SaveBoardPostCommentRequest boardCommentRequest
-    ) {
-        String content = boardCommentRequest.getContent();
-        BoardPostCommentMemberResponse boardPostMember = new BoardPostCommentMemberResponse(boardCommentRequest.getMemberId(), "memberName");
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        SaveBoardPostCommentResponse boardPostComment = new SaveBoardPostCommentResponse(1L,content, boardPostMember,createdAt);
-
-        return ResponseEntity.ok(boardPostComment);
     }
 
     @Operation(summary = "게시판 게시글 삭제")
@@ -113,14 +96,5 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "게시판 게시글 댓글 삭제")
-    @DeleteMapping("/{post-id}/comments/{comment-id}")
-    public ResponseEntity<Void> deleteBoardPostComment(
-            @PathVariable(name = "homepee-id") Long homepeeId,
-            @PathVariable(name = "post-id") Long postId,
-            @PathVariable(name = "comment-id") Long commentId
-    ) {
-        return ResponseEntity.noContent().build();
-    }
 
 }

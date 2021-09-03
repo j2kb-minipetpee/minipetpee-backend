@@ -22,12 +22,10 @@ public class BoardPaginationResponse {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
 
-        List<BoardPostSummaryResponse> content = boardPosts.getContent()
+        this.content = boardPosts.getContent()
                 .stream()
                 .map(BoardPostSummaryResponse::new)
                 .collect(Collectors.toList());
-
-        this.content = content;
         this.page = new PageResponse(boardPosts);
 
     }

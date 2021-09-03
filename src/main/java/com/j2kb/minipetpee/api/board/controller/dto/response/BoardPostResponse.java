@@ -2,7 +2,7 @@ package com.j2kb.minipetpee.api.board.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
-import com.j2kb.minipetpee.global.domain.Comment;
+import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import lombok.Getter;

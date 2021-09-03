@@ -1,8 +1,10 @@
-package com.j2kb.minipetpee.global.domain;
+package com.j2kb.minipetpee.api.comment.domain;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
+import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.*;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-public class Comment extends BaseTimeEntity{
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
