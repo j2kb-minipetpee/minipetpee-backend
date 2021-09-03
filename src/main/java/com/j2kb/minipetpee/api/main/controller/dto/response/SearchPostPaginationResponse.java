@@ -1,5 +1,6 @@
 package com.j2kb.minipetpee.api.main.controller.dto.response;
 
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.dto.PageResponse;
