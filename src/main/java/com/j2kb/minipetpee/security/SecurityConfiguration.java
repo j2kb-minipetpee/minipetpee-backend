@@ -7,7 +7,6 @@ import com.j2kb.minipetpee.security.jwt.JwtResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/favicon.ico")
                 .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui.html")
-                .antMatchers("/swagger-ui/**")
+                .antMatchers("/swagger-ui/**","/v3/api-docs/**")
                 .antMatchers("/aws/health")
                 .antMatchers("/error");
     }
