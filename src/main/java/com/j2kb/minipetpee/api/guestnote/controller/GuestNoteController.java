@@ -58,7 +58,7 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 작성")
     @PostMapping
-    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -71,28 +71,26 @@ public class GuestNoteController {
 
     @Operation(summary = "방명록 수정")
     @PutMapping("/{guest-note-id}")
-    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> updateGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
     ) {
-        //수정 권한 체크 추가하기(토큰값으로)
-        guestNoteService.updateGuestNote(homepeeId, guestNoteId, updateGuestNote);
+        guestNoteService.updateGuestNote(homepeeId, principal.getId(), guestNoteId, updateGuestNote);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "방명록 삭제")
     @DeleteMapping("/{guest-note-id}")
-    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteGuestNote(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {
-        //삭제 권한 체크 추가하기(토큰값으로)
-        guestNoteService.deleteGuestNote(homepeeId, guestNoteId);
+        guestNoteService.deleteGuestNote(homepeeId, principal.getId(), guestNoteId);
         return ResponseEntity.noContent().build();
     }
 }

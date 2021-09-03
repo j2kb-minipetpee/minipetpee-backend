@@ -2,7 +2,6 @@ package com.j2kb.minipetpee.api.album.controller.dto.request;
 
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
-import com.j2kb.minipetpee.global.domain.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +26,4 @@ public class SaveAlbumPostRequest {
                 .tab(tab)
                 .build();
     }
-
 }

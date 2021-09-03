@@ -7,6 +7,7 @@ import com.j2kb.minipetpee.security.jwt.JwtResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -63,11 +64,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers("/").permitAll()
-                .mvcMatchers("/apis/validate-email").permitAll()
-                .mvcMatchers("/apis/members").permitAll()
-                .mvcMatchers("/apis/login").permitAll()
-                .regexMatchers("/apis/[0-9]*").permitAll()
-                .regexMatchers("/apis/[0-9]*/guest/guest-notes").permitAll()
+                .mvcMatchers("/apis/validate-email").permitAll()    // 이메일 중복 조회
+                .mvcMatchers("/apis/members").permitAll()   // 회원가입
+                .mvcMatchers("/apis/login").permitAll()     // 로그인
+                .mvcMatchers("/apis/popular-posts").permitAll()     // 인기 게시글 조회
+                .mvcMatchers("/apis/search-member").permitAll()     // 계정 검색
+                .mvcMatchers("/apis/search-post").permitAll()       // 게시글 검색
+                .regexMatchers("/apis/[0-9]*").permitAll()      // 홈피 조회
+                .regexMatchers(HttpMethod.GET, "/apis/[0-9]*/guest/guest-notes").permitAll()    // 방명록 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/album/posts").permitAll()       // 갤러리 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/board/posts").permitAll()       // 게시판 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/board/posts/[0-9]*").permitAll()        // 게시글 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/posts/[0-9]*]/comments").permitAll()   // 게시글 댓글 조회
                 .anyRequest().authenticated()
 
                 .and()

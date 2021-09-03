@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -37,8 +36,8 @@ public class AlbumService {
     //게시물 저장
     @Transactional
     public AlbumPost saveAlbumPost(Long homepeeId, SaveAlbumPostRequest albumPostRequest) {
-
-        Tab tab = findTabByHomepeeId(homepeeId);
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
         //AlbumPost 생성
         AlbumPost albumPost = albumPostRequest.toEntity(tab);
@@ -54,8 +53,14 @@ public class AlbumService {
 
     //갤러리 목록 조회
     @Transactional(readOnly = true)
-    public AlbumPageResult findAlbumPosts(Long homepeeId, Pageable pageablePost, Pageable pageableComment) {
-        Tab tab = findTabByHomepeeId(homepeeId);
+    public AlbumPageResult findAlbumPosts(Long homepeeId, Long currentUserHomepeeId, Pageable pageablePost, Pageable pageableComment) {
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+
+        //tab 공개인지 비공개 인지 확인
+        if(!tab.isVisible() && !homepeeId.equals(currentUserHomepeeId)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP5001);
+        }
 
         List<AlbumResult> albumResults = new ArrayList<>();
         //tab id로 album 조회
@@ -69,18 +74,13 @@ public class AlbumService {
         return new AlbumPageResult(albumResults, albumPosts);
     }
 
-    //갤러리 단건 조회 (게시글 수정 위해)
-    @Transactional(readOnly = true)
-    public Post findAlbumPost(Long homepeeId, UpdateAlbumPostRequest albumPostRequest) {
-
-        Tab tab = findTabByHomepeeId(homepeeId);
-        Post albumPost = findAlbumPostByPostIdAndTabId(albumPostRequest.getId(), tab.getId());
-        return albumPost;
-    }
-
     //게시글 수정
     @Transactional
-    public void updateAlbumPost(Post albumPost, UpdateAlbumPostRequest albumPostRequest) {
+    public void updateAlbumPost(Long homepeeId, UpdateAlbumPostRequest albumPostRequest) {
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        Post albumPost = postRepository.findByIdAndTabId(albumPostRequest.getId(), tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //전달된 이미지 Image 객체로 변경
         List<Image> images = albumPostRequest.toEntity();
@@ -92,29 +92,12 @@ public class AlbumService {
     //게시글 삭제
     @Transactional
     public void deleteAlbumPost(Long homepeeId, Long postId) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        Post albumPost = findAlbumPostByPostIdAndTabId(postId, tab.getId());
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        Post albumPost = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //게시글 삭제
         postRepository.delete(albumPost);
-    }
-
-    //homepeeId 로 tab 찾기
-    @Transactional(propagation=Propagation.MANDATORY, readOnly = true)
-    public Tab findTabByHomepeeId(Long homepeeId) {
-        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        //tab 공개인지 비공개 인지 확인
-        if(!tab.isVisible())
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP5001);
-        return tab;
-    }
-
-    //postId, tabId로 albumPost 찾기
-    @Transactional(propagation=Propagation.MANDATORY, readOnly = true)
-    public Post findAlbumPostByPostIdAndTabId(Long postId, Long tabId) {
-        Post albumPost = postRepository.findByIdAndTabId(postId, tabId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
-        return albumPost;
     }
 }

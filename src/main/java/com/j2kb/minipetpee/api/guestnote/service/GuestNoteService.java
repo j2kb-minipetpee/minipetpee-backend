@@ -59,25 +59,35 @@ public class GuestNoteService {
     }
 
     @Transactional
-    public void updateGuestNote(Long homepeeId, Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
+    public void updateGuestNote(Long homepeeId, Long currentUserId, Long guestNoteId, UpdateGuestNoteRequest updateGuestNote) {
         //homepeeId에 해당하는 Tab 조회
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND,  ErrorCode.EMP6002));
+
+        // 방명록 작성자만 수정 가능
+        if (!guestNote.memberId().equals(currentUserId)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6009);
+        }
+
         //update 로직
         guestNote.updateGuestNote(updateGuestNote);
     }
 
     @Transactional
-    public void deleteGuestNote(Long homepeeId, Long guestNoteId) {
+    public void deleteGuestNote(Long homepeeId, Long currentUserId, Long guestNoteId) {
         //homepeeId에 해당하는 Tab 조회
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
         //guestNote 찾기
         GuestNote guestNote = guestNoteRepository.findById(guestNoteId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6003));
+        // 방명록 작성자만 삭제 가능
+        if (!guestNote.memberId().equals(currentUserId)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6009);
+        }
         //delete 로직
         guestNoteRepository.deleteById(guestNoteId);
     }
