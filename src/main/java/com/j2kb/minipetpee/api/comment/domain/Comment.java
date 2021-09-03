@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
 import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
+import lombok.AccessLevel;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
@@ -26,6 +27,7 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;

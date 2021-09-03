@@ -2,17 +2,21 @@ package com.j2kb.minipetpee.global.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.comment.domain.Comment;
+import com.j2kb.minipetpee.api.setting.domain.Tab;
+
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.api.setting.domain.Tab;
+
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Getter
 @DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
@@ -48,14 +53,35 @@ public abstract class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    public void setImages(Image image) {
+        this.getImages().add(image);
+        image.setPost(this);
+    }
+
+    public void setComments(Comment comment) {
+        this.getComments().add(comment);
+        comment.setPost(this);
+    }
+
     public Post(String title, Tab tab) {
         this.title = title;
         this.tab = tab;
     }
 
-    public void setImages(Image image) {
-        this.getImages().add(image);
-        image.setPost(this);
+    //게시글 제목 수정
+    public void updatePostTitle(String title) {
+        this.title = title;
+    }
+
+    //게시글 사진 수정
+    public void updatePostImages(List<Image> images) {
+        while(this.getImages().size() > 0)
+            this.getImages().remove(0);
+
+        //받아온 사진들 추가
+        for (Image image : images) {
+            this.setImages(image);
+        }
     }
 
     public Homepee homepee() {

@@ -2,8 +2,8 @@ package com.j2kb.minipetpee.api.board.domain;
 
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.domain.Post;
-import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;

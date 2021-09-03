@@ -12,11 +12,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByTabId(Long tabId, Pageable pagable);
 
+    Optional<Post> findByIdAndTabId(Long id, Long tabId);
+
     // 조회순으로 게시글 받아오기 (조회수가 측정 불가한 앨범 제외)
     Page<BoardPost> findByOrderByViewCountDesc(Pageable pageable);
 
     // 제목으로 검색 (앨범 및 게시글 일괄)
     Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
-
-    Optional<Post> findByIdAndTabId(Long id, Long tabId);
 }

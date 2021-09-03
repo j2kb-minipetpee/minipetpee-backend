@@ -20,8 +20,10 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 100
 
 jwt:
   secret-key: bWluaXBldHBlZS1iYWNrZW5kLWp3dC10b2tlbi1zZWNyZXQta2V5LW1pbmlwZXRwZWUtYmFja2VuZC1qd3QtdG9rZW4tc2VjcmV0LWtleQ==
   access-token-expiry-seconds: 3600
   refresh-token-expiry-seconds: 86400
+
