@@ -1,15 +1,15 @@
 package com.j2kb.minipetpee.global.domain;
 
+import com.j2kb.minipetpee.api.comment.domain.Comment;
+import com.j2kb.minipetpee.api.setting.domain.Tab;
+import lombok.*;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.domain.BaseTimeEntity;
-import com.j2kb.minipetpee.global.domain.Image;
-import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Getter
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Entity
@@ -30,17 +33,46 @@ public abstract class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "view_count")
-    @ColumnDefault("0")
-    private int viewCount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    public void setImages(Image image) {
+        this.getImages().add(image);
+        image.setPost(this);
+    }
+
+    public void setComments(Comment comment) {
+        this.getComments().add(comment);
+        comment.setPost(this);
+    }
+
+    public Post(String title, Tab tab) {
+        this.title = title;
+        this.tab = tab;
+    }
+
+    //게시글 제목 수정
+    public void updatePostTitle(String title) {
+        this.title = title;
+    }
+
+    //게시글 사진 수정
+    public void updatePostImages(List<Image> images) {
+        while(this.getImages().size() > 0)
+            this.getImages().remove(0);
+
+        //받아온 사진들 추가
+        for (Image image : images) {
+            this.setImages(image);
+        }
+    }
 
     public Homepee homepee() {
         if (Objects.isNull(tab)) {

@@ -22,9 +22,9 @@ INSERT INTO tab(id, homepee_id, type, visible) VALUES (9, 3, 'GUEST', 1);
 INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (1, 1, 'BOARD', '취준 1일째', '오늘은 알바 월급날. 저는 오늘 사치를 부릴 예정입니다...후후...카드 슬래쉬!!잔액이 부족합니다.', 10, now(), null);
 INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (2, 1, 'BOARD', '취준 2일째', '앙몬드가 사탕을 줬어요. 저도 하나 주었죠. 하지만 거부 당했어요...홍삼 사탕 맛을 모르네~', 25, now(), null);
 INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (3, 1, 'BOARD', '취준 3일째', '오늘은 영화를 보러 갔어요. 앞자리에 콥이 앉아 있었죠. 그래서 하나도 안 보였어요...ㅠㅠ', 13, now(), null);
-INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (4, 2, 'ALBUM', '취준 4일째', null, 30, now(), null);
-INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (5, 2, 'ALBUM', '취준 5일째', null, 21, now(), null);
-INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (6, 2, 'ALBUM', '취준 6일째', null, 8, now(), null);
+INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (4, 2, 'ALBUM', '취준 4일째', null, null, now(), null);
+INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (5, 2, 'ALBUM', '취준 5일째', null, null, now(), null);
+INSERT INTO post(id, tab_id, dtype, title, content, view_count, created_at, updated_at) VALUES (6, 2, 'ALBUM', '취준 6일째', null, null, now(), null);
 
 INSERT INTO image(id, post_id, url) VALUES (1, 1, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
 INSERT INTO image(id, post_id, url) VALUES (2, 2, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg');
