@@ -1,6 +1,7 @@
-package com.j2kb.minipetpee.api.star.controller.dto;
+package com.j2kb.minipetpee.api.star.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.j2kb.minipetpee.api.star.domain.Star;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,4 +17,11 @@ public class StarResponse {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
+
+    public StarResponse(Star star){
+        this.id = star.getId();
+        this.memberId = star.getStarMember();
+        this.name = star.getStarMember().name(); // 수정하기
+        this.profileImageUrl = star.getStarMember().profileImageUrl();
+    }
 }

@@ -1,12 +1,15 @@
 package com.j2kb.minipetpee.api.star.domain;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 @Entity
 public class Star {
@@ -25,4 +28,13 @@ public class Star {
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Star(Member starMember, Member fanMember) {
+        this.starMember = starMember;
+        this.fanMember = fanMember;
+    }
+
+    public String fanMemberName() {
+        return fanMember.get
+    }
 }
