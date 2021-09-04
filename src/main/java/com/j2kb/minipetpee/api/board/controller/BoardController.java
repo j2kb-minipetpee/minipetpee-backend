@@ -4,7 +4,6 @@ import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
 import com.j2kb.minipetpee.api.board.service.BoardService;
-import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,11 +68,10 @@ public class BoardController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
-        Post boardPost = boardService.findBoardPost(homepeeId, postId);
-
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
-        Page<Comment> comments = boardService.findBoardPostComments(boardPost.getId(), pageRequest);
-        return ResponseEntity.ok(new BoardPostResponse(boardPost, comments));
+        BoardPageResult boardPost = boardService.findBoardPost(homepeeId, postId, pageRequest);
+
+        return ResponseEntity.ok(new BoardPostResponse(boardPost));
     }
 
     @Operation(summary = "게시판 게시글 수정")

@@ -2,14 +2,15 @@ package com.j2kb.minipetpee.api.board.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
-import com.j2kb.minipetpee.api.comment.domain.Comment;
-import com.j2kb.minipetpee.global.domain.Post;
+import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
+import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
@@ -24,13 +25,20 @@ public class BoardPostResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 
-    public BoardPostResponse(Post boardPost, Page<Comment> comments) {
-        this.id = boardPost.getId();
-        this.title = boardPost.getTitle();
-        this.content = boardPost instanceof BoardPost? ((BoardPost) boardPost).getContent() : null;
-        this.viewCount = boardPost instanceof BoardPost? ((BoardPost) boardPost).getViewCount() : null;
-        this.image = new BoardPostImageResponse(boardPost);
-        this.comment = new CommentPaginationResponse(comments);
-        this.createdAt = boardPost.getCreatedAt();
+    public BoardPostResponse(BoardPageResult boardPost) {
+        if(Objects.isNull(boardPost.getBoardPost())) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
+        }
+        if(Objects.isNull(boardPost.getPage())){
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
+        }
+
+        this.id = boardPost.getBoardPost().getId();
+        this.title = boardPost.getBoardPost().getTitle();
+        this.content = boardPost.getBoardPost() instanceof BoardPost? ((BoardPost) boardPost.getBoardPost()).getContent() : null;
+        this.viewCount = boardPost.getBoardPost() instanceof BoardPost? ((BoardPost) boardPost.getBoardPost()).getViewCount() : null;
+        this.image = new BoardPostImageResponse(boardPost.getBoardPost());
+        this.comment = new CommentPaginationResponse(boardPost.getPage());
+        this.createdAt = boardPost.getBoardPost().getCreatedAt();
     }
 }

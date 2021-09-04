@@ -2,6 +2,7 @@ package com.j2kb.minipetpee.api.board.service;
 
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
+import com.j2kb.minipetpee.api.board.controller.dto.response.BoardPageResult;
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -37,11 +37,15 @@ public class BoardService {
 
     //게시글 저장
     @Transactional
-    public Long saveBoardPost(Long homepeeId, SaveBoardPostRequest boardPostRequest) {
-        Tab tab = findTabByHomepeeId(homepeeId);
+    public Long saveBoardPost(Long homepeeId, SaveBoardPostRequest request) {
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
-        Image image = new Image(boardPostRequest.getImage());
-        BoardPost board = boardPostRequest.toEntity(tab);
+        if(!tab.isVisible())
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
+
+        Image image = new Image(request.getImage());
+        BoardPost board = request.toEntity(tab);
         board.setImages(image);
 
         BoardPost savedBoardPost = postRepository.save(board);
@@ -51,18 +55,31 @@ public class BoardService {
     //게시글 목록 조회
     @Transactional(readOnly = true)
     public Page<Post> findBoardPosts(Long homepeeId, Pageable pageable) {
-        Tab tab = findTabByHomepeeId(homepeeId);
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+
+        if(!tab.isVisible())
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
         return postRepository.findAllByTabId(tab.getId(), pageable);
     }
 
     //게시글 하나 조회
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public Post findBoardPost(Long homepeeId, Long postId) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        Post post = findBoardPostByPostIdAndTabId(postId, tab.getId());
+    public BoardPageResult findBoardPost(Long homepeeId, Long postId, PageRequest pageRequest) {
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+
+        if(!tab.isVisible())
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
+        Post post = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
         //게시글 조회할 때, viewCount + 1
         ((BoardPost) post).updateViewCount();
-        return post;
+
+        //댓글 조회
+        Page<Comment> postCommet = commentRepository.findByPostId(post.getId(), pageRequest);
+
+        return new BoardPageResult(post, postCommet);
     }
 
     @Transactional(readOnly = true)
@@ -73,8 +90,13 @@ public class BoardService {
     //게시글 수정
     @Transactional
     public void updateBoardPost(Long homepeeId, Long postId, UpdateBoardPostRequest request) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        Post post = findBoardPostByPostIdAndTabId(postId, tab.getId());
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+
+        if(!tab.isVisible())
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
+        Post post = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
 
         List<Image> images = new ArrayList<>();
         if(Objects.isNull(request.getImage()))
@@ -92,26 +114,14 @@ public class BoardService {
 
     @Transactional
     public void deleteBoardPost(Long homepeeId, Long postId) {
-        Tab tab = findTabByHomepeeId(homepeeId);
-        Post post = findBoardPostByPostIdAndTabId(postId, tab.getId());
-        postRepository.delete(post);
-    }
-
-    //homepeeId 로 tab 찾기
-    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
-    public Tab findTabByHomepeeId(Long homepeeId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
-        return tab;
+        Post post = postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
+        postRepository.delete(post);
     }
 
-    //postId, tabId로 boardPost 찾기
-    @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
-    public Post findBoardPostByPostIdAndTabId(Long postId, Long tabId) {
-        return postRepository.findByIdAndTabId(postId, tabId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
-    }
 }
