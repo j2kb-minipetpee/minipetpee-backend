@@ -54,7 +54,7 @@ public class CommentService {
 
     //게시글 댓글 삭제
     @Transactional
-    public void deletePostComment(Long postId, Long commentId) {
+    public void deletePostComment(Long postId, Long currentUserId, Long commentId) {
         //post 찾기
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
@@ -62,6 +62,12 @@ public class CommentService {
         //댓글 찾기
         Comment comment = commentRepository.findByIdAndPostId(commentId, post.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP10003));
+
+        // 댓글 작성자만 삭제 가능
+        if (!comment.memberId().equals(currentUserId)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP10004);
+        }
+
         //댓글 삭제
         commentRepository.delete(comment);
     }

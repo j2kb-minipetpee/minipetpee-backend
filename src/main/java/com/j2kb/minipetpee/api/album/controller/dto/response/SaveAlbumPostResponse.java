@@ -2,7 +2,6 @@ package com.j2kb.minipetpee.api.album.controller.dto.response;
 
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class SaveAlbumPostResponse {

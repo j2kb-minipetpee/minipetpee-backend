@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.api.comment.controller.dto.response.SavePostCommentRe
 import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.comment.service.CommentService;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,7 +53,9 @@ public class CommentController {
 
     @Operation(summary = "게시글 댓글 작성")
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SavePostCommentResponse> savePostComment(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody SavePostCommentRequest commentRequest
@@ -61,14 +66,14 @@ public class CommentController {
 
     @Operation(summary = "게시글 댓글 삭제")
     @DeleteMapping("/{comment-id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePostComment(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
             @PathVariable(name = "comment-id") Long commentId
     ) {
-        //댓글 작성자만 댓글 삭제 가능(권한 체크)
-
-        commentService.deletePostComment(postId, commentId);
+        commentService.deletePostComment(postId, principal.getId(), commentId);
         return ResponseEntity.noContent().build();
     }
 }

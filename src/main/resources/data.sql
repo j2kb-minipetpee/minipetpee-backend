@@ -1,9 +1,9 @@
-INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (1, 'test1@naver.com', '1234', '죠르디', 'MALE', '2021-09-15 15:55:58', '공룡', '착하고 순함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', now(), null, false);
-INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (2, 'test2@naver.com', '1234', '앙몬드', 'MALE', '2021-09-15 15:55:58', '물개', '게으르고 초콜릿을 좋아함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpgl', now(), null, false);
-INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, created_at, updated_at, deleted)
-VALUES (3, 'test3@naver.com', '1234', '스카피', 'MALE', '2021-09-15 15:55:58', '토끼', '비밀이 많음', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', now(), null, false);
+INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, role, created_at, updated_at, deleted)
+VALUES (1, 'test1@naver.com', '$2a$10$Zjpcj391rBzU06CNj083HuDjZFQFqg8QpK/6064nN8eqcJNtsVjB6', '죠르디', 'MALE', '2021-09-15 15:55:58', '공룡', '착하고 순함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', 0, now(), null, false);
+INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, role, created_at, updated_at, deleted)
+VALUES (2, 'test2@naver.com', '$2a$10$Zjpcj391rBzU06CNj083HuDjZFQFqg8QpK/6064nN8eqcJNtsVjB6', '앙몬드', 'MALE', '2021-09-15 15:55:58', '물개', '게으르고 초콜릿을 좋아함', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', 0, now(), null, false);
+INSERT INTO member(id, email, password, name, gender, birthday, species, personality, profile_image_url, role, created_at, updated_at, deleted)
+VALUES (3, 'test3@naver.com', '$2a$10$Zjpcj391rBzU06CNj083HuDjZFQFqg8QpK/6064nN8eqcJNtsVjB6', '스카피', 'MALE', '2021-09-15 15:55:58', '토끼', '비밀이 많음', 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', 0, now(), null, false);
 
 INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (1, 1, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', '죠르디의 취준일기', 350);
 INSERT INTO homepee(id, member_id, gate_image_url, title, visit_count) VALUES (2, 2, 'http://image.dongascience.com/Photo/2017/03/14900752352661.jpg', '앙몬드의 촤컬릿 리뷰', 120);

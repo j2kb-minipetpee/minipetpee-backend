@@ -38,7 +38,7 @@ public class SettingController {
     // 프로필 및 탭 목록 조회
     @Operation(summary = "관리 탭 조회")
     @GetMapping
-    @PreAuthorize("isAuthenticated() && hasRole('OWNER') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SettingResponse> findSettings(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId
@@ -53,7 +53,7 @@ public class SettingController {
 
     @Operation(summary = "프로필 및 홈피 설정 변경")
     @PutMapping("/profile")
-    @PreAuthorize("isAuthenticated() && hasRole('OWNER') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateProfile(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
@@ -65,7 +65,7 @@ public class SettingController {
 
     @Operation(summary = "탭 공개여부 설정")
     @PutMapping("/tabs")
-    @PreAuthorize("isAuthenticated() && hasRole('OWNER') && #principal.homepeeId.equals(#homepeeId)")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateTabs(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,

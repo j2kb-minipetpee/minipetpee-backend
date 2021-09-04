@@ -26,5 +26,4 @@ public class SaveAlbumPostRequest {
                 .tab(tab)
                 .build();
     }
-
 }
