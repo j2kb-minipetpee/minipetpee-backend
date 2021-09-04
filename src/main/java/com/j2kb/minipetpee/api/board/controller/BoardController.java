@@ -83,7 +83,7 @@ public class BoardController {
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody UpdateBoardPostRequest request
     ) {
-
+        boardService.updateBoardPost(homepeeId, postId, request);
         return ResponseEntity.noContent().build();
     }
 
@@ -93,8 +93,7 @@ public class BoardController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
+        boardService.deleteBoardPost(homepeeId, postId);
         return ResponseEntity.noContent().build();
     }
-
-
 }

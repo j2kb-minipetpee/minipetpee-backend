@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +85,11 @@ public abstract class Post extends BaseTimeEntity {
         }
     }
 
+    //게시글 updateAt 갱신
+    public void updateUpdatedAt() {
+        this.setUpdatedAt(LocalDateTime.now());
+    }
+
     public Homepee homepee() {
         if (Objects.isNull(tab)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP9001);
@@ -98,7 +104,6 @@ public abstract class Post extends BaseTimeEntity {
         return this.homepee().getId();
     }
 
-    //여기서 size()가 0보다 큰게 아니면 null 보내는게 맞지 않을까요?
     public Long imageId() {
         if (Objects.isNull(images)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
@@ -109,7 +114,6 @@ public abstract class Post extends BaseTimeEntity {
         return null;
     }
 
-    //여기도 null 보내는게 나을까요?
     public String imageUrl() {
         if (Objects.isNull(images)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);

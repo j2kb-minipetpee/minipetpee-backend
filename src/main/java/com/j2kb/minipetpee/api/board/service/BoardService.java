@@ -1,6 +1,7 @@
 package com.j2kb.minipetpee.api.board.service;
 
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
+import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
@@ -21,6 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -65,12 +70,39 @@ public class BoardService {
         return commentRepository.findByPostId(boardPostId, pageRequest);
     }
 
+    //게시글 수정
+    @Transactional
+    public void updateBoardPost(Long homepeeId, Long postId, UpdateBoardPostRequest request) {
+        Tab tab = findTabByHomepeeId(homepeeId);
+        Post post = findBoardPostByPostIdAndTabId(postId, tab.getId());
+
+        List<Image> images = new ArrayList<>();
+        if(Objects.isNull(request.getImage()))
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0000);
+        if(request.getImage().getId() != null && !request.getImage().getUrl().equals(null)
+                && !request.getImage().getUrl().equals("undefined")) {
+            images.add(new Image(request.getImage().getUrl()));
+        }
+
+        post.updatePostTitle(request.getTitle());
+        ((BoardPost)post).updatePostContent(request.getContent());
+        post.updatePostImages(images);
+        post.updateUpdatedAt();
+    }
+
+    @Transactional
+    public void deleteBoardPost(Long homepeeId, Long postId) {
+        Tab tab = findTabByHomepeeId(homepeeId);
+        Post post = findBoardPostByPostIdAndTabId(postId, tab.getId());
+        postRepository.delete(post);
+    }
+
     //homepeeId 로 tab 찾기
     @Transactional(propagation = Propagation.MANDATORY, readOnly = true)
     public Tab findTabByHomepeeId(Long homepeeId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        //tab 공개인지 비공개 인지 확인 -> 홈피 주인인 경우는 아래의 로직 안들어가도록 추가하기!!
+
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
         return tab;
@@ -82,5 +114,4 @@ public class BoardService {
         return postRepository.findByIdAndTabId(postId, tabId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
     }
-
 }

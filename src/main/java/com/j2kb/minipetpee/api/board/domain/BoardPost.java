@@ -29,6 +29,10 @@ public class BoardPost extends Post {
         this.viewCount = getViewCount() + 1;
     }
 
+    public void updatePostContent(String content) {
+        this.content = content;
+    }
+
     @Builder
     public BoardPost(String title, Tab tab, String content, boolean visible) {
         super(title, tab);
