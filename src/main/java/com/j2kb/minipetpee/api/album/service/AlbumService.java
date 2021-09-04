@@ -87,6 +87,7 @@ public class AlbumService {
 
         albumPost.updatePostTitle(albumPostRequest.getTitle());
         albumPost.updatePostImages(images);
+        albumPost.updateUpdatedAt();
     }
 
     //게시글 삭제
