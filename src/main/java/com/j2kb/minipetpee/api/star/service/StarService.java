@@ -26,12 +26,15 @@ public class StarService {
 
     // 스타
     @Transactional
-    public void saveStar(MemberAdapter memberAdapter, StarRequest starRequest) {
-        // 로그인한 계정(팬) 정보 검사
-        if (Objects.isNull(memberAdapter.getMember())) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8003);
+    public void saveStar(Long currentMemberId, StarRequest starRequest) {
+        // 팬 계정 검사
+        Member fanMember = memberRepository.findById(starRequest.getStarMemberId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8003));
+
+        // 로그인한 계정과 일치 여부 검사
+        if (!currentMemberId.equals(fanMember.getId())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP0000);
         }
-        Member fanMember = memberAdapter.getMember();
 
         // 스타 계정 검사
         Member starMember = memberRepository.findById(starRequest.getStarMemberId())
@@ -44,11 +47,16 @@ public class StarService {
 
     // 언스타
     @Transactional
-    public void deleteStar(Long starId) {
+    public void deleteStar(Long currentMemberId, Long starId) {
         // 스타 관계 불러오기
         Star star = starRepository.findById(starId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8006));
+
         // 스타에 저장된 팬 정보와 로그인한 정보가 일치하지 않을 경우 처리
+        Member fanMember = star.getFanMember();
+        if (!currentMemberId.equals(fanMember.getId())) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP0000);
+        }
 
         // 삭제
         starRepository.delete(star);

@@ -8,6 +8,7 @@ import com.j2kb.minipetpee.api.star.controller.dto.response.StarPaginationRespon
 import com.j2kb.minipetpee.api.star.controller.dto.response.StarResponse;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.service.StarService;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,20 +38,22 @@ public class StarController {
     @Operation(summary = "스타(팔로우)")
     @PostMapping("/stars")
     public ResponseEntity<Void> star(
-            @AuthenticationPrincipal MemberAdapter memberAdapter,
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @Valid @RequestBody StarRequest starRequest
     ){
-        starService.saveStar(memberAdapter, starRequest);
+        // 저장
+        starService.saveStar(principal.getId(), starRequest);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "언스타(언팔로우)")
     @DeleteMapping("/stars/{star-id}")
     public ResponseEntity<Void> unstar(
-            @AuthenticationPrincipal MemberAdapter memberAdapter,
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable("star-id") long starId
     ){
-        starService.deleteStar(starId);
+        // 삭제
+        starService.deleteStar(principal.getId(), starId);
         return ResponseEntity.noContent().build();
     }
 

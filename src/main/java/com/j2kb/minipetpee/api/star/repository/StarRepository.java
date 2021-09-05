@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 public interface StarRepository extends JpaRepository<Star, Long> {
-
     // 스타 목록 조회
     Page<Star> findByFanMemberIdOrderByIdDesc(@Param("memberId") Long memberId, Pageable pageable);
 
