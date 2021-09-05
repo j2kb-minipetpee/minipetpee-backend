@@ -15,6 +15,8 @@ import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import com.j2kb.minipetpee.api.comment.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,12 +55,12 @@ public class AlbumService {
 
     //갤러리 목록 조회
     @Transactional(readOnly = true)
-    public AlbumPageResult findAlbumPosts(Long homepeeId, Long currentUserHomepeeId, Pageable pageablePost, Pageable pageableComment) {
+    public AlbumPageResult findAlbumPosts(Long homepeeId, JwtAuthenticationPrincipal principal, Pageable pageablePost, Pageable pageableComment) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
         //tab 공개인지 비공개 인지 확인
-        if(!tab.isVisible() && !homepeeId.equals(currentUserHomepeeId)) {
+        if(!tab.isVisible() && (!homepeeId.equals(principal.getHomepeeId()) || Objects.isNull(principal))) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP5001);
         }
 

@@ -2,13 +2,11 @@ package com.j2kb.minipetpee.security.jwt;
 
 import com.j2kb.minipetpee.api.member.domain.Role;
 import com.j2kb.minipetpee.global.ErrorCode;
-import com.j2kb.minipetpee.global.exception.ServiceException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -79,19 +77,19 @@ public class JwtResolver implements InitializingBean {
                             .getBody();
 
         if (Objects.isNull(claims.get("id", Long.class))) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1004);
+            log.error(ErrorCode.EMP1004.getMessage());
         }
         if (Objects.isNull(claims.get("homepeeId", Long.class))) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1016);
+            log.error(ErrorCode.EMP1016.getMessage());
         }
         if (Objects.isNull(claims.get("name", String.class))) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1005);
+            log.error(ErrorCode.EMP1005.getMessage());
         }
         if (Objects.isNull(claims.get("email", String.class))) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1006);
+            log.error(ErrorCode.EMP1006.getMessage());
         }
         if (Objects.isNull(claims.get("role", String.class))) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1007);
+            log.error(ErrorCode.EMP1007.getMessage());
         }
 
         List<GrantedAuthority> authorities =
@@ -122,13 +120,14 @@ public class JwtResolver implements InitializingBean {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1002);
+            log.error(ErrorCode.EMP1002.getMessage());
         } catch (ExpiredJwtException e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1001);
+            log.error(ErrorCode.EMP1001.getMessage());
         } catch (UnsupportedJwtException e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1003);
+            log.error(ErrorCode.EMP1003.getMessage());
         } catch (IllegalArgumentException e) {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED, ErrorCode.EMP1000);
+            log.error(ErrorCode.EMP1000.getMessage());
         }
+        return false;
     }
 }

@@ -51,8 +51,7 @@ public class GuestNoteController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Long currentUserHomepeeId = principal.getHomepeeId();
-        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, currentUserHomepeeId, pageable);
+        Page<GuestNote> guestNotesPage = guestNoteService.findGuestNotes(homepeeId, principal, pageable);
         return ResponseEntity.ok().body(new GuestNotePaginationResponse(guestNotesPage));
     }
 
