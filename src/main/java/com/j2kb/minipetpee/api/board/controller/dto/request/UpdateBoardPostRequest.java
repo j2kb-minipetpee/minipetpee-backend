@@ -21,7 +21,5 @@ public class UpdateBoardPostRequest {
     @Size(min = 1, max = 500, message = "EMP4005")
     private String content;
 
-    @NotNull(message = "EMP4008")
-    @Valid
     private UpdateBoardPostImageRequest image;
 }

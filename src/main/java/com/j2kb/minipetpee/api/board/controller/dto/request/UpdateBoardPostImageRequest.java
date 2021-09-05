@@ -17,5 +17,3 @@ public class UpdateBoardPostImageRequest {
         return new Image(this.url);
     }
 }
-
-//이렇게 필수가 아닌 값은 아무 어노테이션도 안붙여줘도 될까요?

@@ -46,11 +46,9 @@ public abstract class Post extends BaseTimeEntity {
     @JoinColumn(name = "tab_id", nullable = false)
     private Tab tab;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 

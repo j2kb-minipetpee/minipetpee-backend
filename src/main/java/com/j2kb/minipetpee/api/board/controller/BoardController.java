@@ -3,8 +3,8 @@ package com.j2kb.minipetpee.api.board.controller;
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
+import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.api.board.service.BoardService;
-import com.j2kb.minipetpee.global.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -58,7 +58,7 @@ public class BoardController {
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        Page<Post> boardPosts = boardService.findBoardPosts(homepeeId, pageable);
+        Page<BoardPost> boardPosts = boardService.findBoardPosts(homepeeId, pageable);
         return ResponseEntity.ok(new BoardPaginationResponse(boardPosts));
     }
 

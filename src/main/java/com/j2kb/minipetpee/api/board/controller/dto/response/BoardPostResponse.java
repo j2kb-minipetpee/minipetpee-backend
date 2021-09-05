@@ -1,7 +1,6 @@
 package com.j2kb.minipetpee.api.board.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.j2kb.minipetpee.api.board.domain.BoardPost;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.CommentPaginationResponse;
 import com.j2kb.minipetpee.global.exception.ServiceException;
@@ -26,19 +25,17 @@ public class BoardPostResponse {
     private final LocalDateTime createdAt;
 
     public BoardPostResponse(BoardPageResult boardPost) {
-        if(Objects.isNull(boardPost.getBoardPost())) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
-        }
+
         if(Objects.isNull(boardPost.getPage())){
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
 
-        this.id = boardPost.getBoardPost().getId();
-        this.title = boardPost.getBoardPost().getTitle();
-        this.content = boardPost.getBoardPost() instanceof BoardPost? ((BoardPost) boardPost.getBoardPost()).getContent() : null;
-        this.viewCount = boardPost.getBoardPost() instanceof BoardPost? ((BoardPost) boardPost.getBoardPost()).getViewCount() : null;
-        this.image = new BoardPostImageResponse(boardPost.getBoardPost());
-        this.comment = new CommentPaginationResponse(boardPost.getPage());
-        this.createdAt = boardPost.getBoardPost().getCreatedAt();
+        this.id = boardPost.id();
+        this.title = boardPost.title();
+        this.content = boardPost.content();
+        this.viewCount = boardPost.viewCount();
+        this.image = new BoardPostImageResponse(boardPost.boardPost());
+        this.comment = new CommentPaginationResponse(boardPost.comments());
+        this.createdAt = boardPost.createdAt();
     }
 }

@@ -19,11 +19,11 @@ public class BoardPostSummaryResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 
-    public BoardPostSummaryResponse(Post boardPost) {
+    public BoardPostSummaryResponse(BoardPost boardPost) {
         this.id = boardPost.getId();
         this.title = boardPost.getTitle();
         this.image = new BoardPostImageResponse(boardPost);
-        this.viewCount = boardPost instanceof BoardPost? ((BoardPost) boardPost).getViewCount() : null;
+        this.viewCount = boardPost.getViewCount();
         this.createdAt = boardPost.getCreatedAt();
     }
 }

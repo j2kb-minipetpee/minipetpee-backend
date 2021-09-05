@@ -38,4 +38,5 @@ public class BoardPost extends Post {
         super(title, tab);
         this.content = content;
     }
+
 }
