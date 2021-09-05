@@ -11,6 +11,8 @@ import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +29,12 @@ public class GuestNoteService {
     private final TabRepository tabRepository;
 
     @Transactional(readOnly = true)
-    public Page<GuestNote> findGuestNotes(Long homepeeId, Long currentUserHomepeeId, Pageable pageable) {
+    public Page<GuestNote> findGuestNotes(Long homepeeId, JwtAuthenticationPrincipal principal, Pageable pageable) {
         //homepeeId에 해당하는 Tab 조회
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.GUEST)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP6007));
 
-        if (!tab.isVisible() && !homepeeId.equals(currentUserHomepeeId)) {
+        if (!tab.isVisible() && (!homepeeId.equals(principal.getHomepeeId()) || Objects.isNull(principal))) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP6008);
         }
 

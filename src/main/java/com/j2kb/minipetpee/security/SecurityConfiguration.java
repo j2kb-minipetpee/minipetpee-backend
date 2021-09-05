@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -39,6 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/swagger-ui/**")
+                .antMatchers("/v3/api-docs/**")
                 .antMatchers("/aws/health")
                 .antMatchers("/error");
     }
@@ -71,11 +71,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/apis/search-member").permitAll()     // 계정 검색
                 .mvcMatchers("/apis/search-post").permitAll()       // 게시글 검색
                 .regexMatchers("/apis/[0-9]*").permitAll()      // 홈피 조회
-                .regexMatchers(HttpMethod.GET, "/apis/[0-9]*/guest/guest-notes").permitAll()    // 방명록 조회
-                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/album/posts").permitAll()       // 갤러리 조회
-                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/board/posts").permitAll()       // 게시판 조회
+                .regexMatchers(HttpMethod.GET, "/apis/[0-9]*/guest/guest-notes\\?size=[0-9]*&page=[0-9]*").permitAll()    // 방명록 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/album/posts\\?size=[0-9]*&page=[0-9]*").permitAll()       // 갤러리 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/board/posts\\?size=[0-9]*&page=[0-9]*").permitAll()       // 게시판 조회
                 .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/board/posts/[0-9]*").permitAll()        // 게시글 조회
-                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/posts/[0-9]*]/comments").permitAll()   // 게시글 댓글 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/posts/[0-9]*]/comments?\\size=[0-9]*&page=[0-9]*").permitAll()   // 게시글 댓글 조회
                 .anyRequest().authenticated()
 
                 .and()
