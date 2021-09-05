@@ -9,6 +9,8 @@ import com.j2kb.minipetpee.api.star.repository.StarRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,14 +56,18 @@ public class StarService {
 
     // 스타 목록 조회
     @Transactional(readOnly = true)
-    public void findStars() {
-
+    public Page<Star> findStars(Long memberId, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8007));
+        return starRepository.findByFanMemberIdOrderByIdDesc(member.getId(), pageable);
     }
 
     // 팬 목록 조회
     @Transactional(readOnly = true)
-    public void findFans() {
-
+    public Page<Star> findFans(Long memberId, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8008));
+        return starRepository.findByStarMemberIdOrderByIdDesc(member.getId(), pageable);
     }
 }
 

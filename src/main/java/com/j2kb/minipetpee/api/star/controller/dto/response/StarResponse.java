@@ -20,8 +20,9 @@ public class StarResponse {
 
     public StarResponse(Star star){
         this.id = star.getId();
-        this.memberId = star.getStarMember();
-        this.name = star.getStarMember().name(); // 수정하기
-        this.profileImageUrl = star.getStarMember().profileImageUrl();
+        this.memberId = star.starMemberId();
+        this.name = star.starMemberName();
+        this.profileImageUrl = star.starMemberProfileImageUrl();
+        this.createdAt = star.getCreatedAt();
     }
 }

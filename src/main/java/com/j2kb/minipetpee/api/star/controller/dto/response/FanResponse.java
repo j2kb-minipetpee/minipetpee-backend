@@ -20,9 +20,9 @@ public class FanResponse {
 
     public FanResponse(Star star) {
         this.id = star.getId();
-        this.memberId = star.getFanMember().getId(); //수정하기
-        this.name = star.getFanMember().name(); //수정하기
-        this.profileImageUrl = star.getFanMember().profileImageUrl(); //수정하기
+        this.memberId = star.fanMemberId();
+        this.name = star.fanMemberName();
+        this.profileImageUrl = star.fanMemberProfileImageUrl();
         this.createdAt = star.getCreatedAt();
     }
 }

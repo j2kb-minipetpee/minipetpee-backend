@@ -1,11 +1,15 @@
 package com.j2kb.minipetpee.api.star.domain;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.global.ErrorCode;
+import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,6 +39,44 @@ public class Star {
     }
 
     public String fanMemberName() {
-        return fanMember.get
+        if (Objects.isNull(fanMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8003);
+        }
+        return fanMember.name();
+    }
+
+    public String starMemberName() {
+        if (Objects.isNull(starMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001);
+        }
+        return starMember.name();
+    }
+
+    public String starMemberProfileImageUrl() {
+        if (Objects.isNull(starMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001);
+        }
+        return starMember.profileImageUrl();
+    }
+
+    public Long starMemberId() {
+        if (Objects.isNull(starMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001);
+        }
+        return starMember.getId();
+    }
+
+    public String fanMemberProfileImageUrl() {
+        if (Objects.isNull(fanMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001);
+        }
+        return fanMember.profileImageUrl();
+    }
+
+    public Long fanMemberId() {
+        if (Objects.isNull(fanMember)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001);
+        }
+        return fanMember.getId();
     }
 }

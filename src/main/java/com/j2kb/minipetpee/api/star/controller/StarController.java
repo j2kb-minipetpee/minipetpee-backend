@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.api.star.controller.dto.response.FanPaginationRespons
 import com.j2kb.minipetpee.api.star.controller.dto.response.FanResponse;
 import com.j2kb.minipetpee.api.star.controller.dto.response.StarPaginationResponse;
 import com.j2kb.minipetpee.api.star.controller.dto.response.StarResponse;
+import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.service.StarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -69,19 +71,11 @@ public class StarController {
     @Operation(summary = "스타 목록")
     @GetMapping("/{member-id}/stars")
     public ResponseEntity<StarPaginationResponse> findStars(
-            @PathVariable("member-id") long memberId,
+            @PathVariable("member-id") Long memberId,
             @ParameterObject @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        StarResponse starMember1 = new StarResponse(11, 1, "뽀로로", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        StarResponse starMember2 = new StarResponse(22, 2, "루피", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        StarResponse starMember3 = new StarResponse(33, 3, "포비", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-
-        List<StarResponse> stars = new ArrayList<>();
-        stars.add(starMember1);
-        stars.add(starMember2);
-        stars.add(starMember3);
-
-        return ResponseEntity.ok(stars);
+        Page<Star> stars = starService.findStars(memberId, pageable);
+        return ResponseEntity.ok(new StarPaginationResponse(stars));
     }
 
 
@@ -99,17 +93,7 @@ public class StarController {
             @PathVariable("member-id") long memberId,
             @ParameterObject @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        FanResponse fanMember1 = new FanResponse(44, 5, "크롱", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember2 = new FanResponse(55, 6, "에디", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember3 = new FanResponse(66, 7, "패티", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember4 = new FanResponse(77, 8, "해리", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-
-        List<FanResponse> fans = new ArrayList<>();
-        fans.add(fanMember1);
-        fans.add(fanMember2);
-        fans.add(fanMember3);
-        fans.add(fanMember4);
-
-        return ResponseEntity.ok(fans);
+        Page<Star> fans = starService.findFans(memberId, pageable);
+        return ResponseEntity.ok(new FanPaginationResponse(fans));
     }
 }
