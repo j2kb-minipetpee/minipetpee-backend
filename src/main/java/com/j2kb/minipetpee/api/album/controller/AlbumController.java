@@ -45,8 +45,6 @@ public class AlbumController {
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveAlbumPostRequest albumPostRequest
     ) {
-        //홈피 주인만 게시글 등록 가능(권한 체크)
-
         AlbumPost saveAlbumPost =
                 albumService.saveAlbumPost(homepeeId, albumPostRequest);
         return ResponseEntity.ok(new SaveAlbumPostResponse(saveAlbumPost));
@@ -69,7 +67,7 @@ public class AlbumController {
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글 찾기
-        AlbumPageResult albumPosts = albumService.findAlbumPosts(homepeeId, principal.getHomepeeId(), pageable, pageRequest);
+        AlbumPageResult albumPosts = albumService.findAlbumPosts(homepeeId, principal, pageable, pageRequest);
 
         return ResponseEntity.ok(new AlbumPaginationResponse(albumPosts));
     }
