@@ -1,6 +1,5 @@
 package com.j2kb.minipetpee.api.star.controller.dto.response;
 
-import com.j2kb.minipetpee.api.guestnote.controller.dto.response.GuestNoteResponse;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.PageResponse;
