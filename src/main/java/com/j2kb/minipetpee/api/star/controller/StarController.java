@@ -1,11 +1,8 @@
 package com.j2kb.minipetpee.api.star.controller;
 
-import com.j2kb.minipetpee.api.member.domain.MemberAdapter;
 import com.j2kb.minipetpee.api.star.controller.dto.request.StarRequest;
 import com.j2kb.minipetpee.api.star.controller.dto.response.FanPaginationResponse;
-import com.j2kb.minipetpee.api.star.controller.dto.response.FanResponse;
 import com.j2kb.minipetpee.api.star.controller.dto.response.StarPaginationResponse;
-import com.j2kb.minipetpee.api.star.controller.dto.response.StarResponse;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.service.StarService;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;

@@ -1,7 +1,6 @@
 package com.j2kb.minipetpee.api.star.service;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.member.domain.MemberAdapter;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.star.controller.dto.request.StarRequest;
 import com.j2kb.minipetpee.api.star.domain.Star;
@@ -14,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service

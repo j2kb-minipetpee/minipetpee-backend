@@ -5,7 +5,6 @@ import com.j2kb.minipetpee.api.homepee.repository.HomepeeRepository;
 import com.j2kb.minipetpee.api.member.controller.dto.LoginRequest;
 import com.j2kb.minipetpee.api.member.controller.dto.SignUpRequest;
 import com.j2kb.minipetpee.api.member.domain.Member;
-import com.j2kb.minipetpee.api.member.domain.MemberAdapter;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
@@ -13,9 +12,6 @@ import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +21,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
     private final MemberRepository memberRepository;
     private final HomepeeRepository homepeeRepository;
     private final PasswordEncoder passwordEncoder;
@@ -66,13 +62,5 @@ public class MemberService implements UserDetailsService {
         member.isMatchPassword(passwordEncoder, request.getPassword());
 
         return member;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001));
-        return new MemberAdapter(member);
     }
 }
