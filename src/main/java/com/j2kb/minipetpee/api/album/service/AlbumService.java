@@ -66,9 +66,9 @@ public class AlbumService {
 
         List<AlbumResult> albumResults = new ArrayList<>();
         //tab id로 album 조회
-        Page<AlbumPost> albumPosts = postRepository.findAllAlbumByTabId(tab.getId(), pageablePost);
+        Page<Post> albumPosts = postRepository.findAllByTabId(tab.getId(), pageablePost);
         //갤러리 포스트의 댓글 조회
-        for (AlbumPost albumPost : albumPosts) {
+        for (Post albumPost : albumPosts) {
             Page<Comment> postComment = commentRepository.findByPostId(albumPost.getId(), pageableComment);
             albumResults.add(new AlbumResult(albumPost, postComment));
         }
@@ -81,7 +81,7 @@ public class AlbumService {
     public void updateAlbumPost(Long homepeeId, UpdateAlbumPostRequest albumPostRequest) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        AlbumPost albumPost = postRepository.findAlbumByIdAndTabId(albumPostRequest.getId(), tab.getId())
+        AlbumPost albumPost = (AlbumPost) postRepository.findByIdAndTabId(albumPostRequest.getId(), tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //전달된 이미지 Image 객체로 변경
@@ -97,7 +97,7 @@ public class AlbumService {
     public void deleteAlbumPost(Long homepeeId, Long postId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        AlbumPost albumPost = postRepository.findAlbumByIdAndTabId(postId, tab.getId())
+        AlbumPost albumPost = (AlbumPost) postRepository.findByIdAndTabId(postId, tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //게시글 삭제

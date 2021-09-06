@@ -10,6 +10,7 @@ import com.j2kb.minipetpee.api.setting.repository.TabRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.domain.Image;
+import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import com.j2kb.minipetpee.api.comment.repository.CommentRepository;
 import com.j2kb.minipetpee.global.repository.PostRepository;
@@ -54,13 +55,13 @@ public class BoardService {
 
     //게시글 목록 조회
     @Transactional(readOnly = true)
-    public Page<BoardPost> findBoardPosts(Long homepeeId, Pageable pageable) {
+    public Page<Post> findBoardPosts(Long homepeeId, Pageable pageable) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
-        return postRepository.findAllBoardByTabId(tab.getId(), pageable);
+        return postRepository.findAllByTabId(tab.getId(), pageable);
     }
 
     //게시글 하나 조회
@@ -71,7 +72,7 @@ public class BoardService {
 
         if(!tab.isVisible())
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4006);
-        BoardPost boardPost = postRepository.findBoardByIdAndTabId(postId, tab.getId())
+        BoardPost boardPost = (BoardPost) postRepository.findByIdAndTabId(postId, tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
         //게시글 조회할 때, viewCount + 1
         boardPost.updateViewCount();
@@ -88,7 +89,7 @@ public class BoardService {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
-        BoardPost boardPost = postRepository.findBoardByIdAndTabId(postId, tab.getId())
+        BoardPost boardPost = (BoardPost) postRepository.findByIdAndTabId(postId, tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
 
         List<Image> images = new ArrayList<>();
@@ -109,7 +110,7 @@ public class BoardService {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.BOARD)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
-        BoardPost post = postRepository.findBoardByIdAndTabId(postId, tab.getId())
+        BoardPost post = (BoardPost) postRepository.findByIdAndTabId(postId, tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP4001));
         postRepository.delete(post);
     }

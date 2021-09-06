@@ -4,14 +4,12 @@ import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.global.domain.Post;
 import org.hibernate.annotations.ColumnDefault;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Getter
-@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("BOARD")

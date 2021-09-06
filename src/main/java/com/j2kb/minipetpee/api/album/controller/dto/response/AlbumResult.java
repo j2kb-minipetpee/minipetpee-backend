@@ -1,9 +1,9 @@
 package com.j2kb.minipetpee.api.album.controller.dto.response;
 
-import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.Image;
+import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -14,10 +14,10 @@ import java.util.Objects;
 
 @Getter
 public class AlbumResult {
-    private final AlbumPost albumPost;
+    private final Post albumPost;
     private final Page<Comment> albumComment;
 
-    public AlbumResult(AlbumPost albumPost,Page<Comment> albumComment) {
+    public AlbumResult(Post albumPost, Page<Comment> albumComment) {
         this.albumPost = albumPost;
         this.albumComment = albumComment;
     }
@@ -29,7 +29,7 @@ public class AlbumResult {
         return albumComment;
     }
 
-    public AlbumPost albumPost() {
+    public Post albumPost() {
         if(Objects.isNull(albumPost)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }

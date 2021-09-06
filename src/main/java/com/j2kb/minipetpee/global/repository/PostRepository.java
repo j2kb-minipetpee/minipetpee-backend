@@ -11,13 +11,9 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<AlbumPost> findAllAlbumByTabId(Long tabId, Pageable pagable);
+    Page<Post> findAllByTabId(Long tabId, Pageable pagable);
 
-    Page<BoardPost> findAllBoardByTabId(Long tabId, Pageable pagable);
-
-    Optional<AlbumPost> findAlbumByIdAndTabId(Long id, Long tabId);
-
-    Optional<BoardPost> findBoardByIdAndTabId(Long id, Long tabId);
+    Optional<Post> findByIdAndTabId(Long id, Long tabId);
 
     // 조회순으로 게시글 받아오기 (조회수가 측정 불가한 앨범 제외)
     Page<BoardPost> findByOrderByViewCountDesc(Pageable pageable);

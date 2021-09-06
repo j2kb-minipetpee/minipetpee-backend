@@ -1,6 +1,5 @@
 package com.j2kb.minipetpee.global.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 
@@ -15,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
@@ -27,7 +25,6 @@ import java.util.Objects;
 
 @Slf4j
 @Getter
-@DynamicUpdate
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

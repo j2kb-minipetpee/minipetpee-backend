@@ -18,7 +18,7 @@ public class BoardPaginationResponse {
     private final List<BoardPostSummaryResponse> content;
     private final PageResponse page;
 
-    public BoardPaginationResponse(Page<BoardPost> boardPosts) {
+    public BoardPaginationResponse(Page<Post> boardPosts) {
         if(Objects.isNull(boardPosts)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
