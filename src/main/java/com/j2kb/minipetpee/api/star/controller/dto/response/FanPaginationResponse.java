@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
-@RequiredArgsConstructor
 public class FanPaginationResponse {
     private final List<FanResponse> content;
     private final PageResponse page;

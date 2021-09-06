@@ -1,8 +1,8 @@
 package com.j2kb.minipetpee.api.star.controller;
 
-import com.j2kb.minipetpee.api.star.controller.dto.request.StarRequest;
 import com.j2kb.minipetpee.api.star.controller.dto.response.FanPaginationResponse;
 import com.j2kb.minipetpee.api.star.controller.dto.response.StarPaginationResponse;
+import com.j2kb.minipetpee.api.star.controller.dto.response.StarRelationshipResponse;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.service.StarService;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
@@ -32,25 +32,38 @@ public class StarController {
 
     private final StarService starService;
 
+    @Operation(summary = "스타(팔로우) 여부 확인")
+    @GetMapping("/{fan-member-id}/star/{star-member-id}")
+    public ResponseEntity<StarRelationshipResponse> checkStarRelationship(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable("fan-member-id") Long fanMemberId,
+            @PathVariable("star-member-id") Long starMemberId
+    ){
+        boolean result = starService.hasStarRelationship(principal.getId(), fanMemberId, starMemberId);
+        return ResponseEntity.ok(new StarRelationshipResponse(fanMemberId, starMemberId, result));
+    }
+
     @Operation(summary = "스타(팔로우)")
-    @PostMapping("/stars")
+    @PostMapping("/{fan-member-id}/star/{star-member-id}")
     public ResponseEntity<Void> star(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
-            @Valid @RequestBody StarRequest starRequest
+            @PathVariable("fan-member-id") Long fanMemberId,
+            @PathVariable("star-member-id") Long starMemberId
     ){
         // 저장
-        starService.saveStar(principal.getId(), starRequest);
+        starService.saveStar(principal.getId(), fanMemberId, starMemberId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "언스타(언팔로우)")
-    @DeleteMapping("/stars/{star-id}")
+    @DeleteMapping("/{fan-member-id}/star/{star-member-id}")
     public ResponseEntity<Void> unstar(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
-            @PathVariable("star-id") long starId
+            @PathVariable("fan-member-id") Long fanMemberId,
+            @PathVariable("star-member-id") Long starMemberId
     ){
         // 삭제
-        starService.deleteStar(principal.getId(), starId);
+        starService.deleteStar(principal.getId(), fanMemberId, starMemberId);
         return ResponseEntity.noContent().build();
     }
 
@@ -85,7 +98,7 @@ public class StarController {
     @Operation(summary = "팬 목록")
     @GetMapping("/{member-id}/fans")
     public ResponseEntity<FanPaginationResponse> findFans(
-            @PathVariable("member-id") long memberId,
+            @PathVariable("member-id") Long memberId,
             @ParameterObject @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<Star> fans = starService.findFans(memberId, pageable);

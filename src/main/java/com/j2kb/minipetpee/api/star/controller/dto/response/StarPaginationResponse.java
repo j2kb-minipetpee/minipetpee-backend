@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
-@RequiredArgsConstructor
 public class StarPaginationResponse {
     private final List<StarResponse> content;
     private final PageResponse page;
