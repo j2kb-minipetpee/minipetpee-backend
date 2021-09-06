@@ -1,6 +1,6 @@
 package com.j2kb.minipetpee.api.homepee.controller.dto;
 
-import com.j2kb.minipetpee.api.homepee.domain.FanComment;
+import com.j2kb.minipetpee.api.fancomment.domain.FanComment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class HomepeeResponse {
     private final String gateImageUrl;
     private final String title;
     private final int visitCount;
-    private List<FanCommentResponse> fanComments;
+    private List<HomepeeFanCommentResponse> fanComments;
 
     public HomepeeResponse(Homepee homepee, List<FanComment> fanComments) {
         this.profile = new ProfileResponse(homepee.memberProfile());
@@ -23,7 +23,7 @@ public class HomepeeResponse {
         this.visitCount = homepee.getVisitCount();
         if (!Objects.isNull(fanComments)) {
             this.fanComments = fanComments.stream()
-                    .map(FanCommentResponse::new)
+                    .map(HomepeeFanCommentResponse::new)
                     .collect(Collectors.toList());
         }
     }
