@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -20,35 +21,30 @@ public class StarService {
     private final StarRepository starRepository;
     private final MemberRepository memberRepository;
 
+    // 스타 여부 확인
+    @Transactional(readOnly = true)
+    public boolean hasStarRelationship(Long currentMemberId, Long starMemberId) {
+        // 스타(팔로잉) 여부 확인
+        return (starRepository.countByFanMemberIdAndStarMemberId(currentMemberId, starMemberId) != 0);
+    }
+
     // 스타
     @Transactional
-    public void saveStar(Long currentMemberId, Long fanMemberId, Long starMemberId) {
+    public void saveStar(Long currentMemberId, Long starMemberId) {
         // 팬 계정 검사
-        Member fanMember = memberRepository.findById(fanMemberId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8003));
-
-        // 로그인한 계정과 일치 여부 검사
-        if (!currentMemberId.equals(fanMember.getId())) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP0000);
-        }
+        Member fanMember = findMember(currentMemberId, ErrorCode.EMP8003);
 
         // 스타 계정 검사
-        Member starMember = memberRepository.findById(starMemberId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001));
-        Star star = new Star(starMember, fanMember);
+        Member starMember = findMember(starMemberId, ErrorCode.EMP8001);
 
         // 저장
+        Star star = new Star(starMember, fanMember);
         starRepository.save(star);
     }
 
     // 언스타
     @Transactional
-    public void deleteStar(Long currentMemberId, Long fanMemberId, Long starMemberId) {
-        // 로그인한 계정과 팬 계정 일치 여부 검사
-        if (!currentMemberId.equals(fanMemberId)) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP0000);
-        }
-
+    public void deleteStar(Long currentMemberId, Long starMemberId) {
         // 스타 관계 불러오기
         Star star = starRepository.findByFanMemberIdAndStarMemberId(currentMemberId, starMemberId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8006));
@@ -57,15 +53,12 @@ public class StarService {
         starRepository.delete(star);
     }
 
-    // 스타 여부 확인
-    @Transactional(readOnly = true)
-    public boolean hasStarRelationship(Long currentMemberId, Long fanMemberId, Long starMemberId) {
-        // 로그인 계정 == 팬 계정 여부 체크
-        if (!currentMemberId.equals(fanMemberId)) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP0000);
-        }
-        // 스타(팔로잉) 여부 확인
-        return (starRepository.countByFanMemberIdAndStarMemberId(currentMemberId, starMemberId) != 0);
+
+    // 팬 검사
+    @Transactional(readOnly = true, propagation = Propagation.MANDATORY)
+    public Member findMember(Long memberId, ErrorCode errorCode) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, errorCode));
     }
 
     // 스타 목록 조회

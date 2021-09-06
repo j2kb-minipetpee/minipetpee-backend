@@ -29,13 +29,13 @@ public class Star {
     @JoinColumn(name = "fan_member_id", nullable = false)
     private Member fanMember;
 
-    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Star(Member starMember, Member fanMember) {
         this.starMember = starMember;
         this.fanMember = fanMember;
+        this.createdAt = LocalDateTime.now();
     }
 
     public String fanMemberName() {
