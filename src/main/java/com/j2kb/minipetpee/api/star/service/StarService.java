@@ -6,6 +6,7 @@ import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.repository.StarRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,16 +24,16 @@ public class StarService {
 
     // 스타 여부 확인
     @Transactional(readOnly = true)
-    public boolean hasStarRelationship(Long currentMemberId, Long starMemberId) {
+    public boolean hasStarRelationship(JwtAuthenticationPrincipal principal, Long starMemberId) {
         // 스타(팔로잉) 여부 확인
-        return (starRepository.countByFanMemberIdAndStarMemberId(currentMemberId, starMemberId) != 0);
+        return (starRepository.countByFanMemberIdAndStarMemberId(principal.getId(), starMemberId) != 0);
     }
 
     // 스타
     @Transactional
-    public void saveStar(Long currentMemberId, Long starMemberId) {
+    public void saveStar(JwtAuthenticationPrincipal principal, Long starMemberId) {
         // 팬 계정 검사
-        Member fanMember = findMember(currentMemberId, ErrorCode.EMP8003);
+        Member fanMember = findMember(principal.getId(), ErrorCode.EMP8003);
 
         // 스타 계정 검사
         Member starMember = findMember(starMemberId, ErrorCode.EMP8001);
@@ -44,9 +45,9 @@ public class StarService {
 
     // 언스타
     @Transactional
-    public void deleteStar(Long currentMemberId, Long starMemberId) {
+    public void deleteStar(JwtAuthenticationPrincipal principal, Long starMemberId) {
         // 스타 관계 불러오기
-        Star star = starRepository.findByFanMemberIdAndStarMemberId(currentMemberId, starMemberId)
+        Star star = starRepository.findByFanMemberIdAndStarMemberId(principal.getId(), starMemberId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8006));
 
         // 삭제
@@ -64,16 +65,20 @@ public class StarService {
     // 스타 목록 조회
     @Transactional(readOnly = true)
     public Page<Star> findStars(Long memberId, Pageable pageable) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8007));
+        // 회원 찾기
+        Member member = findMember(memberId, ErrorCode.EMP8007);
+
+        // 스타 목록 조회
         return starRepository.findByFanMemberId(member.getId(), pageable);
     }
 
     // 팬 목록 조회
     @Transactional(readOnly = true)
     public Page<Star> findFans(Long memberId, Pageable pageable) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8008));
+        // 회원 찾기
+        Member member = findMember(memberId, ErrorCode.EMP8008);
+
+        // 팬 목록 조회
         return starRepository.findByStarMemberId(member.getId(), pageable);
     }
 }

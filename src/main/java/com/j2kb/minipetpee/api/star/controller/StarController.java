@@ -36,8 +36,8 @@ public class StarController {
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable("star-member-id") Long starMemberId
     ){
-        boolean result = starService.hasStarRelationship(principal.getId(), starMemberId);
-        return ResponseEntity.ok(new StarRelationshipResponse(principal.getId(), starMemberId, result));
+        boolean result = starService.hasStarRelationship(principal, starMemberId);
+        return ResponseEntity.ok(new StarRelationshipResponse(principal, starMemberId, result));
     }
 
     @Operation(summary = "스타(팔로우)")
@@ -47,7 +47,7 @@ public class StarController {
             @PathVariable("star-member-id") Long starMemberId
     ){
         // 저장
-        starService.saveStar(principal.getId(), starMemberId);
+        starService.saveStar(principal, starMemberId);
         return ResponseEntity.noContent().build();
     }
 
@@ -58,7 +58,7 @@ public class StarController {
             @PathVariable("star-member-id") Long starMemberId
     ){
         // 삭제
-        starService.deleteStar(principal.getId(), starMemberId);
+        starService.deleteStar(principal, starMemberId);
         return ResponseEntity.noContent().build();
     }
 
