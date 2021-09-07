@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+
 @Tag(name = "게시판 API")
 @Slf4j
 @RestController
@@ -59,7 +60,7 @@ public class BoardController {
     @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
     public ResponseEntity<BoardPaginationResponse> findBoardPosts(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -71,7 +72,7 @@ public class BoardController {
     @Operation(summary = "게시판 게시글 조회")
     @GetMapping("/{post-id}")
     public ResponseEntity<BoardPostResponse> findBoardPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
