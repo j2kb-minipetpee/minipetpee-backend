@@ -30,16 +30,6 @@ public class StarController {
 
     private final StarService starService;
 
-    @Operation(summary = "스타(팔로우) 여부 확인")
-    @GetMapping("/star/{star-member-id}")
-    public ResponseEntity<StarRelationshipResponse> checkStarRelationship(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
-            @PathVariable("star-member-id") Long starMemberId
-    ){
-        boolean result = starService.checkStarRelationship(principal.getId(), starMemberId);
-        return ResponseEntity.ok(new StarRelationshipResponse(principal.getId(), starMemberId, result));
-    }
-
     @Operation(summary = "스타(팔로우)")
     @PostMapping("/star/{star-member-id}")
     public ResponseEntity<Void> star(

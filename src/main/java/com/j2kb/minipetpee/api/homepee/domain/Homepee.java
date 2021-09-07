@@ -61,6 +61,13 @@ public class Homepee {
         return member.getProfile();
     }
 
+    public Long memberId() {
+        if (Objects.isNull(member)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
+        }
+        return member.getId();
+    }
+
     public void setTabs(Tab tab) {
         this.getTabs().add(tab);
         tab.setHomepee(this);

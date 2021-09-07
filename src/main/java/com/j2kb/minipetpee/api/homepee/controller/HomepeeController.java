@@ -8,10 +8,15 @@ import com.j2kb.minipetpee.api.homepee.domain.FanComment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.homepee.service.FanCommentService;
 import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
+import com.j2kb.minipetpee.api.star.controller.dto.response.StarRelationshipResponse;
+import com.j2kb.minipetpee.api.star.domain.Relationship;
+import com.j2kb.minipetpee.api.star.service.StarService;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,14 +30,20 @@ public class HomepeeController {
 
     private final HomepeeService homepeeService;
     private final FanCommentService fanCommentService;
+    private final StarService starService;
 
     @Operation(summary = "홈피 조회")
     @GetMapping
-    public ResponseEntity<HomepeeResponse> find(@PathVariable(name = "homepee-id") Long homepeeId) {
+    public ResponseEntity<HomepeeResponse> find(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable(name = "homepee-id") Long homepeeId
+    ) {
         Homepee homepee = homepeeService.findById(homepeeId);
         List<FanComment> fanComments = fanCommentService.findAllByHomepeeId(homepeeId);
 
-        return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments));
+        // 스타(팔로우) 여부 확인
+        Relationship relational = starService.checkStarRelationship(principal.getId(), homepee.memberId());
+        return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments, relational));
     }
 
     @Operation(summary = "공생평 작성")

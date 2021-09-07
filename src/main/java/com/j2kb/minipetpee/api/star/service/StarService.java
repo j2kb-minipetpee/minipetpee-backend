@@ -2,6 +2,7 @@ package com.j2kb.minipetpee.api.star.service;
 
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.repository.MemberRepository;
+import com.j2kb.minipetpee.api.star.domain.Relationship;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.repository.StarRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
@@ -23,9 +24,16 @@ public class StarService {
 
     // 스타 여부 확인
     @Transactional(readOnly = true)
-    public boolean checkStarRelationship(Long fanMemberId, Long starMemberId) {
-        // 스타(팔로잉) 여부 확인
-        return (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0);
+    public Relationship checkStarRelationship(Long fanMemberId, Long starMemberId) {
+        Relationship relationship;
+        if (fanMemberId.equals(starMemberId)) {
+            relationship = Relationship.SELF;
+        } else if (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0){  // 스타(팔로잉) 여부 확인
+            relationship = Relationship.STAR;
+        } else {
+            relationship = Relationship.NONE;
+        }
+        return relationship;
     }
 
     // 스타
