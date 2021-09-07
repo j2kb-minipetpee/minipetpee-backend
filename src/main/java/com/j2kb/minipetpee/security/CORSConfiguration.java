@@ -20,6 +20,8 @@ public class CORSConfiguration {
             "http://localhost:8080/",
             "http://minipetpee.tk/",
             "https://minipetpee.tk/",
+            "http://www.minipetpee.tk/",
+            "https://www.minipetpee.tk/",
             "http://api.minipetpee.ml/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/",
             "https://api.minipetpee.ml/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/"
         ));
