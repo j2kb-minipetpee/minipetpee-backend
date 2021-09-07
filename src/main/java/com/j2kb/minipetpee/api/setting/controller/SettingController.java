@@ -11,6 +11,7 @@ import com.j2kb.minipetpee.api.setting.controller.dto.response.SettingResponse;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import com.j2kb.minipetpee.api.setting.service.SettingService;
@@ -40,7 +41,7 @@ public class SettingController {
     @GetMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SettingResponse> findSettings(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
         Member member = memberService.findById(principal.getId());
@@ -55,7 +56,7 @@ public class SettingController {
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateProfile(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody UpdateSettingRequest request
     ) {
@@ -67,7 +68,7 @@ public class SettingController {
     @PutMapping("/tabs")
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_HOMEPEE') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateTabs(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody UpdateTabsRequest request
     ) {
