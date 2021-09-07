@@ -33,7 +33,7 @@ public class StarController {
     @Operation(summary = "스타(팔로우)")
     @PostMapping("/star/{star-member-id}")
     public ResponseEntity<Void> star(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable("star-member-id") Long starMemberId
     ){
         // 저장
@@ -44,7 +44,7 @@ public class StarController {
     @Operation(summary = "언스타(언팔로우)")
     @DeleteMapping("/star/{star-member-id}")
     public ResponseEntity<Void> unstar(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable("star-member-id") Long starMemberId
     ){
         // 삭제
