@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Service
 public class StarService {
@@ -26,12 +28,14 @@ public class StarService {
     @Transactional(readOnly = true)
     public Relationship checkStarRelationship(Long fanMemberId, Long starMemberId) {
         Relationship relationship;
-        if (fanMemberId.equals(starMemberId)) {
+        if (Objects.isNull(fanMemberId)) {
+            relationship = Relationship.NONE;
+        } else if (fanMemberId.equals(starMemberId)) { // 본인 홈피
             relationship = Relationship.SELF;
         } else if (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0){  // 스타(팔로잉) 여부 확인
-            relationship = Relationship.STAR;
-        } else {
-            relationship = Relationship.NONE;
+            relationship = Relationship.STAR; // 팔로잉중
+        } else { // 언팔중
+            relationship = Relationship.UNSTAR;
         }
         return relationship;
     }
@@ -44,6 +48,11 @@ public class StarService {
 
         // 스타 계정 검사
         Member starMember = findMember(starMemberId, ErrorCode.EMP8001);
+
+        // 스타 중복 확인
+        if (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8009);
+        }
 
         // 저장
         Star star = new Star(starMember, fanMember);

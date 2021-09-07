@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "홈피 API")
 @RestController
@@ -41,9 +42,11 @@ public class HomepeeController {
         Homepee homepee = homepeeService.findById(homepeeId);
         List<FanComment> fanComments = fanCommentService.findAllByHomepeeId(homepeeId);
 
-        // 스타(팔로우) 여부 확인
-        Relationship relational = starService.checkStarRelationship(principal.getId(), homepee.memberId());
-        return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments, relational));
+        // 로그인 여부 체크
+        Long currentMemberId = (Objects.isNull(principal))? null: principal.getId();
+        // 스타(팔로잉) 여부 확인
+        Relationship relationship = starService.checkStarRelationship(currentMemberId, homepee.memberId());
+        return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments, relationship));
     }
 
     @Operation(summary = "공생평 작성")
