@@ -15,18 +15,18 @@ import java.util.Objects;
 @Getter
 public class BoardPageResult {
     private final BoardPost boardPost;
-    private final Page<Comment> page;
+    private final Page<Comment> commentPage;
 
-    public BoardPageResult(BoardPost boardPost, Page<Comment> page) {
+    public BoardPageResult(BoardPost boardPost, Page<Comment> commentPage) {
         this.boardPost = boardPost;
-        this.page = page;
+        this.commentPage = commentPage;
     }
 
     public Page<Comment> comments() {
-        if(Objects.isNull(page)) {
+        if(Objects.isNull(commentPage)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        return this.page;
+        return this.commentPage;
     }
 
     public BoardPost boardPost() {
