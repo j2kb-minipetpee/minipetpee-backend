@@ -44,10 +44,12 @@ public class StarService {
     @Transactional
     public void saveStar(Long fanMemberId, Long starMemberId) {
         // 팬 계정 검사
-        Member fanMember = findMember(fanMemberId, ErrorCode.EMP8003);
+        Member fanMember = memberRepository.findById(fanMemberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8003));
 
         // 스타 계정 검사
-        Member starMember = findMember(starMemberId, ErrorCode.EMP8001);
+        Member starMember = memberRepository.findById(starMemberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8001));
 
         // 스타 중복 확인
         if (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0) {
@@ -70,19 +72,12 @@ public class StarService {
         starRepository.delete(star);
     }
 
-
-    // 팬 검사
-    @Transactional(readOnly = true, propagation = Propagation.MANDATORY)
-    public Member findMember(Long memberId, ErrorCode errorCode) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, errorCode));
-    }
-
     // 스타 목록 조회
     @Transactional(readOnly = true)
     public Page<Star> findStars(Long memberId, Pageable pageable) {
         // 회원 찾기
-        Member member = findMember(memberId, ErrorCode.EMP8007);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8007));
 
         // 스타 목록 조회
         return starRepository.findByFanMemberId(member.getId(), pageable);
@@ -92,7 +87,8 @@ public class StarService {
     @Transactional(readOnly = true)
     public Page<Star> findFans(Long memberId, Pageable pageable) {
         // 회원 찾기
-        Member member = findMember(memberId, ErrorCode.EMP8008);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8008));
 
         // 팬 목록 조회
         return starRepository.findByStarMemberId(member.getId(), pageable);
