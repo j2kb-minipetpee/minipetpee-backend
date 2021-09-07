@@ -1,15 +1,26 @@
 package com.j2kb.minipetpee.api.star.controller;
 
-import com.j2kb.minipetpee.api.star.controller.dto.*;
+import com.j2kb.minipetpee.api.star.controller.dto.response.FanPaginationResponse;
+import com.j2kb.minipetpee.api.star.controller.dto.response.StarPaginationResponse;
+import com.j2kb.minipetpee.api.star.controller.dto.response.StarRelationshipResponse;
+import com.j2kb.minipetpee.api.star.domain.Star;
+import com.j2kb.minipetpee.api.star.service.StarService;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Tag(name = "스타/팬 API")
 @RequiredArgsConstructor
@@ -17,55 +28,65 @@ import java.util.List;
 @RequestMapping("/apis")
 public class StarController {
 
+    private final StarService starService;
+
     @Operation(summary = "스타(팔로우)")
-    @PostMapping("/stars/{star-id}")
-    public ResponseEntity<Void> star(@PathVariable("star-id") long starId){
-        /**
-         * 스타 서비스: 스타 메서드 호출
-         */
+    @PostMapping("/star/{star-member-id}")
+    public ResponseEntity<Void> star(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable("star-member-id") Long starMemberId
+    ){
+        // 저장
+        starService.saveStar(principal.getId(), starMemberId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "언스타(언팔로우)")
-    @DeleteMapping("/stars/{star-id}")
-    public ResponseEntity<Void> unstar(@PathVariable("star-id") long starId){
-        /**
-         * 스타 서비스: 언스타 메서드 호출
-         */
+    @DeleteMapping("/star/{star-member-id}")
+    public ResponseEntity<Void> unstar(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable("star-member-id") Long starMemberId
+    ){
+        // 삭제
+        starService.deleteStar(principal.getId(), starMemberId);
         return ResponseEntity.noContent().build();
     }
 
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 (0 부터 시작)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "5")))
     @Operation(summary = "스타 목록")
     @GetMapping("/{member-id}/stars")
-    public ResponseEntity<List<StarResponse>> findStars(@PathVariable("member-id") long memberId) {
-        StarResponse starMember1 = new StarResponse(11, 1, "뽀로로", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        StarResponse starMember2 = new StarResponse(22, 2, "루피", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        StarResponse starMember3 = new StarResponse(33, 3, "포비", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-
-        List<StarResponse> stars = new ArrayList<>();
-        stars.add(starMember1);
-        stars.add(starMember2);
-        stars.add(starMember3);
-
-        return ResponseEntity.ok(stars);
+    public ResponseEntity<StarPaginationResponse> findStars(
+            @PathVariable("member-id") Long memberId,
+            @ParameterObject @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Star> stars = starService.findStars(memberId, pageable);
+        return ResponseEntity.ok(new StarPaginationResponse(stars));
     }
 
 
+    @Parameter(in = ParameterIn.QUERY
+            , description = "페이지 (0 부터 시작)"
+            , name = "page"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "0")))
+    @Parameter(in = ParameterIn.QUERY
+            , description = "반환할 데이터 수"
+            , name = "size"
+            , content = @Content(schema = @Schema(type = "integer", defaultValue = "4")))
     @Operation(summary = "팬 목록")
     @GetMapping("/{member-id}/fans")
-    public ResponseEntity<List<FanResponse>> findFans(@PathVariable("member-id") long memberId) {
-        FanResponse fanMember1 = new FanResponse(44, 5, "크롱", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember2 = new FanResponse(55, 6, "에디", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember3 = new FanResponse(66, 7, "패티", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-        FanResponse fanMember4 = new FanResponse(77, 8, "해리", "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg", LocalDateTime.now());
-
-        List<FanResponse> fans = new ArrayList<>();
-        fans.add(fanMember1);
-        fans.add(fanMember2);
-        fans.add(fanMember3);
-        fans.add(fanMember4);
-
-        return ResponseEntity.ok(fans);
+    public ResponseEntity<FanPaginationResponse> findFans(
+            @PathVariable("member-id") Long memberId,
+            @ParameterObject @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Star> fans = starService.findFans(memberId, pageable);
+        return ResponseEntity.ok(new FanPaginationResponse(fans));
     }
 }
