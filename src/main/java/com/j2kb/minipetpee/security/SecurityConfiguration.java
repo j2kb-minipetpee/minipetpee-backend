@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/favicon.ico")
                 .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui.html")
-                .antMatchers("/swagger-ui/**")
+                .antMatchers("/swagger-ui/**","/v3/api-docs/**")
                 .antMatchers("/v3/api-docs/**")
                 .antMatchers("/aws/health")
                 .antMatchers("/error");

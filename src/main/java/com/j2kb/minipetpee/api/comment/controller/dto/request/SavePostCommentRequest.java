@@ -13,9 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SavePostCommentRequest {
 
-    @NotNull(message = "EMP2003")
-    private Long memberId;
-
     @NotNull(message = "EMP10001")
     @Size(min = 1, max = 200, message = "EMP10002")
     private String content;

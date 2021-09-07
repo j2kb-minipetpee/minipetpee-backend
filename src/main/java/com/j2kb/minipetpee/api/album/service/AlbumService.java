@@ -81,7 +81,7 @@ public class AlbumService {
     public void updateAlbumPost(Long homepeeId, UpdateAlbumPostRequest albumPostRequest) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        Post albumPost = postRepository.findByIdAndTabId(albumPostRequest.getId(), tab.getId())
+        AlbumPost albumPost = (AlbumPost) postRepository.findByIdAndTabId(albumPostRequest.getId(), tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //전달된 이미지 Image 객체로 변경
@@ -89,6 +89,7 @@ public class AlbumService {
 
         albumPost.updatePostTitle(albumPostRequest.getTitle());
         albumPost.updatePostImages(images);
+        albumPost.updateUpdatedAt();
     }
 
     //게시글 삭제
@@ -96,7 +97,7 @@ public class AlbumService {
     public void deleteAlbumPost(Long homepeeId, Long postId) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
-        Post albumPost = postRepository.findByIdAndTabId(postId, tab.getId())
+        AlbumPost albumPost = (AlbumPost) postRepository.findByIdAndTabId(postId, tab.getId())
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //게시글 삭제
