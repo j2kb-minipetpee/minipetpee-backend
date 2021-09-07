@@ -7,8 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ProfileResponse {
-    private final String email;
+public class SettingProfileResponse {
     private final String name;
     private final LocalDateTime birthday;
     private final String species;
@@ -16,8 +15,7 @@ public class ProfileResponse {
     private final Gender gender;
     private final String profileImageUrl;
 
-    public ProfileResponse(Profile profile) {
-        this.email = profile.getProfileImageUrl();
+    public SettingProfileResponse(Profile profile) {
         this.name = profile.getName();
         this.birthday = profile.getBirthday();
         this.species = profile.getSpecies();
