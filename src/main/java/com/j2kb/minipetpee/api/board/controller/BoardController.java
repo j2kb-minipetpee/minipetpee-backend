@@ -41,7 +41,7 @@ public class BoardController {
     @PostMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveBoardPostRequest request
     ) {
@@ -86,7 +86,7 @@ public class BoardController {
     @PutMapping("/{post-id}")
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateBoardPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody UpdateBoardPostRequest request
@@ -99,7 +99,7 @@ public class BoardController {
     @DeleteMapping("/{post-id}")
     @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> deleteBoardPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
