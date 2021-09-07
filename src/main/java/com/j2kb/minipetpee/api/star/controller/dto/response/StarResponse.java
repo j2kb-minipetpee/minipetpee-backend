@@ -3,7 +3,6 @@ package com.j2kb.minipetpee.api.star.controller.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.star.domain.Star;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 

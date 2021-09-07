@@ -5,7 +5,6 @@ import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.dto.PageResponse;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
@@ -15,15 +14,14 @@ import java.util.stream.Collectors;
 
 @Getter
 public class StarPaginationResponse {
-    private final List<StarResponse> content;
+    private final List<StarResponse> contents;
     private final PageResponse page;
 
     public StarPaginationResponse(Page<Star> starPage) {
         if (Objects.isNull(starPage)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.content = starPage
-                .stream()
+        this.contents = starPage.stream()
                 .map(StarResponse::new)
                 .collect(Collectors.toList());
         this.page = new PageResponse(starPage);

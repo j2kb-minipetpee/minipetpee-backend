@@ -6,7 +6,6 @@ import com.j2kb.minipetpee.api.star.domain.Star;
 import com.j2kb.minipetpee.api.star.repository.StarRepository;
 import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.exception.ServiceException;
-import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,16 +23,16 @@ public class StarService {
 
     // 스타 여부 확인
     @Transactional(readOnly = true)
-    public boolean hasStarRelationship(JwtAuthenticationPrincipal principal, Long starMemberId) {
+    public boolean checkStarRelationship(Long fanMemberId, Long starMemberId) {
         // 스타(팔로잉) 여부 확인
-        return (starRepository.countByFanMemberIdAndStarMemberId(principal.getId(), starMemberId) != 0);
+        return (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0);
     }
 
     // 스타
     @Transactional
-    public void saveStar(JwtAuthenticationPrincipal principal, Long starMemberId) {
+    public void saveStar(Long fanMemberId, Long starMemberId) {
         // 팬 계정 검사
-        Member fanMember = findMember(principal.getId(), ErrorCode.EMP8003);
+        Member fanMember = findMember(fanMemberId, ErrorCode.EMP8003);
 
         // 스타 계정 검사
         Member starMember = findMember(starMemberId, ErrorCode.EMP8001);
@@ -45,9 +44,9 @@ public class StarService {
 
     // 언스타
     @Transactional
-    public void deleteStar(JwtAuthenticationPrincipal principal, Long starMemberId) {
+    public void deleteStar(Long fanMemberId, Long starMemberId) {
         // 스타 관계 불러오기
-        Star star = starRepository.findByFanMemberIdAndStarMemberId(principal.getId(), starMemberId)
+        Star star = starRepository.findByFanMemberIdAndStarMemberId(fanMemberId, starMemberId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP8006));
 
         // 삭제
