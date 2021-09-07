@@ -9,6 +9,7 @@ import com.j2kb.minipetpee.global.ErrorCode;
 import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.global.exception.ServiceException;
 import com.j2kb.minipetpee.global.repository.PostRepository;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +36,14 @@ public class CommentService {
 
     //게시물의 댓글 저장
     @Transactional
-    public Comment savePostComment(Long postId, SavePostCommentRequest commentRequest) {
+    public Comment savePostComment(Long postId, Long memberId, SavePostCommentRequest commentRequest) {
 
         //post 찾기
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
 
         //댓글 쓴 멤버 찾기
-        Member member = memberRepository.findById(commentRequest.getMemberId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP2001));
 
         //댓글 객체 생성

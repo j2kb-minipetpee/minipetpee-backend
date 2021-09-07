@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostReque
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
 import com.j2kb.minipetpee.api.board.service.BoardService;
 import com.j2kb.minipetpee.global.domain.Post;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,7 +38,9 @@ public class BoardController {
 
     @Operation(summary = "게시판 게시글 등록")
     @PostMapping
+    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveBoardPostRequest request
     ) {
@@ -54,29 +59,33 @@ public class BoardController {
     @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
     public ResponseEntity<BoardPaginationResponse> findBoardPosts(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        Page<Post> boardPosts = boardService.findBoardPosts(homepeeId, pageable);
+        Page<Post> boardPosts = boardService.findBoardPosts(homepeeId, principal, pageable);
         return ResponseEntity.ok(new BoardPaginationResponse(boardPosts));
     }
 
     @Operation(summary = "게시판 게시글 조회")
     @GetMapping("/{post-id}")
     public ResponseEntity<BoardPostResponse> findBoardPost(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
-        BoardPageResult boardPost = boardService.findBoardPost(homepeeId, postId, pageRequest);
+        BoardPageResult boardPost = boardService.findBoardPost(homepeeId, postId, principal, pageRequest);
 
         return ResponseEntity.ok(new BoardPostResponse(boardPost));
     }
 
     @Operation(summary = "게시판 게시글 수정")
     @PutMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateBoardPost(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody UpdateBoardPostRequest request
@@ -87,7 +96,9 @@ public class BoardController {
 
     @Operation(summary = "게시판 게시글 삭제")
     @DeleteMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> deleteBoardPost(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
