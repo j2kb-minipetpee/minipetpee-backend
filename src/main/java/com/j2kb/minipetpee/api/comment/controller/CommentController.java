@@ -60,7 +60,7 @@ public class CommentController {
             @PathVariable(name = "post-id") Long postId,
             @Valid @RequestBody SavePostCommentRequest commentRequest
     ) {
-        Comment comment = commentService.savePostComment(postId, commentRequest);
+        Comment comment = commentService.savePostComment(postId, principal.getId(), commentRequest);
         return ResponseEntity.ok(new SavePostCommentResponse(comment));
     }
 

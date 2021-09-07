@@ -29,7 +29,6 @@ public class Homepee {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 

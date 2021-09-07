@@ -2,17 +2,23 @@ package com.j2kb.minipetpee.global.domain;
 
 import com.j2kb.minipetpee.api.comment.domain.Comment;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
-import lombok.*;
+
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.member.domain.Profile;
 import com.j2kb.minipetpee.global.ErrorCode;
+
 import com.j2kb.minipetpee.global.exception.ServiceException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -74,6 +80,11 @@ public abstract class Post extends BaseTimeEntity {
         }
     }
 
+    //게시글 updateAt 갱신
+    public void updateUpdatedAt() {
+        this.setUpdatedAt(LocalDateTime.now());
+    }
+
     public Homepee homepee() {
         if (Objects.isNull(tab)) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP9001);
@@ -86,6 +97,16 @@ public abstract class Post extends BaseTimeEntity {
 
     public Long homepeeId() {
         return this.homepee().getId();
+    }
+
+    public Long imageId() {
+        if (Objects.isNull(images)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP4001);
+        }
+        if (images.size() > 0) {
+            return images.get(0).getId();
+        }
+        return null;
     }
 
     public String imageUrl() {

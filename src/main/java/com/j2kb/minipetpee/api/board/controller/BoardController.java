@@ -1,43 +1,52 @@
 package com.j2kb.minipetpee.api.board.controller;
 
-import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostCommentRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.*;
+import com.j2kb.minipetpee.api.board.service.BoardService;
+import com.j2kb.minipetpee.global.domain.Post;
+import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
+
 
 @Tag(name = "게시판 API")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/apis/{homepee-id}/board/posts")
 public class BoardController {
 
+    private final BoardService boardService;
+
     @Operation(summary = "게시판 게시글 등록")
     @PostMapping
+    @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SaveBoardPostResponse> saveBoardPost(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
-            @RequestBody SaveBoardPostRequest boardPostRequest
+            @Valid @RequestBody SaveBoardPostRequest request
     ) {
-        log.info("ImageUrl = {}", boardPostRequest.getImage());
-
-        SaveBoardPostResponse boardPostResponse = new SaveBoardPostResponse(1L);
-        return ResponseEntity.ok(boardPostResponse);
+        Long boardPostId = boardService.saveBoardPost(homepeeId, request);
+        return ResponseEntity.ok(new SaveBoardPostResponse(boardPostId));
     }
 
     @Parameter(in = ParameterIn.QUERY
@@ -50,86 +59,51 @@ public class BoardController {
             , content = @Content(schema = @Schema(type = "integer", defaultValue = "10")))
     @Operation(summary = "게시판 게시글 목록 조회")
     @GetMapping
-    public ResponseEntity<List<BoardPostSummaryResponse>> findBoardPosts(
-            @PathVariable(name = "homepee-id") Long hompeeId,
+    public ResponseEntity<BoardPaginationResponse> findBoardPosts(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject  @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        BoardPostImageResponse boardImg1 = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        BoardPostImageResponse boardImg2 = new BoardPostImageResponse(2L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        BoardPostImageResponse boardImg3 = new BoardPostImageResponse(3L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
 
-        BoardPostSummaryResponse boardPost1 = new BoardPostSummaryResponse(1L, "title1", boardImg1, 100, LocalDateTime.now());
-        BoardPostSummaryResponse boardPost2 = new BoardPostSummaryResponse(2L, "title2", boardImg2, 100, LocalDateTime.now());
-        BoardPostSummaryResponse boardPost3 = new BoardPostSummaryResponse(3L, "title3", boardImg3, 100, LocalDateTime.now());
-
-        List<BoardPostSummaryResponse> boardPosts = new ArrayList<>();
-        boardPosts.add(boardPost1);
-        boardPosts.add(boardPost2);
-        boardPosts.add(boardPost3);
-
-        return ResponseEntity.ok(boardPosts);
+        Page<Post> boardPosts = boardService.findBoardPosts(homepeeId, principal, pageable);
+        return ResponseEntity.ok(new BoardPaginationResponse(boardPosts));
     }
 
     @Operation(summary = "게시판 게시글 조회")
     @GetMapping("/{post-id}")
     public ResponseEntity<BoardPostResponse> findBoardPost(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
-        String title = "title";
-        String content = "content";
-        int viewCount = 100;
-        BoardPostImageResponse postImageResponse = new BoardPostImageResponse(1L, "http://image.dongascience.com/Photo/2017/03/14900752352661.jpg");
-        LocalDateTime createdAt = LocalDateTime.now();
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
+        BoardPageResult boardPost = boardService.findBoardPost(homepeeId, postId, principal, pageRequest);
 
-        BoardPostResponse boardPostResponse = new BoardPostResponse(postId,title,content,viewCount,postImageResponse, createdAt);
-
-        return ResponseEntity.ok(boardPostResponse);
+        return ResponseEntity.ok(new BoardPostResponse(boardPost));
     }
 
     @Operation(summary = "게시판 게시글 수정")
     @PutMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateBoardPost(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId,
-            @RequestBody UpdateBoardPostRequest updateBoardPostRequest
+            @Valid @RequestBody UpdateBoardPostRequest request
     ) {
+        boardService.updateBoardPost(homepeeId, postId, request);
         return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "게시판 게시글 댓글 작성")
-    @PostMapping("/{post-id}/comment")
-    public ResponseEntity<SaveBoardPostCommentResponse> saveBoardPostComment(
-            @PathVariable(name = "homepee-id") Long homepeeId,
-            @PathVariable(name = "post-id") Long postId,
-            @RequestBody SaveBoardPostCommentRequest boardCommentRequest
-    ) {
-        String content = boardCommentRequest.getContent();
-        BoardPostCommentMemberResponse boardPostMember = new BoardPostCommentMemberResponse(boardCommentRequest.getMemberId(), "memberName");
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        SaveBoardPostCommentResponse boardPostComment = new SaveBoardPostCommentResponse(1L,content, boardPostMember,createdAt);
-
-        return ResponseEntity.ok(boardPostComment);
     }
 
     @Operation(summary = "게시판 게시글 삭제")
     @DeleteMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> deleteBoardPost(
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
+        boardService.deleteBoardPost(homepeeId, postId);
         return ResponseEntity.noContent().build();
     }
-
-    @Operation(summary = "게시판 게시글 댓글 삭제")
-    @DeleteMapping("/{post-id}/comments/{comment-id}")
-    public ResponseEntity<Void> deleteBoardPostComment(
-            @PathVariable(name = "homepee-id") Long homepeeId,
-            @PathVariable(name = "post-id") Long postId,
-            @PathVariable(name = "comment-id") Long commentId
-    ) {
-        return ResponseEntity.noContent().build();
-    }
-
 }
