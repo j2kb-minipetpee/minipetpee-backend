@@ -29,13 +29,13 @@ public class StarService {
     public Relationship checkStarRelationship(Long fanMemberId, Long starMemberId) {
         Relationship relationship;
         if (Objects.isNull(fanMemberId)) {
-            relationship = Relationship.NONE;
-        } else if (fanMemberId.equals(starMemberId)) { // 본인 홈피
-            relationship = Relationship.SELF;
+            relationship = Relationship.NONE; // 게스트 (로그인X)
+        } else if (fanMemberId.equals(starMemberId)) {
+            relationship = Relationship.SELF; // 본인 홈피
         } else if (starRepository.countByFanMemberIdAndStarMemberId(fanMemberId, starMemberId) != 0){  // 스타(팔로잉) 여부 확인
             relationship = Relationship.STAR; // 팔로잉중
-        } else { // 언팔중
-            relationship = Relationship.UNSTAR;
+        } else {
+            relationship = Relationship.UNSTAR; // 언팔중
         }
         return relationship;
     }
