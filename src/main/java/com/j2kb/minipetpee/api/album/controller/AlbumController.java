@@ -40,7 +40,7 @@ public class AlbumController {
     @PostMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SaveAlbumPostResponse> saveAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveAlbumPostRequest albumPostRequest
     ) {
@@ -60,7 +60,7 @@ public class AlbumController {
     @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
     @GetMapping
     public ResponseEntity<AlbumPaginationResponse> findAlbumPosts(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -86,7 +86,7 @@ public class AlbumController {
     @PutMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody UpdateAlbumPostRequest albumPostRequest
     ) {
@@ -98,7 +98,7 @@ public class AlbumController {
     @DeleteMapping("/{post-id}")
     @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> deleteAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {
