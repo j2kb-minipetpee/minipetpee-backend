@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class AlbumPageSingleResult {
+public class AlbumPageSingleResponse {
     private final String title;
     private final List<AlbumPostImageResponse> images;
 
-    public AlbumPageSingleResult(AlbumPost albumPost) {
+    public AlbumPageSingleResponse(AlbumPost albumPost) {
         this.title = albumPost.getTitle();
         this.images = albumPost.getImages()
                 .stream()
