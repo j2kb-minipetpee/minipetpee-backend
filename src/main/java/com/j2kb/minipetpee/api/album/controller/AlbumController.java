@@ -67,9 +67,20 @@ public class AlbumController {
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글 찾기
-        AlbumPageResult albumPosts = albumService.findAlbumPosts(homepeeId, principal, pageable, pageRequest);
+        AlbumPageResult albumPosts = albumService.findAllAlbumPosts(homepeeId, principal, pageable, pageRequest);
 
         return ResponseEntity.ok(new AlbumPaginationResponse(albumPosts));
+    }
+
+    @Operation(summary = "갤러리 단건 조회")
+    @GetMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    public ResponseEntity<AlbumPageSingleResult> findAlbumPosts(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId) {
+        AlbumPost albumPost = albumService.findAlbumPosts(homepeeId, postId);
+        return ResponseEntity.ok(new AlbumPageSingleResult(albumPost));
     }
 
     @Operation(summary = "갤러리 게시글 수정")
