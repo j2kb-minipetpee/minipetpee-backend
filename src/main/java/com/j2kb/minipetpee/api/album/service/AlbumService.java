@@ -55,7 +55,7 @@ public class AlbumService {
 
     //갤러리 목록 조회
     @Transactional(readOnly = true)
-    public AlbumPageResult findAlbumPosts(Long homepeeId, JwtAuthenticationPrincipal principal, Pageable pageablePost, Pageable pageableComment) {
+    public AlbumPageResult findAllAlbumPosts(Long homepeeId, JwtAuthenticationPrincipal principal, Pageable pageablePost, Pageable pageableComment) {
         Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
                 .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
 
@@ -74,6 +74,15 @@ public class AlbumService {
         }
 
         return new AlbumPageResult(albumResults, albumPosts);
+    }
+
+    //게시글 단건 조회
+    @Transactional(readOnly = true)
+    public AlbumPost findAlbumPosts(Long homepeeId, Long postId) {
+        Tab tab = tabRepository.findByHomepeeIdAndType(homepeeId, Type.ALBUM)
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP9001));
+        return (AlbumPost) postRepository.findByIdAndTabId(postId, tab.getId())
+                .orElseThrow(() -> new ServiceException(HttpStatus.NOT_FOUND, ErrorCode.EMP5002));
     }
 
     //게시글 수정

@@ -5,7 +5,6 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostReque
 import com.j2kb.minipetpee.api.album.controller.dto.response.*;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
-import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,9 +66,20 @@ public class AlbumController {
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글 찾기
-        AlbumPageResult albumPosts = albumService.findAlbumPosts(homepeeId, principal, pageable, pageRequest);
+        AlbumPageResult albumPosts = albumService.findAllAlbumPosts(homepeeId, principal, pageable, pageRequest);
 
         return ResponseEntity.ok(new AlbumPaginationResponse(albumPosts));
+    }
+
+    @Operation(summary = "갤러리 단건 조회")
+    @GetMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    public ResponseEntity<AlbumPostSingleResponse> findAlbumPosts(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId) {
+        AlbumPost albumPost = albumService.findAlbumPosts(homepeeId, postId);
+        return ResponseEntity.ok(new AlbumPostSingleResponse(albumPost));
     }
 
     @Operation(summary = "갤러리 게시글 수정")
