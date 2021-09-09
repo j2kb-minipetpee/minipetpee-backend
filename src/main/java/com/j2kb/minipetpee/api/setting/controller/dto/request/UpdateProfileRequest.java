@@ -36,6 +36,6 @@ public class UpdateProfileRequest {
     private String profileImageUrl;
 
     public Profile toProfile() {
-        return new Profile(name, LocalDateTime.now(), species, personality, gender, profileImageUrl);
+        return new Profile(name, birthday, species, personality, gender, profileImageUrl);
     }
 }
