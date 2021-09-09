@@ -1,11 +1,9 @@
 package com.j2kb.minipetpee.api.homepee.controller;
 
 import com.j2kb.minipetpee.api.homepee.controller.dto.HomepeeResponse;
-import com.j2kb.minipetpee.api.fancomment.domain.FanComment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import com.j2kb.minipetpee.api.fancomment.service.FanCommentService;
 import com.j2kb.minipetpee.api.homepee.service.HomepeeService;
-import com.j2kb.minipetpee.api.star.controller.dto.response.StarRelationshipResponse;
 import com.j2kb.minipetpee.api.star.domain.Relationship;
 import com.j2kb.minipetpee.api.star.service.StarService;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @Tag(name = "홈피 API")
@@ -36,12 +33,11 @@ public class HomepeeController {
             @PathVariable(name = "homepee-id") Long homepeeId
     ) {
         Homepee homepee = homepeeService.findById(homepeeId);
-        List<FanComment> fanComments = fanCommentService.findAllByHomepeeId(homepeeId);
 
         // 로그인 여부 체크
         Long currentMemberId = (Objects.isNull(principal))? null: principal.getId();
         // 스타(팔로잉) 여부 확인
         Relationship relationship = starService.checkStarRelationship(currentMemberId, homepee.memberId());
-        return ResponseEntity.ok(new HomepeeResponse(homepee, fanComments, relationship));
+        return ResponseEntity.ok(new HomepeeResponse(homepee, relationship));
     }
 }

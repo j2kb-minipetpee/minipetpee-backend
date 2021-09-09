@@ -15,19 +15,13 @@ public class HomepeeResponse {
     private final String gateImageUrl;
     private final String title;
     private final int visitCount;
-    private List<HomepeeFanCommentResponse> fanComments;
     private final Relationship relationship;
 
-    public HomepeeResponse(Homepee homepee, List<FanComment> fanComments, Relationship relationship) {
+    public HomepeeResponse(Homepee homepee, Relationship relationship) {
         this.profile = new ProfileResponse(homepee.memberProfile());
         this.gateImageUrl = homepee.getGateImageUrl();
         this.title = homepee.getTitle();
         this.visitCount = homepee.getVisitCount();
-        if (!Objects.isNull(fanComments)) {
-            this.fanComments = fanComments.stream()
-                    .map(HomepeeFanCommentResponse::new)
-                    .collect(Collectors.toList());
-        }
         this.relationship = relationship;
     }
 }
