@@ -47,7 +47,7 @@ public class GuestNoteController {
     @Operation(summary = "방명록 조회")
     @GetMapping
     public ResponseEntity<GuestNotePaginationResponse> findGuestNotes(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -59,7 +59,7 @@ public class GuestNoteController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SaveGuestNoteResponse> saveGuestNote(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveGuestNoteRequest guestNoteRequest
     ) {
@@ -72,7 +72,7 @@ public class GuestNoteController {
     @PutMapping("/{guest-note-id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> updateGuestNote(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId,
             @Valid @RequestBody UpdateGuestNoteRequest updateGuestNote
@@ -85,7 +85,7 @@ public class GuestNoteController {
     @DeleteMapping("/{guest-note-id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteGuestNote(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "guest-note-id") Long guestNoteId
     ) {

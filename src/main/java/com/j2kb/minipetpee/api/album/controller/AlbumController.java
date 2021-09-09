@@ -5,7 +5,6 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostReque
 import com.j2kb.minipetpee.api.album.controller.dto.response.*;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
 import com.j2kb.minipetpee.api.album.service.AlbumService;
-import com.j2kb.minipetpee.global.domain.Post;
 import com.j2kb.minipetpee.security.jwt.JwtAuthenticationPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,7 +40,7 @@ public class AlbumController {
     @PostMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('SAVE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<SaveAlbumPostResponse> saveAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody SaveAlbumPostRequest albumPostRequest
     ) {
@@ -61,22 +60,33 @@ public class AlbumController {
     @Operation(summary = "갤러리 게시글 조회", description = "전체 갤러리 내용 모두 조회")
     @GetMapping
     public ResponseEntity<AlbumPaginationResponse> findAlbumPosts(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @ParameterObject @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.Direction.DESC, "id");
         //게시글 찾기
-        AlbumPageResult albumPosts = albumService.findAlbumPosts(homepeeId, principal, pageable, pageRequest);
+        AlbumPageResult albumPosts = albumService.findAllAlbumPosts(homepeeId, principal, pageable, pageRequest);
 
         return ResponseEntity.ok(new AlbumPaginationResponse(albumPosts));
+    }
+
+    @Operation(summary = "갤러리 단건 조회")
+    @GetMapping("/{post-id}")
+    @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
+    public ResponseEntity<AlbumPostSingleResponse> findAlbumPosts(
+            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @PathVariable(name = "homepee-id") Long homepeeId,
+            @PathVariable(name = "post-id") Long postId) {
+        AlbumPost albumPost = albumService.findAlbumPosts(homepeeId, postId);
+        return ResponseEntity.ok(new AlbumPostSingleResponse(albumPost));
     }
 
     @Operation(summary = "갤러리 게시글 수정")
     @PutMapping
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> updateAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @Valid @RequestBody UpdateAlbumPostRequest albumPostRequest
     ) {
@@ -88,7 +98,7 @@ public class AlbumController {
     @DeleteMapping("/{post-id}")
     @PreAuthorize("isAuthenticated() && hasAuthority('DELETE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
     public ResponseEntity<Void> deleteAlbumPost(
-            @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
+            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId
     ) {

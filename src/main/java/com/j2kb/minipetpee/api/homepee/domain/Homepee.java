@@ -29,7 +29,6 @@ public class Homepee {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -59,6 +58,13 @@ public class Homepee {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
         }
         return member.getProfile();
+    }
+
+    public Long memberId() {
+        if (Objects.isNull(member)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP2001);
+        }
+        return member.getId();
     }
 
     public void setTabs(Tab tab) {

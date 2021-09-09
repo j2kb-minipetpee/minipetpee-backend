@@ -4,11 +4,11 @@ import com.j2kb.minipetpee.api.homepee.domain.Homepee;
 import lombok.Getter;
 
 @Getter
-public class HomepeeResponse {
+public class SettingHomepeeResponse {
     private final String title;
     private final String gateImageUrl;
 
-    public HomepeeResponse(Homepee homepee) {
+    public SettingHomepeeResponse(Homepee homepee) {
         this.title = homepee.getTitle();
         this.gateImageUrl = homepee.getGateImageUrl();
     }

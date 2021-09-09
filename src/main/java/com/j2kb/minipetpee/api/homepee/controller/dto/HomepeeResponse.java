@@ -2,6 +2,7 @@ package com.j2kb.minipetpee.api.homepee.controller.dto;
 
 import com.j2kb.minipetpee.api.fancomment.domain.FanComment;
 import com.j2kb.minipetpee.api.homepee.domain.Homepee;
+import com.j2kb.minipetpee.api.star.domain.Relationship;
 import lombok.Getter;
 
 import java.util.List;
@@ -15,8 +16,9 @@ public class HomepeeResponse {
     private final String title;
     private final int visitCount;
     private List<HomepeeFanCommentResponse> fanComments;
+    private final Relationship relationship;
 
-    public HomepeeResponse(Homepee homepee, List<FanComment> fanComments) {
+    public HomepeeResponse(Homepee homepee, List<FanComment> fanComments, Relationship relationship) {
         this.profile = new ProfileResponse(homepee.memberProfile());
         this.gateImageUrl = homepee.getGateImageUrl();
         this.title = homepee.getTitle();
@@ -26,5 +28,6 @@ public class HomepeeResponse {
                     .map(HomepeeFanCommentResponse::new)
                     .collect(Collectors.toList());
         }
+        this.relationship = relationship;
     }
 }

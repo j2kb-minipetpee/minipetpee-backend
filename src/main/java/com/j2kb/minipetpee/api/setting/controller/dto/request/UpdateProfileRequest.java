@@ -3,6 +3,7 @@ package com.j2kb.minipetpee.api.setting.controller.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j2kb.minipetpee.api.member.domain.Gender;
 import com.j2kb.minipetpee.api.member.domain.Profile;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,11 +18,11 @@ import java.time.LocalDateTime;
 public class UpdateProfileRequest {
 
     @NotBlank(message = "EMP7008")
-    @Pattern(regexp="^[0-9a-zA-Z가-힣]*$", message = "EMP7015")
+    @Pattern(regexp="[_0-9a-zA-Z가-힣]*", message = "EMP7015")
     @Size(min = 2, max = 10, message = "EMP7009")
     private String name;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime birthday;
 
     @Size(max = 30, message = "EMP7012")
