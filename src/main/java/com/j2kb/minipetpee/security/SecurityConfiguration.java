@@ -78,6 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/posts/[0-9]*/comments\\?size=[0-9]*&page=[0-9]*").permitAll()   // 게시글 댓글 조회
                 .regexMatchers(HttpMethod.GET, "/apis/[0-9]*/stars").permitAll()    // 스타 목록 조회
                 .regexMatchers(HttpMethod.GET, "/apis/[0-9]*/fans").permitAll()    // 팬 목록 조회
+                .regexMatchers(HttpMethod.GET,"/apis/[0-9]*/fan-comments\\?size=[0-9]*&page=[0-9]*").permitAll()   // 공생평 조회
                 .anyRequest().authenticated()
 
                 .and()
