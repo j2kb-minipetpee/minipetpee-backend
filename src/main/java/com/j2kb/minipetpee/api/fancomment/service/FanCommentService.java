@@ -56,12 +56,12 @@ public class FanCommentService {
 
     @Transactional
     public void updateFanComment(Long currentUserId, UpdateFanCommentRequest request) {
-        if (!currentUserId.equals(request.getMemberId())) {
+        FanComment fanComment = fanCommentRepository.findById(request.getId())
+            .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP11005));
+
+        if (!currentUserId.equals(fanComment.memberId())) {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP11007);
         }
-
-        FanComment fanComment = fanCommentRepository.findByIdAndMemberId(request.getId(), request.getMemberId())
-            .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP11005));
 
         fanComment.changeContent(request.getContent());
     }
