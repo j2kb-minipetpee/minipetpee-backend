@@ -60,7 +60,7 @@ public class FanCommentService {
             throw new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP11007);
         }
 
-        FanComment fanComment = fanCommentRepository.findById(request.getId())
+        FanComment fanComment = fanCommentRepository.findByIdAndMemberId(request.getId(), request.getMemberId())
             .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, ErrorCode.EMP11005));
 
         fanComment.changeContent(request.getContent());
