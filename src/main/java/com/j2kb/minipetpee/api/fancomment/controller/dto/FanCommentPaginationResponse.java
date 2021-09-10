@@ -9,11 +9,11 @@ import org.springframework.data.domain.Page;
 
 @Getter
 public class FanCommentPaginationResponse {
-    private final List<FanCommentResponse> fanComments;
+    private final List<FanCommentResponse> content;
     private final PageResponse page;
 
     public FanCommentPaginationResponse(Page<FanComment> fanComments) {
-        this.fanComments = fanComments.stream()
+        this.content = fanComments.stream()
             .map(FanCommentResponse::new)
             .collect(Collectors.toList());
         this.page = new PageResponse(fanComments);

@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 
 @Getter
 public class StarPaginationResponse {
-    private final List<StarResponse> contents;
+    private final List<StarResponse> content;
     private final PageResponse page;
 
     public StarPaginationResponse(Page<Star> starPage) {
         if (Objects.isNull(starPage)) {
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
-        this.contents = starPage.stream()
+        this.content = starPage.stream()
                 .map(StarResponse::new)
                 .collect(Collectors.toList());
         this.page = new PageResponse(starPage);
