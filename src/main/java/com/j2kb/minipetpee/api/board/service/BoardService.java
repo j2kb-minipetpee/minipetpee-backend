@@ -4,6 +4,8 @@ import com.j2kb.minipetpee.api.board.controller.dto.request.SaveBoardPostRequest
 import com.j2kb.minipetpee.api.board.controller.dto.request.UpdateBoardPostRequest;
 import com.j2kb.minipetpee.api.board.controller.dto.response.BoardPageResult;
 import com.j2kb.minipetpee.api.board.domain.BoardPost;
+import com.j2kb.minipetpee.api.member.domain.Member;
+import com.j2kb.minipetpee.api.member.repository.MemberRepository;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
@@ -35,6 +37,7 @@ public class BoardService {
     public final PostRepository postRepository;
     public final TabRepository tabRepository;
     public final CommentRepository commentRepository;
+    public final MemberRepository memberRepository;
 
     //게시글 저장
     @Transactional
@@ -80,9 +83,9 @@ public class BoardService {
         boardPost.updateViewCount();
 
         //댓글 조회
-        Page<Comment> postCommet = commentRepository.findByPostId(boardPost.getId(), pageRequest);
+        Page<Comment> postComment = commentRepository.findByPostId(boardPost.getId(), pageRequest);
 
-        return new BoardPageResult(boardPost, postCommet);
+        return new BoardPageResult(boardPost, postComment);
     }
 
     //게시글 수정

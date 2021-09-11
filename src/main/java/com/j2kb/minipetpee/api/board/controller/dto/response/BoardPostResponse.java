@@ -19,13 +19,15 @@ public class BoardPostResponse {
     private final String content;
     private final int viewCount;
     private final BoardPostImageResponse image;
+    private final Long memberId;
+    private final String memberName;
+    private final String profileImageUrl;
     private final CommentPaginationResponse comments;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdAt;
 
     public BoardPostResponse(BoardPageResult boardPost) {
-
         if(Objects.isNull(boardPost.getCommentPage())){
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.EMP0001);
         }
@@ -36,6 +38,9 @@ public class BoardPostResponse {
         this.viewCount = boardPost.viewCount();
         this.image = new BoardPostImageResponse(boardPost.boardPost());
         this.comments = new CommentPaginationResponse(boardPost.comments());
+        this.memberId = boardPost.getBoardPost().member().getId();
+        this.memberName = boardPost.getBoardPost().memberName();
+        this.profileImageUrl = boardPost.getBoardPost().member().profileImageUrl();
         this.createdAt = boardPost.createdAt();
     }
 }

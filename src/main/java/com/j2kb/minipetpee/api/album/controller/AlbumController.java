@@ -74,11 +74,11 @@ public class AlbumController {
     @Operation(summary = "갤러리 단건 조회")
     @GetMapping("/{post-id}")
     @PreAuthorize("isAuthenticated() && hasAuthority('UPDATE_POSTS') && #principal.homepeeId.equals(#homepeeId)")
-    public ResponseEntity<AlbumPostSingleResponse> findAlbumPosts(
+    public ResponseEntity<AlbumPostSingleResponse> findAlbumPost(
             @AuthenticationPrincipal JwtAuthenticationPrincipal principal,
             @PathVariable(name = "homepee-id") Long homepeeId,
             @PathVariable(name = "post-id") Long postId) {
-        AlbumPost albumPost = albumService.findAlbumPosts(homepeeId, postId);
+        AlbumPost albumPost = albumService.findAlbumPost(homepeeId, postId);
         return ResponseEntity.ok(new AlbumPostSingleResponse(albumPost));
     }
 
