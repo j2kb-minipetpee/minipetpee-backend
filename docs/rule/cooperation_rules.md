@@ -1,15 +1,26 @@
 # 백엔드 협업 규칙
 
-3. back/front repository 분리
+- [백엔드 협업 규칙](#백엔드-협업-규칙)
+  - [Branch](#branch)
+    - [Git-flow](#git-flow)
+    - [Naming](#naming)
+  - [Commit](#commit)
+    - [Commit Message](#commit-message)
+    - [Type](#type)
+  - [Pull Request](#pull-request)
+    - [Naming](#naming-1)
+  - [Github Project](#github-project)
+    - [Card](#card)
+    - [Column](#column)
 
 ## Branch
 
-### Git Flow
+### Git-flow
 
 1. main: 2주 단위로 develop 브랜치를 머지
 2. develop: feature 브랜치 중 리뷰 완료 된 브랜치만 머지
 3. feature: 기능 브랜치
-4. 그외 hotfix, release 등 
+4. hotfix, release 등
 
 ### Naming
 
@@ -34,13 +45,19 @@ ex) <#61> feat: 앨범 게시글 단건 조회
 5. test: 테스트 코드
 6. docs: 문서 작업  
 
+## Pull Request
 
+### Naming
+
+```
+<#[IssueNo]> [Type]: [Subject]
+```
 
 ## Github Project
 
 ### Card
 
-이슈 등록 시 프로젝트 태깅하여 프로젝트 카드 추가하기 
+이슈 등록 시 프로젝트 태깅하여 프로젝트 카드 추가하기
 
 ### Column
 
