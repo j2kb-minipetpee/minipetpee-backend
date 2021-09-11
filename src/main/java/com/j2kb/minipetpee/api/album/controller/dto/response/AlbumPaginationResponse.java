@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 public class AlbumPaginationResponse {
 
     private final List<AlbumPostResponse> content;
+    private final Long memberId;
+    private final String memberName;
+    private final String profileImageUrl;
     private final PageResponse page;
 
     public AlbumPaginationResponse(AlbumPageResult albumPageResult) {
@@ -28,6 +31,9 @@ public class AlbumPaginationResponse {
                 .stream()
                 .map(AlbumPostResponse::new)
                 .collect(Collectors.toList());
+        this.memberId = albumPageResult.getMember().getId();
+        this.memberName = albumPageResult.getMember().name();
+        this.profileImageUrl = albumPageResult.getMember().profileImageUrl();
         this.page = new PageResponse(albumPageResult.getPage());
     }
 }

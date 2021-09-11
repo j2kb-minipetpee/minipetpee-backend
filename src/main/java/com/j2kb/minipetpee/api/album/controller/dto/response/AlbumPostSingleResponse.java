@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 public class AlbumPostSingleResponse {
     private final String title;
     private final List<AlbumPostImageResponse> images;
-    private final Long memberId;
-    private final String memberName;
-    private final String profileImageUrl;
 
     public AlbumPostSingleResponse(AlbumPost albumPost) {
         this.title = albumPost.getTitle();
@@ -20,8 +17,5 @@ public class AlbumPostSingleResponse {
                 .stream()
                 .map(AlbumPostImageResponse::new)
                 .collect(Collectors.toList());
-        this.memberId = albumPost.member().getId();
-        this.memberName = albumPost.memberName();
-        this.profileImageUrl = albumPost.member().profileImageUrl();
     }
 }

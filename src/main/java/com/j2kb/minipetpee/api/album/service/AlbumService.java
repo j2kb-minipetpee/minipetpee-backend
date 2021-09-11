@@ -5,6 +5,7 @@ import com.j2kb.minipetpee.api.album.controller.dto.request.UpdateAlbumPostReque
 import com.j2kb.minipetpee.api.album.controller.dto.response.AlbumPageResult;
 import com.j2kb.minipetpee.api.album.controller.dto.response.AlbumResult;
 import com.j2kb.minipetpee.api.album.domain.AlbumPost;
+import com.j2kb.minipetpee.api.member.domain.Member;
 import com.j2kb.minipetpee.api.setting.domain.Tab;
 import com.j2kb.minipetpee.api.setting.domain.Type;
 import com.j2kb.minipetpee.api.setting.repository.TabRepository;
@@ -73,7 +74,9 @@ public class AlbumService {
             albumResults.add(new AlbumResult(albumPost, postComment));
         }
 
-        return new AlbumPageResult(albumResults, albumPosts);
+        Member member = tab.getHomepee().getMember();
+
+        return new AlbumPageResult(albumResults, member, albumPosts);
     }
 
     //게시글 단건 조회
