@@ -36,6 +36,7 @@ Spring boot, Spring Data JPA, Spring Security, Swagger, H2, AWS ELB
 
 ## 프로젝트 관리 문서
 
+- [협업 규칙](docs/rule/cooperation_rules.md)
 - [기능 명세서](docs/functional_spec/기능_명세서.pdf)
 - [API 설계](docs/api/design)
-- API 명세서(Swagger)
+- [API 명세서 (Swagger)](docs/api/spec)
