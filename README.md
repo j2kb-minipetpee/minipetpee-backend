@@ -4,6 +4,8 @@
 
 ## 서비스 소개
 
+![minipetpee](docs/images/minipetpee-logo.png)
+
 - 싸이월드 느낌의 펫 소셜 네트워크 서비스
 - 반려동물 전용 미니홈피
 
@@ -24,7 +26,7 @@
 
 ## 서비스 아키텍쳐
 
-![docs/minipetpee-architecture.png](docs/images/minipetpee-architecture.png)
+![minipetpee-architecture](docs/images/minipetpee-architecture.png)
 
 ## 기술 스택
 
@@ -32,7 +34,7 @@ Spring boot, Spring Data JPA, Spring Security, Swagger, H2, AWS ELB
 
 ## DataBase Modeling
 
-![minipetpee-modeling.png](docs/images/minipetpee-modeling.png)
+![minipetpee-modeling](docs/images/minipetpee-modeling.png)
 
 ## 프로젝트 관리 문서
 
